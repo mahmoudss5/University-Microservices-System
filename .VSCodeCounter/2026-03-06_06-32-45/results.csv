@@ -1,0 +1,213 @@
+"filename", "language", "JSON", "Markdown", "JSON with Comments", "TypeScript", "TypeScript JSX", "JavaScript", "HTML", "XML", "YAML", "Batch", "PostCSS", "Java Properties", "Java", "MS SQL", "comment", "blank", "total"
+"c:\Fullstack\practical projects\UniSystem\Backend\.idea\Backend.iml", "XML", 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 9
+"c:\Fullstack\practical projects\UniSystem\Backend\.idea\copilot.data.migration.ask2agent.xml", "XML", 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 6
+"c:\Fullstack\practical projects\UniSystem\Backend\.idea\misc.xml", "XML", 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 6
+"c:\Fullstack\practical projects\UniSystem\Backend\.idea\modules.xml", "XML", 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 8
+"c:\Fullstack\practical projects\UniSystem\Backend\.idea\vcs.xml", "XML", 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 6
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\.mvn\wrapper\maven-wrapper.properties", "Java Properties", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 1, 4
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\compose.yaml", "YAML", 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 11
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\mvnw.cmd", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 0, 139, 0, 0, 0, 0, 26, 25, 190
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\pom.xml", "XML", 0, 0, 0, 0, 0, 0, 0, 181, 0, 0, 0, 0, 0, 0, 0, 8, 189
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\ImpServiceLayer\AnnouncementServiceImp.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 21, 85
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\ImpServiceLayer\AuditLogServiceImp.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 81, 0, 0, 15, 96
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\ImpServiceLayer\AuthServiceImp.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 113, 0, 0, 23, 136
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\ImpServiceLayer\CourseServiceImp.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 101, 0, 0, 19, 120
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\ImpServiceLayer\DepartmentServiceImp.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 15, 79
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\ImpServiceLayer\EnrolledCourseServiceImp.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 93, 0, 0, 18, 111
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\ImpServiceLayer\FeedbackServiceImp.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 82, 0, 0, 17, 99
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\ImpServiceLayer\StudentServiceImp.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 202, 0, 2, 27, 231
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\ImpServiceLayer\TeacherServiceImp.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 202, 0, 4, 28, 234
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\ImpServiceLayer\UpcomingEventServiceImp.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 99, 0, 0, 19, 118
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\ImpServiceLayer\UserServiceImp.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 162, 0, 1, 46, 209
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\InterfaceServiceLayer\AnnouncementService.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 4, 15
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\InterfaceServiceLayer\AuditLogService.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 10, 23
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\InterfaceServiceLayer\AuthService.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 4, 13
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\InterfaceServiceLayer\CourseService.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 6, 20
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\InterfaceServiceLayer\DepartmentService.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 9, 22
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\InterfaceServiceLayer\EnrolledCourseService.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 9, 21
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\InterfaceServiceLayer\FeedbackService.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 10, 23
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\InterfaceServiceLayer\StudentService.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 10, 27
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\InterfaceServiceLayer\TeacherService.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 11, 28
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\InterfaceServiceLayer\UpcomingEventService.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 12, 26
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\BusinessLogic\InterfaceServiceLayer\UserService.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, 14, 38
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Config\DataSeeder.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 39, 0, 0, 4, 43
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Config\SwaggerConfig\OpenApiConfig.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 48, 0, 0, 1, 49
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Controllers\AnnouncementController.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 0, 0, 11, 61
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Controllers\AuditLogController.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 68, 0, 0, 12, 80
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Controllers\AuthController.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 7, 48
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Controllers\CourseController.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 82, 0, 0, 14, 96
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Controllers\DepartmentController.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 68, 0, 0, 11, 79
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Controllers\EnrolledCourseController.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 61, 0, 0, 11, 72
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Controllers\FeedbackController.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 70, 0, 0, 12, 82
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Controllers\StudentController.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 76, 0, 0, 12, 88
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Controllers\TeacherController.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 76, 0, 0, 12, 88
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Controllers\UpcomingEventController.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 60, 0, 0, 13, 73
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Controllers\UserController.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 76, 0, 0, 12, 88
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\Announcement\AnnouncementRequest.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 3, 13
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\Announcement\AnnouncementResponse.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 6, 19
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\AuditLog\AuditLogRequest.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 3, 14
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\AuditLog\AuditLogResponse.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 4, 19
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\Auth\AuthRequest.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 5, 15
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\Auth\AuthResponse.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 3, 13
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\Course\CourseRequest.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 6, 24
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\Course\CourseResponse.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 0, 4, 27
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\Department\DepartmentRequest.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 3, 15
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\Department\DepartmentResponse.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 3, 16
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\EnrolledCourse\EnrolledCourseRequest.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 3, 16
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\EnrolledCourse\EnrolledCourseResponse.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, 4, 28
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\Feedback\FeedbackRequest.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 3, 17
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\Feedback\FeedbackResponse.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 0, 0, 4, 23
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\Student\StudentRequest.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 4, 25
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\Student\StudentResponse.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, 4, 28
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\Teacher\TeacherRequest.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 4, 24
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\Teacher\TeacherResponse.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 0, 4, 27
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\UpcomingEvent\UpcomingEventRequest.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 5, 22
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\UpcomingEvent\UpcomingEventResponse.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 5, 25
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\UserDetails\StudentDetailsResponse.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, 5, 29
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\UserDetails\TeacherDetailsResponse.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, 4, 28
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\UserDetails\UserDetailsRequest.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 3, 11
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\User\UserRequest.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 3, 15
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Dto\User\UserResponse.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 4, 22
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Entities\Announcement.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 0, 0, 9, 36
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Entities\AuditLog.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 29, 0, 0, 9, 38
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Entities\AuditLogType.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 2, 15
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Entities\Course.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 48, 0, 0, 21, 69
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Entities\Department.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 4, 21
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Entities\DepartmentsType.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 2, 12
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Entities\EnrolledCourse.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 10, 35
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Entities\EventType.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 2, 9
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Entities\Feedback.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 31, 0, 0, 10, 41
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Entities\Role.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 0, 0, 4, 30
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Entities\RoleType.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 3, 10
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Entities\Student.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 10, 38
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Entities\Teacher.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 0, 0, 12, 38
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Entities\UpcomingEvent.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 0, 1, 12, 45
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Entities\User.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 42, 0, 0, 16, 58
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Repositories\AnnouncementRepository.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 5, 14
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Repositories\AuditLogRepository.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 3, 16
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Repositories\CourseRepository.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 0, 0, 13, 35
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Repositories\DepartmentRepository.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 5, 15
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Repositories\EnrolledCourseRepository.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 6, 19
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Repositories\FeedbackRepository.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 7, 21
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Repositories\RoleRepository.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 5, 15
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Repositories\StudentRepository.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 7, 21
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Repositories\TeacherRepository.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 3, 11
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Repositories\UpcomingEventRepository.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 10, 28
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\DataAccessLayer\Repositories\UserRepository.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 4, 17
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\ExcHandler\Entites\AuthError.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 3, 9
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\ExcHandler\Entites\ErrorResponse.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 2, 10
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\ExcHandler\GolbalHandler\GlobalHandler.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 29, 0, 0, 7, 36
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\HelwanApplication.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 5, 14
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Security\Jwt\JwtAuthenticationFilter.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 0, 8, 14, 72
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Security\Jwt\JwtService.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 79, 0, 0, 22, 101
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Security\Oauth2\OAuth2LoginSuccessHandler.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 57, 0, 22, 17, 96
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Security\User\CustomUserDetailsService.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 4, 22
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Security\User\SecurityUser.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 45, 0, 0, 14, 59
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Security\Util\SecurityUtils.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 6, 27
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Security\config\AppConfig.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 31, 0, 0, 9, 40
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\java\UnitSystem\demo\Security\config\SecurityConfiguration.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 80, 0, 9, 16, 105
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\resources\application.properties", "Java Properties", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 2, 18
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\resources\db\migration\V1__init_schema.sql", "MS SQL", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 85, 11, 21, 117
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\resources\db\migration\V2__AddCourseDescriptionCoulmn.schema.sql", "MS SQL", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 7
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\resources\db\migration\V3__AddFeedBackTable.schema.sql", "MS SQL", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 11
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\resources\db\migration\V4__AddAnouncmentTable.schema.sql", "MS SQL", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 3, 16
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\resources\db\migration\V5__AddUpcomingEventsTable.schema.sql", "MS SQL", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 3, 19
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\main\resources\db\migration\V6__SampleData.sql", "MS SQL", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 75, 43, 18, 136
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\test\java\UnitSystem\demo\DataAccessLayer\Repositories\AuditLogRepositoryTest.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 89, 0, 12, 23, 124
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\test\java\UnitSystem\demo\DataAccessLayer\Repositories\CourseRepositoryTest.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 267, 0, 15, 77, 359
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\test\java\UnitSystem\demo\DataAccessLayer\Repositories\DepartmentRepositoryTest.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 101, 0, 0, 38, 139
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\test\java\UnitSystem\demo\DataAccessLayer\Repositories\EnrolledCourseRepositoryTest.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 196, 0, 7, 54, 257
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\test\java\UnitSystem\demo\DataAccessLayer\Repositories\RoleRepositoryTest.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 101, 0, 0, 38, 139
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\test\java\UnitSystem\demo\DataAccessLayer\Repositories\StudentRepositoryTest.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 0, 5, 21, 138
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\test\java\UnitSystem\demo\DataAccessLayer\Repositories\TeacherRepositoryTest.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 117, 0, 0, 38, 155
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\test\java\UnitSystem\demo\DataAccessLayer\Repositories\UserRepositorieTest.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 93, 0, 0, 16, 109
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\test\java\UnitSystem\demo\HelwanApplicationTests.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 5, 15
+"c:\Fullstack\practical projects\UniSystem\Backend\Uni\src\test\java\UnitSystem\demo\TestHelwanApplication.java", "Java", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 6, 12
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\README.md", "Markdown", 0, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 74
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\eslint.config.js", "JavaScript", 0, 0, 0, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 24
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\index.html", "HTML", 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\package-lock.json", "JSON", 4393, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4394
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\package.json", "JSON", 41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 42
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\postcss.config.js", "JavaScript", 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 7
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\public\vite.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\App.tsx", "TypeScript JSX", 0, 0, 0, 0, 73, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 77
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\ContextsProviders\AuthContext.tsx", "TypeScript JSX", 0, 0, 0, 0, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 11, 71
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\ContextsProviders\DashboardContext.tsx", "TypeScript JSX", 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 18, 120
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\CustomeHooks\CoursesHooks\UseCreateCourse.tsx", "TypeScript JSX", 0, 0, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 23
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\CustomeHooks\CoursesHooks\UseDeleteCourse.tsx", "TypeScript JSX", 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\CustomeHooks\CoursesHooks\UseGetAllCourses.tsx", "TypeScript JSX", 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 15
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\CustomeHooks\CoursesHooks\UseGetAllEnrolledCourses.tsx", "TypeScript JSX", 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 20
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\CustomeHooks\CoursesHooks\UseGetAllTeacherCourses.tsx", "TypeScript JSX", 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 20
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\CustomeHooks\CoursesHooks\UseUpdateCourse.tsx", "TypeScript JSX", 0, 0, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\CustomeHooks\EnrollmentsHooks\UseGetAllEnrollmentsByCourseId.tsx", "TypeScript JSX", 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 18
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\CustomeHooks\EnrollmentsHooks\UseUnEnrollStudentFromCourse.tsx", "TypeScript JSX", 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 20
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\Interfaces\Auth.ts", "TypeScript", 0, 0, 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 32
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\Interfaces\announcement.ts", "TypeScript", 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 18
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\Interfaces\course.ts", "TypeScript", 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 28
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\Interfaces\enrolledCourse.ts", "TypeScript", 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\Interfaces\student.ts", "TypeScript", 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 19
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\Interfaces\teacher.ts", "TypeScript", 0, 0, 0, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 29
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\Interfaces\upComingEvent.ts", "TypeScript", 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\Interfaces\user.ts", "TypeScript", 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\Services\AnnouncmentService.ts", "TypeScript", 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 45
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\Services\CourseService.ts", "TypeScript", 0, 0, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 201
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\Services\DepartmentService.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\Services\EnrolledCourseService.ts", "TypeScript", 0, 0, 0, 119, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 123
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\Services\authService.ts", "TypeScript", 0, 0, 0, 91, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 102
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\Services\commonService.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\Services\config.ts", "TypeScript", 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\Services\dashboardService.ts", "TypeScript", 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 13, 85
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\Services\studentService.ts", "TypeScript", 0, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 24
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\Services\teacherService.ts", "TypeScript", 0, 0, 0, 42, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 45
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\Services\userService.ts", "TypeScript", 0, 0, 0, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 33
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\assets\react.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\Auth\LoginForm.tsx", "TypeScript JSX", 0, 0, 0, 0, 146, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 157
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\Auth\RegisterFrom.tsx", "TypeScript JSX", 0, 0, 0, 0, 228, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 19, 254
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\Courses\CourseFormModal.tsx", "TypeScript JSX", 0, 0, 0, 0, 175, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 19, 204
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\Courses\EnrolledCourseCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 11, 131
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\Courses\StudentsModal.tsx", "TypeScript JSX", 0, 0, 0, 0, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 16, 210
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\Courses\TeacherCourseCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 175, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 17, 202
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\Dashboard\EnrolledCourses.tsx", "TypeScript JSX", 0, 0, 0, 0, 98, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 104
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\Dashboard\RecentAnnouncements.tsx", "TypeScript JSX", 0, 0, 0, 0, 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 67
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\Dashboard\StatsCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 35
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\Dashboard\TeachingCourses.tsx", "TypeScript JSX", 0, 0, 0, 0, 61, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 66
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\Dashboard\UpcomingEvents.tsx", "TypeScript JSX", 0, 0, 0, 0, 96, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 105
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\Home\CourseCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 70, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 80
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\Home\DepartmentCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 51, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 56
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\Home\Departments.tsx", "TypeScript JSX", 0, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 68
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\Home\FeedBackCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 51, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 58
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\Home\FeedBacks.tsx", "TypeScript JSX", 0, 0, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 27
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\Home\FinalSecion.tsx", "TypeScript JSX", 0, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 67
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\Home\Indicator.tsx", "TypeScript JSX", 0, 0, 0, 0, 119, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 121
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\Home\PopularCourses.tsx", "TypeScript JSX", 0, 0, 0, 0, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 33
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\Home\Welcome.tsx", "TypeScript JSX", 0, 0, 0, 0, 70, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 72
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\common\AsideNav.tsx", "TypeScript JSX", 0, 0, 0, 0, 79, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 7, 89
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\common\DashboardHeader.tsx", "TypeScript JSX", 0, 0, 0, 0, 56, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 64
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\common\ErrorPage.tsx", "TypeScript JSX", 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 40
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\common\Footer.tsx", "TypeScript JSX", 0, 0, 0, 0, 159, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 164
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\common\LodingSpinner.tsx", "TypeScript JSX", 0, 0, 0, 0, 132, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 16, 149
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\common\Nav.tsx", "TypeScript JSX", 0, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 8, 75
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\common\ProtectedRoute.tsx", "TypeScript JSX", 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\components\common\dummyData.ts", "TypeScript", 0, 0, 0, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 130
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\index.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 4
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\main.tsx", "TypeScript JSX", 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 15
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\pages\Auth.tsx", "TypeScript JSX", 0, 0, 0, 0, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 31
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\pages\Courses\CoursesDashboard.tsx", "TypeScript JSX", 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 13
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\pages\Courses\StudentCoursesDashboard.tsx", "TypeScript JSX", 0, 0, 0, 0, 76, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 8, 87
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\pages\Courses\TeacherCouresesDashboard.tsx", "TypeScript JSX", 0, 0, 0, 0, 140, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 16, 163
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\pages\Dashboard.tsx", "TypeScript JSX", 0, 0, 0, 0, 72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 79
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\pages\DashboardLayout.tsx", "TypeScript JSX", 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 18
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\pages\Home.tsx", "TypeScript JSX", 0, 0, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 35
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\pages\RootLayOut.tsx", "TypeScript JSX", 0, 0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 49
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\pages\TeacherDashboard.tsx", "TypeScript JSX", 0, 0, 0, 0, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 6, 76
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\utils\courseUtils.tsx", "TypeScript JSX", 0, 0, 0, 0, 135, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 18, 159
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\src\vite-env.d.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\tsconfig.app.json", "JSON", 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 29
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\tsconfig.json", "JSON with Comments", 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\tsconfig.node.json", "JSON", 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 27
+"c:\Fullstack\practical projects\UniSystem\FrontEnd\my-app\vite.config.ts", "TypeScript", 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 8
+"c:\Fullstack\practical projects\UniSystem\README.md", "Markdown", 0, 513, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 141, 654
+"c:\Fullstack\practical projects\UniSystem\diagrams\activity-diagram.md", "Markdown", 0, 287, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 340
+"c:\Fullstack\practical projects\UniSystem\diagrams\sequential-diagram.md", "Markdown", 0, 213, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 33, 246
+"c:\Fullstack\practical projects\UniSystem\diagrams\system-design.md", "Markdown", 0, 649, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 119, 768
+"Total", "-", 4480, 1722, 7, 890, 3458, 28, 13, 218, 11, 139, 4, 19, 4688, 207, 250, 2075, 18209
