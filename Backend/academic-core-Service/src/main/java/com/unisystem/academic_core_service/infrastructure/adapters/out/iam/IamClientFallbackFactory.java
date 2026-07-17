@@ -9,12 +9,8 @@ import org.springframework.stereotype.Component;
 public class IamClientFallbackFactory implements FallbackFactory<IamClient> {
 
     private static final Logger logger = LoggerFactory.getLogger(IamClientFallbackFactory.class);
-
-
-
     @Override
     public IamClient create(Throwable cause) {
-        // ✅ Now you see the REAL exception — 401, 404, timeout, etc.
         logger.error("IAM service call failed. cause={}, message={}",
                 cause.getClass().getSimpleName(), cause.getMessage());
 
@@ -30,13 +26,6 @@ public class IamClientFallbackFactory implements FallbackFactory<IamClient> {
                 logger.warn("Fallback: getStudentBasic studentId={}", studentId);
                 return null;
             }
-
-            @Override
-            public String getStudentBasicRaw(Long studentId, String authHeader) {
-                logger.warn("Fallback: getStudentBasicRaw studentId={}", studentId);
-                return "error";
-            }
-
         };
     }
 }

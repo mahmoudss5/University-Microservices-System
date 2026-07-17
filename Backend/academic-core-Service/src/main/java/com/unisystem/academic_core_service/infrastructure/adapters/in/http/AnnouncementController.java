@@ -1,10 +1,8 @@
 package com.unisystem.academic_core_service.infrastructure.adapters.in.http;
 
-import com.unisystem.academic_core_service.domain.application.port.in.CreateAnnouncementUseCase;
-import com.unisystem.academic_core_service.domain.application.port.in.GetAnnouncementsQuery;
-import com.unisystem.academic_core_service.domain.model.Announcement;
 import com.unisystem.academic_core_service.infrastructure.adapters.in.http.Dto.Request.CreateAnnouncementRequest;
 import com.unisystem.academic_core_service.infrastructure.adapters.in.http.Dto.Response.AnnouncementResponse;
+import com.unisystem.academic_core_service.infrastructure.adapters.in.http.services.AnnouncementHttpService;
 import com.unisystem.academic_core_service.infrastructure.aop.annotations.AuditLog;
 import com.unisystem.academic_core_service.infrastructure.aop.annotations.CourseTeacherOnly;
 import lombok.RequiredArgsConstructor;
@@ -23,83 +21,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AnnouncementController {
 
-    private final CreateAnnouncementUseCase createAnnouncementUseCase;
-    private final GetAnnouncementsQuery getAnnouncementsQuery;
+    private final AnnouncementHttpService announcementHttpService;
 
     @CourseTeacherOnly(bodyParam = "request")
     @AuditLog(action = "CREATE_ANNOUNCEMENT")
     @PostMapping("/create")
     public ResponseEntity<AnnouncementResponse> createAnnouncement(@RequestBody CreateAnnouncementRequest request) {
-        Announcement savedAnnouncement = createAnnouncementUseCase.create(
-                new CreateAnnouncementUseCase.CreateAnnouncementCommand(
-                        request.title(),
-                        request.content(),
-                        request.courseId(),
-                        request.createdAt()
-                )
-        );
+        return ResponseEntity.ok(announcementHttpService.createAnnouncement(request));
+    }
 
-        return ResponseEntity.ok(toResponse(savedAnnouncement));
-}
-
-
-
-
-@GetMapping("/course/{courseId}")
-public ResponseEntity<List<AnnouncementResponse>> getAnnouncementsByCourseId(@PathVariable Long courseId) {
-        List<AnnouncementResponse> responses = getAnnouncementsQuery.getAnnouncementsByCourseId(courseId)
-                .stream()
-                .map(announcement -> new AnnouncementResponse(
-                        announcement.id(),
-                        announcement.title(),
-                        announcement.content(),
-                        announcement.courseId(),
-                        announcement.createdAt()
-                ))
-                .toList();
-
-        return ResponseEntity.ok(responses);
+    @GetMapping("/course/{courseId}")
+    public ResponseEntity<List<AnnouncementResponse>> getAnnouncementsByCourseId(@PathVariable Long courseId) {
+        return ResponseEntity.ok(announcementHttpService.getAnnouncementsByCourseId(courseId));
     }
 
     @GetMapping("/student/{studentId}")
     public ResponseEntity<List<AnnouncementResponse>> getAnnouncementsByStudentId(@PathVariable Long studentId) {
-        List<AnnouncementResponse> responses = getAnnouncementsQuery.getAnnouncementsByStudentId(studentId)
-                .stream()
-                .map(announcement -> new AnnouncementResponse(
-                        announcement.id(),
-                        announcement.title(),
-                        announcement.content(),
-                        announcement.courseId(),
-                        announcement.createdAt()
-                ))
-                .toList();
-
-        return ResponseEntity.ok(responses);
+        return ResponseEntity.ok(announcementHttpService.getAnnouncementsByStudentId(studentId));
     }
 
     @GetMapping("/teacher/{teacherId}")
     public ResponseEntity<List<AnnouncementResponse>> getAnnouncementsByTeacherId(@PathVariable Long teacherId) {
-        List<AnnouncementResponse> responses = getAnnouncementsQuery.getAnnouncementsByTeacherId(teacherId)
-                .stream()
-                .map(announcement -> new AnnouncementResponse(
-                        announcement.id(),
-                        announcement.title(),
-                        announcement.content(),
-                        announcement.courseId(),
-                        announcement.createdAt()
-                ))
-                .toList();
-
-        return ResponseEntity.ok(responses);
-    }
-
-    private AnnouncementResponse toResponse(Announcement announcement) {
-        return new AnnouncementResponse(
-                announcement.getId(),
-                announcement.getTitle(),
-                announcement.getContent(),
-                announcement.getCourseId(),
-                announcement.getCreatedAt()
-        );
+        return ResponseEntity.ok(announcementHttpService.getAnnouncementsByTeacherId(teacherId));
     }
 }

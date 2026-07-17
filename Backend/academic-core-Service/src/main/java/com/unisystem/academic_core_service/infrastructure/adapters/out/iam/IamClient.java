@@ -25,13 +25,6 @@ public interface IamClient {
             @RequestHeader(value = "Authorization", required = false) String authHeader
     );
 
-    @GetMapping("/api/students/basic/{id}")
-    String getStudentBasicRaw(
-            @PathVariable("id") Long studentId,
-            @RequestHeader(value = "Authorization", required = false) String authHeader
-    );
-
-    // ── DTOs ─────────────────────────────────────────────────────────────
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
