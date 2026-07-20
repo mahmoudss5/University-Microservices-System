@@ -48,8 +48,10 @@ npm run lint
 Configure the frontend API target with Vite env vars:
 
 ```bash
-VITE_API_URL=http://localhost:8080
+VITE_API_BASE_URL=http://localhost:8080
 ```
+
+`VITE_API_URL` is also accepted for backwards compatibility.
 
 ## Notes
 
