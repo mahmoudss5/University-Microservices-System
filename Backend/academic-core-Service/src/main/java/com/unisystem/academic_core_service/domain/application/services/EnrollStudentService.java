@@ -1,4 +1,6 @@
 package com.unisystem.academic_core_service.domain.application.services;
+import org.springframework.transaction.event.TransactionalApplicationListener.SynchronizationCallback;
+
 import com.unisystem.academic_core_service.domain.application.port.in.EnrollStudentUseCase;
 import com.unisystem.academic_core_service.domain.application.port.out.CourseRepositoryPort;
 import com.unisystem.academic_core_service.domain.application.port.out.EnrollmentRepositoryPort;
@@ -26,8 +28,7 @@ public class EnrollStudentService  implements EnrollStudentUseCase {
 
 
     @Override
-
-    public Enrollment enroll(EnrollCommand cmd) {
+    public  Enrollment enroll(EnrollCommand cmd) {
         Course course=courseRepositoryPort.findById(cmd.courseId())
                 .orElseThrow(()->new CourseNotFoundException(cmd.courseId()));
 
