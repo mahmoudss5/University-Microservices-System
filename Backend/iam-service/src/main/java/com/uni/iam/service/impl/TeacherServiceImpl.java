@@ -1,5 +1,7 @@
 package com.uni.iam.service.impl;
 
+import com.uni.iam.aop.ExecutionTime;
+import com.uni.iam.aop.GeneralLog;
 import com.uni.iam.client.AcademicCoreClient;
 import com.uni.iam.dto.response.AnnouncementSummaryResponse;
 import com.uni.iam.dto.response.TeacherBasicResponse;
@@ -28,12 +30,16 @@ public class TeacherServiceImpl implements TeacherService {
         private final AnnouncementMapper announcementMapper;
 
         @Override
+        @ExecutionTime
+        @GeneralLog
         @Transactional(readOnly = true)
         public List<TeacherResponse> getAllTeachers() {
                 return teacherRepository.findAll().stream().map(teacherMapper::toTeacherResponse).toList();
         }
 
         @Override
+        @ExecutionTime
+        @GeneralLog
         @Transactional(readOnly = true)
         public TeacherBasicResponse getTeacherBasic(Long id) {
                 Teacher teacher = teacherRepository.findById(id)
@@ -44,6 +50,8 @@ public class TeacherServiceImpl implements TeacherService {
         }
 
         @Override
+        @ExecutionTime
+        @GeneralLog
         @Transactional(readOnly = true)
         public TeacherProfileResponse getTeacherDetails(Long id) {
                 Teacher teacher = teacherRepository.findById(id)

@@ -1,5 +1,7 @@
 package com.uni.iam.service.impl;
 
+import com.uni.iam.aop.ExecutionTime;
+import com.uni.iam.aop.GeneralLog;
 import com.uni.iam.dto.request.UpdateUserRequest;
 import com.uni.iam.dto.response.UserResponse;
 import com.uni.iam.entity.Role;
@@ -23,12 +25,16 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    @ExecutionTime
+    @GeneralLog
     @Transactional(readOnly = true)
     public UserResponse getUserById(Long id) {
         return toUserResponse(findUserOrThrow(id));
     }
 
     @Override
+    @ExecutionTime
+    @GeneralLog
     @Transactional(readOnly = true)
     public UserResponse getUserByUsername(String username) {
         User user = userRepository.findByUsername(username)
@@ -37,18 +43,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @ExecutionTime
+    @GeneralLog
     @Transactional(readOnly = true)
     public List<UserResponse> getAllUsers() {
         return userRepository.findAll().stream().map(this::toUserResponse).toList();
     }
 
     @Override
+    @ExecutionTime
+    @GeneralLog
     @Transactional(readOnly = true)
     public List<UserResponse> getUsersByRole(Role role) {
         return userRepository.findAllByRole(role).stream().map(this::toUserResponse).toList();
     }
 
     @Override
+    @ExecutionTime
+    @GeneralLog
     @Transactional
     public UserResponse updateUser(Long id, UpdateUserRequest request) {
         User user = findUserOrThrow(id);
@@ -68,6 +80,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @ExecutionTime
+    @GeneralLog
     @Transactional
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
@@ -77,6 +91,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @ExecutionTime
+    @GeneralLog
     public void activeUser(Long id) {
         User user = findUserOrThrow(id);
         user.setActive(true);
@@ -84,6 +100,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @ExecutionTime
+    @GeneralLog
     public void deactiveUser(Long id) {
     User user = findUserOrThrow(id);
     user.setActive(false);

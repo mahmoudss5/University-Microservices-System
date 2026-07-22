@@ -1,5 +1,7 @@
 package com.uni.iam.service.impl;
 
+import com.uni.iam.aop.ExecutionTime;
+import com.uni.iam.aop.GeneralLog;
 import com.uni.iam.dto.request.LoginRequest;
 import com.uni.iam.dto.request.RegisterRequest;
 import com.uni.iam.dto.response.AuthResponse;
@@ -34,6 +36,8 @@ public class AuthServiceImpl implements AuthService {
     private final JwtUtils jwtUtils;
 
     @Override
+    @ExecutionTime
+    @GeneralLog
     @Transactional
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
@@ -60,6 +64,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @ExecutionTime
+    @GeneralLog
     public AuthResponse login(LoginRequest request) {
         log.info("Attempting login for email: {}", request.getEmail());
         String email = request.getEmail().trim();
