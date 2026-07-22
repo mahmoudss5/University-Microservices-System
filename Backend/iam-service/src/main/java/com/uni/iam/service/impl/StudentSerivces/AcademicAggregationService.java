@@ -1,5 +1,7 @@
 package com.uni.iam.service.impl.StudentSerivces;
 
+import com.uni.iam.aop.ExecutionTime;
+import com.uni.iam.aop.GeneralLog;
 import com.uni.iam.client.AcademicCoreClient;
 import com.uni.iam.dto.response.EnrolledCourseResponse;
 import com.uni.iam.dto.response.StudentProfileResponse;
@@ -26,6 +28,8 @@ public class AcademicAggregationService {
     private final List<AcademicStandingStrategy> academicStandingStrategies;
     private final StudentMapper studentMapper;
 
+    @ExecutionTime
+    @GeneralLog
     public StudentProfileResponse assembleStudentProfile(Student student) {
         var enrollments = academicCoreClient.getEnrollmentsByStudentId(student.getId());
 

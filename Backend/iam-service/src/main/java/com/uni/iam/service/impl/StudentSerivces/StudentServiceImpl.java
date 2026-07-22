@@ -1,5 +1,7 @@
 package com.uni.iam.service.impl.StudentSerivces;
 
+import com.uni.iam.aop.ExecutionTime;
+import com.uni.iam.aop.GeneralLog;
 import com.uni.iam.dto.response.StudentResponse;
 import com.uni.iam.entity.Student;
 import com.uni.iam.exception.UserNotFoundException;
@@ -20,6 +22,8 @@ public class StudentServiceImpl implements StudentService {
         private final StudentMapper studentMapper;
 
         @Override
+        @ExecutionTime
+        @GeneralLog
         @Transactional(readOnly = true)
         public List<StudentResponse> getAllStudents() {
                 return studentRepository.findAll().stream()
@@ -28,12 +32,16 @@ public class StudentServiceImpl implements StudentService {
         }
 
         @Override
+        @ExecutionTime
+        @GeneralLog
         public Student getById(Long id) {
                 return studentRepository.findById(id)
                         .orElseThrow(() -> new UserNotFoundException(id));
         }
 
         @Override
+        @ExecutionTime
+        @GeneralLog
         public String getStudneName(Long id) {
                 Student student = studentRepository.findById(id)
                         .orElseThrow(() -> new UserNotFoundException(id));
