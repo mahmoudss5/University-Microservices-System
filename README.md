@@ -377,7 +377,7 @@ docker-compose up --build
 
 | Component | Host Port | Credentials |
 |---|---|---|
-| MySQL | `3307` | root / `01125867988`, DB: `helwanuni` |
+| MySQL | `3307` | root / `UniSys@Db#2026`, DB: `helwanuni` |
 | Redis | `6379` | no auth |
 | Kafka | `9092` | no auth |
 

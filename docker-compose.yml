@@ -120,12 +120,12 @@ services:
     ports:
       - "3307:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: "01125867988"
+      MYSQL_ROOT_PASSWORD: "UniSys@Db#2026"
       MYSQL_DATABASE: helwanuni
     volumes:
       - shared-db-data:/var/lib/mysql
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p01125867988" ]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pUniSys@Db#2026" ]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -138,7 +138,7 @@ services:
       shared-db:
         condition: service_healthy
     environment:
-      MYSQL_ROOT_PASSWORD: "01125867988"
+      MYSQL_ROOT_PASSWORD: "UniSys@Db#2026"
     volumes:
       - ./init.sql:/init.sql:ro
     entrypoint: [ "/bin/sh", "-c" ]
@@ -238,7 +238,7 @@ services:
       SPRING_DEVTOOLS_RESTART_ENABLED: 'true'
       SPRING_DATASOURCE_URL: jdbc:mysql://shared-db:3306/helwanuni?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: "01125867988"
+      SPRING_DATASOURCE_PASSWORD: "UniSys@Db#2026"
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:8761/eureka
       EUREKA_INSTANCE_PREFER_IP_ADDRESS: 'true'
@@ -280,7 +280,7 @@ services:
       SPRING_DEVTOOLS_RESTART_ENABLED: 'true'
       SPRING_DATASOURCE_URL: jdbc:mysql://shared-db:3306/helwanuni?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: "01125867988"
+      SPRING_DATASOURCE_PASSWORD: "UniSys@Db#2026"
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       SPRING_DATA_REDIS_HOST: redis
@@ -317,7 +317,7 @@ services:
       SPRING_DEVTOOLS_RESTART_ENABLED: 'true'
       SPRING_DATASOURCE_URL: jdbc:mysql://shared-db:3306/helwanuni?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: "01125867988"
+      SPRING_DATASOURCE_PASSWORD: "UniSys@Db#2026"
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       SPRING_KAFKA_CONSUMER_GROUP_ID: communication-group
