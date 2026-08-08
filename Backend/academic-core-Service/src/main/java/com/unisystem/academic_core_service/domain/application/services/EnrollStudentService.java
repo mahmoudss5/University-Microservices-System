@@ -29,7 +29,7 @@ public class EnrollStudentService  implements EnrollStudentUseCase {
 
     @Override
     public  Enrollment enroll(EnrollCommand cmd) {
-        Course course=courseRepositoryPort.findById(cmd.courseId())
+        Course course=courseRepositoryPort.findByIdWithLock(cmd.courseId())
                 .orElseThrow(()->new CourseNotFoundException(cmd.courseId()));
 
         enrollmentRepositoryPort.findByStudentIdAndCourseId(cmd.studentId(), cmd.courseId())

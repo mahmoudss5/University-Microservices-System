@@ -139,6 +139,9 @@ Services publish domain events consumed by downstream services:
 ### 6. Backend for Frontend (BFF)
 `DashboardController` in the **API Gateway** aggregates data from IAM, Academic Core, and Communication services into single-call responses optimised for the React frontend.
 
+### 7. Database Concurrency Control
+- **Pessimistic Locking** (`@Lock(LockModeType.PESSIMISTIC_WRITE)`): Implemented in the **Academic Core Service** (`CourseJpaRepository`) to prevent race conditions when multiple users attempt to enroll in the same course simultaneously. This guarantees that only one transaction can check and update course capacity at a time, ensuring strict data consistency without application-level retry logic.
+
 ---
 
 ## 🚦 Rate Limiting (Sliding Window — Lua + Redis)
