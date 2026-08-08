@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interactive University API stress-test report">
+  <title>University API · Performance Report</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <header class="shell header">
+    <div class="brand"><span class="brand-mark">U</span><span>University Platform</span></div>
+    <button id="loadButton" class="button" type="button">Load JSON report</button>
+    <input id="fileInput" type="file" accept="application/json,.json" hidden>
+  </header>
+  <main class="shell">
+    <section class="hero">
+      <div><p class="eyebrow">PERFORMANCE ENGINEERING</p><h1>Stress test <span>intelligence.</span></h1><p id="subtitle" class="subtitle">Loading the latest test result…</p></div>
+      <div id="statusBadge" class="status loading"><i></i><span>Loading</span></div>
+    </section>
+    <section id="errorPanel" class="error-panel hidden">
+      <strong>No report loaded</strong><p id="errorText"></p><button id="errorLoadButton" class="button" type="button">Choose summary.json</button>
+    </section>
+    <div id="dashboard" class="hidden">
+      <section id="metrics" class="metric-grid"></section>
+      <section class="grid-two">
+        <article class="panel"><div class="panel-heading"><div><p class="eyebrow">DISTRIBUTION</p><h2>Latency profile</h2></div><span>milliseconds</span></div><div id="latencyChart" class="bar-chart"></div></article>
+        <article class="panel"><div class="panel-heading"><div><p class="eyebrow">SERVICE MAP</p><h2>Endpoint performance</h2></div><span>P95</span></div><div id="endpointList" class="endpoint-list"></div></article>
+      </section>
+      <section class="panel thresholds"><div class="panel-heading"><div><p class="eyebrow">RELEASE GATES</p><h2>Threshold assessment</h2></div><span id="thresholdCount"></span></div><div id="thresholdList" class="threshold-list"></div></section>
+      <footer><span id="environment"></span><span id="generatedAt"></span></footer>
+    </div>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
