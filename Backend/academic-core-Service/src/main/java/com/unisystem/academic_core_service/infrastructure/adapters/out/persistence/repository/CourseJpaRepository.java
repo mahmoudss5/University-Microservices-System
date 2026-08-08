@@ -13,4 +13,8 @@ public interface CourseJpaRepository extends JpaRepository<CourseEntity, Long> {
     List<CourseEntity> findByTeacherId(Long teacherId);
     Optional<CourseEntity> findByNameIgnoreCase(String name);
     List<CourseEntity> findByDepartmentIdIn(List<Long> departmentIds);
+
+    @org.springframework.data.jpa.repository.Lock(jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)
+    @org.springframework.data.jpa.repository.Query("SELECT c FROM CourseEntity c WHERE c.id = :id")
+    Optional<CourseEntity> findByIdWithLock(@org.springframework.data.repository.query.Param("id") Long id);
 }

@@ -49,6 +49,11 @@ public class CoursePersistenceAdapter implements CourseRepositoryPort {
     }
 
     @Override
+    public Optional<Course> findByIdWithLock(Long id) {
+        return courseJpaRepository.findByIdWithLock(id).map(coursePersistenceMapper::toDomain);
+    }
+
+    @Override
     public List<Course> findByIds(List<Long> ids) {
         if (ids == null || ids.isEmpty()) {
             return List.of();
