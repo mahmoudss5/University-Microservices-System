@@ -3,11 +3,12 @@ import { check, group, sleep } from "k6";
 import { Trend, Rate, Counter } from "k6/metrics";
 
 // Local test credentials. Change these two values for the account under test.
-const USER_EMAIL = "admin@gmail.com";
+const USER_EMAIL = "fady@gmail.com"; // Must match a user in init.sql!
 const USER_PASSWORD = "test1234";
 
 const BASE_URL = __ENV.BASE_URL || "http://localhost:8080";
 const THINK_TIME_SECONDS = Number(__ENV.THINK_TIME_SECONDS || 0.25);
+const MAX_VUS = Number(__ENV.MAX_VUS || 500);
 
 const endpointLatency = {
   profile: new Trend("endpoint_profile_duration", true),
@@ -24,11 +25,11 @@ export const options = {
       executor: "ramping-vus",
       startVUs: 0,
       stages: [
-        { duration: __ENV.WARM_UP || "20s", target: 10 },
-        { duration: __ENV.NORMAL_LOAD || "40s", target: 25 },
-        { duration: __ENV.STRESS_LOAD || "40s", target: 60 },
-        { duration: __ENV.SPIKE_LOAD || "20s", target: 100 },
-        { duration: __ENV.RECOVERY || "30s", target: 10 },
+        { duration: __ENV.WARM_UP || "20s", target: Math.round(MAX_VUS * 0.10) },
+        { duration: __ENV.NORMAL_LOAD || "40s", target: Math.round(MAX_VUS * 0.25) },
+        { duration: __ENV.STRESS_LOAD || "40s", target: Math.round(MAX_VUS * 0.60) },
+        { duration: __ENV.SPIKE_LOAD || "20s", target: MAX_VUS },
+        { duration: __ENV.RECOVERY || "30s", target: Math.round(MAX_VUS * 0.10) },
         { duration: __ENV.COOL_DOWN || "10s", target: 0 },
       ],
       gracefulRampDown: "10s",
@@ -147,7 +148,7 @@ export function handleSummary(data) {
   };
 
   return {
-    stdout: `\nStress report: ${report.overview.status.toUpperCase()} — ${report.overview.requests} requests at ${report.overview.requestsPerSecond.toFixed(1)} req/s\nDashboard data: performance/results/summary.json\n`,
-    "performance/results/summary.json": JSON.stringify(report, null, 2),
+    stdout: `\nStress report: ${report.overview.status.toUpperCase()} — ${report.overview.requests} requests at ${report.overview.requestsPerSecond.toFixed(1)} req/s\nDashboard data: results/summary.json\n`,
+    "results/summary.json": JSON.stringify(report, null, 2),
   };
 }

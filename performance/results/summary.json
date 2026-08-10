@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "title": "University API Stress Test",
+  "generatedAt": "2026-08-10T20:33:33.214Z",
+  "configuration": {
+    "baseUrl": "http://localhost:8080",
+    "scenario": "Ramping stress test",
+    "credentials": {
+      "email": "fady@gmail.com",
+      "password": "••••••••"
+    }
+  },
+  "overview": {
+    "status": "failed",
+    "requests": 395345,
+    "requestsPerSecond": 2468.9639894194784,
+    "failureRate": 0.9991627565796962,
+    "checkPassRate": 0.0009801565721079058,
+    "maxVirtualUsers": 500,
+    "durationMs": 160125.867244
+  },
+  "latency": {
+    "average": 10.73386558551664,
+    "median": 9.175451,
+    "p90": 21.738905400000007,
+    "p95": 26.3140856,
+    "p99": 0,
+    "maximum": 97.933916
+  },
+  "endpoints": [
+    {
+      "name": "profile",
+      "average": 12.296799552673189,
+      "p95": 32.985906,
+      "maximum": 63.658071
+    },
+    {
+      "name": "courses",
+      "average": 11.288532722874258,
+      "p95": 25.868853,
+      "maximum": 63.151459
+    },
+    {
+      "name": "departments",
+      "average": 10.260912898012807,
+      "p95": 23.22412775,
+      "maximum": 52.552482
+    },
+    {
+      "name": "feedback",
+      "average": 9.088334898377136,
+      "p95": 21.611371,
+      "maximum": 48.942845
+    }
+  ],
+  "thresholds": [
+    {
+      "metric": "endpoint_failures",
+      "rule": "rate<0.02",
+      "passed": false
+    },
+    {
+      "metric": "http_req_failed",
+      "rule": "rate<0.02",
+      "passed": false
+    },
+    {
+      "metric": "http_req_duration",
+      "rule": "p(95)<1000",
+      "passed": true
+    },
+    {
+      "metric": "http_req_duration",
+      "rule": "p(99)<2000",
+      "passed": true
+    },
+    {
+      "metric": "checks",
+      "rule": "rate>0.98",
+      "passed": false
+    }
+  ]
+}
