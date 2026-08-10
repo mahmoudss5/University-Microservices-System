@@ -3,35 +3,297 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Interactive University API stress-test report">
+  <meta name="description" content="Interactive University API stress-test performance report">
   <title>University API · Performance Report</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090b18; --bg2: #0d1025;
+      --surface: rgba(255,255,255,.045); --surface-h: rgba(255,255,255,.07);
+      --border: rgba(255,255,255,.08); --border-h: rgba(139,92,246,.55);
+      --text: #f0f2ff; --muted: #7c85b0; --subtle: #3a3f5c;
+      --violet: #8b5cf6; --violet-glow: rgba(139,92,246,.22);
+      --cyan: #22d3ee; --cyan-glow: rgba(34,211,238,.18);
+      --emerald: #34d399; --rose: #f43f5e; --amber: #fbbf24;
+      --radius-sm: 10px; --radius: 16px; --radius-lg: 22px;
+      --font: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+
+    .orb { position: fixed; border-radius: 50%; filter: blur(110px); pointer-events: none; z-index: 0; opacity: .55; animation: drift 14s ease-in-out infinite alternate; }
+    .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, #6d28d9, transparent 70%); top: -180px; right: -120px; animation-delay: 0s; }
+    .orb-2 { width: 420px; height: 420px; background: radial-gradient(circle, #0e7490, transparent 70%); bottom: -160px; left: -100px; animation-delay: -5s; }
+    .orb-3 { width: 280px; height: 280px; background: radial-gradient(circle, #4c1d95, transparent 70%); top: 55%; left: 55%; animation-delay: -9s; }
+    @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(30px,20px) scale(1.08); } }
+
+    .wrap { position: relative; z-index: 1; width: min(1200px, calc(100% - 40px)); margin: auto; }
+
+    header { position: sticky; top: 0; z-index: 100; backdrop-filter: blur(18px) saturate(1.6); -webkit-backdrop-filter: blur(18px) saturate(1.6); border-bottom: 1px solid var(--border); background: rgba(9,11,24,.72); }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 15px; letter-spacing: -.025em; }
+    .brand-icon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #6d28d9, #2563eb); font-size: 15px; font-weight: 800; color: #fff; box-shadow: 0 0 18px rgba(109,40,217,.5); }
+    .brand-sub { color: var(--muted); font-weight: 400; font-size: 13px; margin-left: 2px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; font-size: 13px; font-weight: 500; cursor: pointer; transition: all .2s; }
+    .btn:hover { border-color: var(--border-h); background: var(--surface-h); color: var(--violet); }
+
+    .hero { padding: 68px 0 50px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--violet); margin-bottom: 16px; }
+    .eyebrow::before { content:''; display:inline-block; width:20px; height:2px; background: var(--violet); border-radius:99px; }
+    h1 { font-size: clamp(38px, 6.5vw, 72px); font-weight: 800; letter-spacing: -.065em; line-height: .94; }
+    h1 em { font-style: normal; background: linear-gradient(120deg, var(--violet), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-sub { margin-top: 18px; color: var(--muted); font-size: 15px; line-height: 1.6; max-width: 440px; }
+
+    .badge { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; padding: 12px 20px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; border: 1px solid; transition: all .4s; }
+    .badge-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; box-shadow: 0 0 12px currentColor; }
+    .badge.ok      { color: var(--emerald); border-color: rgba(52,211,153,.3); background: rgba(52,211,153,.08); }
+    .badge.fail    { color: var(--rose);    border-color: rgba(244,63,94,.3);  background: rgba(244,63,94,.08); }
+    .badge.loading { color: var(--amber);   border-color: rgba(251,191,36,.3); background: rgba(251,191,36,.08); }
+
+    .error-panel { display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; padding: 56px 32px; border: 1px dashed rgba(139,92,246,.35); border-radius: var(--radius-lg); background: rgba(139,92,246,.04); }
+    .error-panel .err-icon { font-size: 44px; line-height: 1; }
+    .error-panel h2 { font-size: 20px; font-weight: 700; }
+    .error-panel p { color: var(--muted); font-size: 14px; max-width: 400px; line-height: 1.6; }
+
+    #dashboard { animation: fadeUp .5s ease both; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:translateY(0); } }
+
+    .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 14px; }
+    .metric-card { padding: 26px 24px; border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--border); position: relative; overflow: hidden; transition: border-color .2s, transform .2s; }
+    .metric-card:hover { border-color: var(--border-h); transform: translateY(-3px); }
+    .metric-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at top left, var(--card-glow, transparent) 0%, transparent 65%); pointer-events: none; }
+    .metric-card:nth-child(1) { --card-glow: rgba(139,92,246,.15); }
+    .metric-card:nth-child(2) { --card-glow: rgba(34,211,238,.12); }
+    .metric-card:nth-child(3) { --card-glow: rgba(244,63,94,.1); }
+    .metric-card:nth-child(4) { --card-glow: rgba(52,211,153,.1); }
+    .metric-label { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+    .metric-value { display: block; font-size: 36px; font-weight: 800; letter-spacing: -.04em; margin: 12px 0 6px; color: var(--text); }
+    .metric-note { font-size: 12px; color: var(--muted); }
+
+    .panel-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 14px; }
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; }
+    .panel-title { font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .panel-heading { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; }
+    .panel-heading h2 { font-size: 18px; font-weight: 700; letter-spacing: -.03em; }
+    .panel-tag { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; padding: 5px 10px; border-radius: 6px; background: var(--surface-h); color: var(--muted); }
+
+    .bar-rows { display: flex; flex-direction: column; gap: 18px; }
+    .bar-row { display: grid; grid-template-columns: 60px 1fr 80px; align-items: center; gap: 14px; }
+    .bar-label { font-size: 12px; color: var(--muted); font-weight: 500; }
+    .bar-track { height: 8px; background: rgba(255,255,255,.06); border-radius: 999px; overflow: hidden; }
+    .bar-fill { height: 100%; width: 0; border-radius: 999px; transition: width 1s cubic-bezier(.16,1,.3,1); }
+    .bar-fill-violet { background: linear-gradient(90deg, #6d28d9, #8b5cf6, #a78bfa); }
+    .bar-fill-cyan   { background: linear-gradient(90deg, #0891b2, #22d3ee, #67e8f9); }
+    .bar-fill-amber  { background: linear-gradient(90deg, #d97706, #fbbf24, #fde68a); }
+    .bar-fill-rose   { background: linear-gradient(90deg, #be123c, #f43f5e, #fb7185); }
+    .bar-val { text-align: right; font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--text); }
+
+    .endpoint-list { display: flex; flex-direction: column; }
+    .endpoint-item { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+    .endpoint-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .endpoint-name { font-size: 13px; font-weight: 600; text-transform: capitalize; }
+    .endpoint-meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
+    .endpoint-p95 { font-size: 14px; font-weight: 700; color: var(--cyan); font-variant-numeric: tabular-nums; }
+
+    .thresholds-panel { margin-top: 14px; }
+    .threshold-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .threshold-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: var(--radius-sm); background: rgba(255,255,255,.025); border: 1px solid var(--border); transition: border-color .2s; }
+    .threshold-item.pass { border-color: rgba(52,211,153,.2); }
+    .threshold-item.fail { border-color: rgba(244,63,94,.2); }
+    .threshold-icon { display: grid; place-items: center; flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; font-size: 13px; font-weight: 800; }
+    .pass .threshold-icon { background: rgba(52,211,153,.12); color: var(--emerald); }
+    .fail .threshold-icon { background: rgba(244,63,94,.12); color: var(--rose); }
+    .threshold-body { flex: 1; min-width: 0; }
+    .threshold-metric { font-size: 12px; font-weight: 700; }
+    .threshold-rule { font-size: 11px; color: var(--muted); font-family: 'Courier New', monospace; margin-top: 2px; }
+    .threshold-result { font-size: 11px; font-weight: 700; letter-spacing: .06em; }
+    .pass .threshold-result { color: var(--emerald); }
+    .fail .threshold-result { color: var(--rose); }
+
+    .threshold-count { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 22px; }
+    .threshold-count .pill { padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; background: rgba(52,211,153,.12); color: var(--emerald); }
+    .threshold-count .pill.bad { background: rgba(244,63,94,.12); color: var(--rose); }
+
+    footer { display: flex; justify-content: space-between; align-items: center; padding: 28px 0 52px; margin-top: 14px; border-top: 1px solid var(--border); font-size: 11px; color: var(--muted); }
+    .footer-left { display: flex; align-items: center; gap: 8px; }
+    .footer-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--emerald); box-shadow: 0 0 8px var(--emerald); }
+
+    .hidden { display: none !important; }
+    .separator { height: 14px; }
+
+    @media (max-width: 900px) { .metric-grid { grid-template-columns: repeat(2, 1fr); } .panel-grid { grid-template-columns: 1fr; } .threshold-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 580px) { .wrap { width: calc(100% - 24px); } .hero { flex-direction: column; align-items: flex-start; padding: 44px 0 36px; } h1 { font-size: 38px; } .metric-grid { grid-template-columns: 1fr 1fr; } .metric-value { font-size: 28px; } .panel { padding: 20px; } footer { flex-direction: column; gap: 12px; text-align: center; } }
+  </style>
 </head>
 <body>
-  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
-  <header class="shell header">
-    <div class="brand"><span class="brand-mark">U</span><span>University Platform</span></div>
-    <button id="loadButton" class="button" type="button">Load JSON report</button>
-    <input id="fileInput" type="file" accept="application/json,.json" hidden>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <header>
+    <div class="wrap header-inner">
+      <div class="brand">
+        <div class="brand-icon">U</div>
+        <div>University Platform <span class="brand-sub">/ Performance</span></div>
+      </div>
+      <button id="loadButton" class="btn" type="button">&#128194; Load report</button>
+      <input id="fileInput" type="file" accept="application/json,.json" hidden>
+    </div>
   </header>
-  <main class="shell">
-    <section class="hero">
-      <div><p class="eyebrow">PERFORMANCE ENGINEERING</p><h1>Stress test <span>intelligence.</span></h1><p id="subtitle" class="subtitle">Loading the latest test result…</p></div>
-      <div id="statusBadge" class="status loading"><i></i><span>Loading</span></div>
-    </section>
-    <section id="errorPanel" class="error-panel hidden">
-      <strong>No report loaded</strong><p id="errorText"></p><button id="errorLoadButton" class="button" type="button">Choose summary.json</button>
-    </section>
-    <div id="dashboard" class="hidden">
-      <section id="metrics" class="metric-grid"></section>
-      <section class="grid-two">
-        <article class="panel"><div class="panel-heading"><div><p class="eyebrow">DISTRIBUTION</p><h2>Latency profile</h2></div><span>milliseconds</span></div><div id="latencyChart" class="bar-chart"></div></article>
-        <article class="panel"><div class="panel-heading"><div><p class="eyebrow">SERVICE MAP</p><h2>Endpoint performance</h2></div><span>P95</span></div><div id="endpointList" class="endpoint-list"></div></article>
+
+  <main>
+    <div class="wrap">
+      <section class="hero">
+        <div>
+          <div class="eyebrow">Performance Engineering</div>
+          <h1>Stress&thinsp;test<br><em>intelligence.</em></h1>
+          <p class="hero-sub" id="subtitle">Loading latest test results&hellip;</p>
+        </div>
+        <div id="statusBadge" class="badge loading">
+          <span class="badge-dot"></span><span>Initialising</span>
+        </div>
       </section>
-      <section class="panel thresholds"><div class="panel-heading"><div><p class="eyebrow">RELEASE GATES</p><h2>Threshold assessment</h2></div><span id="thresholdCount"></span></div><div id="thresholdList" class="threshold-list"></div></section>
-      <footer><span id="environment"></span><span id="generatedAt"></span></footer>
+
+      <section id="errorPanel" class="error-panel hidden">
+        <div class="err-icon">&#128202;</div>
+        <h2>No report loaded</h2>
+        <p id="errorText">Run the k6 stress test first, then open this page via a local server or load the JSON file manually.</p>
+        <button id="errorLoadButton" class="btn" type="button">Choose summary.json</button>
+      </section>
+
+      <div id="dashboard" class="hidden">
+        <section id="metrics" class="metric-grid"></section>
+        <div class="separator"></div>
+        <section class="panel-grid">
+          <article class="panel">
+            <div class="panel-heading">
+              <div><p class="panel-title">Distribution</p><h2>Latency profile</h2></div>
+              <span class="panel-tag">Milliseconds</span>
+            </div>
+            <div id="latencyChart" class="bar-rows"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading">
+              <div><p class="panel-title">Service map</p><h2>Endpoint performance</h2></div>
+              <span class="panel-tag">P95</span>
+            </div>
+            <div id="endpointList" class="endpoint-list"></div>
+          </article>
+        </section>
+        <div class="separator"></div>
+        <section class="panel thresholds-panel">
+          <div class="panel-heading">
+            <div><p class="panel-title">Release gates</p><h2>Threshold assessment</h2></div>
+          </div>
+          <div class="threshold-count">
+            <span id="thresholdPassed" class="pill">&#8212; passed</span>
+            <span id="thresholdFailed" class="pill bad hidden">&#8212; failed</span>
+          </div>
+          <div id="thresholdList" class="threshold-grid"></div>
+        </section>
+        <footer>
+          <div class="footer-left"><span class="footer-dot"></span><span id="environment">&#8212;</span></div>
+          <span id="generatedAt">&#8212;</span>
+        </footer>
+      </div>
     </div>
   </main>
-  <script src="app.js"></script>
+
+  <script>
+    const $ = (s) => document.querySelector(s);
+    const fmt = new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 });
+    const fmtPct = (v) => fmt.format((v || 0) * 100) + '%';
+    const fmtMs  = (v) => fmt.format(v || 0) + ' ms';
+    const esc = (v) => { const n = document.createElement('span'); n.textContent = String(v); return n.innerHTML; };
+    const FILLS = ['bar-fill-violet','bar-fill-cyan','bar-fill-amber','bar-fill-rose','bar-fill-violet','bar-fill-cyan'];
+
+    function fmtAbbr(n) {
+      if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+      if (n >= 1000)    return (n/1000).toFixed(1) + 'K';
+      return String(n || 0);
+    }
+
+    function card(label, value, note) {
+      return '<article class="metric-card"><div class="metric-label">' + label + '</div><strong class="metric-value">' + value + '</strong><div class="metric-note">' + note + '</div></article>';
+    }
+
+    function render(data) {
+      if (!data.overview || !data.latency || !Array.isArray(data.thresholds))
+        throw new Error('This file is not a recognised stress-test summary.');
+
+      const ok = data.overview.status === 'passed';
+      const badge = $('#statusBadge');
+      badge.className = 'badge ' + (ok ? 'ok' : 'fail');
+      badge.innerHTML = '<span class="badge-dot"></span><span>' + (ok ? 'All gates passed' : 'Action required') + '</span>';
+      $('#subtitle').textContent = (data.configuration && data.configuration.scenario ? data.configuration.scenario : 'Stress test') + ' \u00b7 ' + fmt.format((data.overview.durationMs || 0) / 1000) + ' s duration';
+
+      const erOk = (data.overview.failureRate || 0) < 0.02;
+      $('#metrics').innerHTML = [
+        card('Total requests', fmtAbbr(data.overview.requests), fmt.format(data.overview.requestsPerSecond) + ' req / s'),
+        card('P95 latency',    fmtMs(data.latency.p95),         'Average ' + fmtMs(data.latency.average)),
+        card('Failure rate',   fmtPct(data.overview.failureRate), erOk ? 'Within error budget' : 'Above error budget'),
+        card('Peak VUs',       fmt.format(data.overview.maxVirtualUsers), fmtPct(data.overview.checkPassRate) + ' checks passed'),
+      ].join('');
+
+      const latRows = [['Average',data.latency.average],['Median',data.latency.median],['P 90',data.latency.p90],['P 95',data.latency.p95],['P 99',data.latency.p99],['Max',data.latency.maximum]];
+      const maxVal = Math.max.apply(null, latRows.map(function(r){ return r[1]; }).concat([1]));
+      $('#latencyChart').innerHTML = latRows.map(function(row, i) {
+        var label = row[0], value = row[1];
+        return '<div class="bar-row"><span class="bar-label">' + label + '</span><div class="bar-track"><div class="bar-fill ' + FILLS[i] + '" data-w="' + Math.max(2, value / maxVal * 100) + '"></div></div><span class="bar-val">' + fmtMs(value) + '</span></div>';
+      }).join('');
+
+      requestAnimationFrame(function() {
+        document.querySelectorAll('.bar-fill[data-w]').forEach(function(el) { el.style.width = el.dataset.w + '%'; });
+      });
+
+      var endpoints = data.endpoints || [];
+      $('#endpointList').innerHTML = endpoints.length
+        ? endpoints.map(function(ep) {
+            return '<div class="endpoint-item"><div><div class="endpoint-name">' + esc(ep.name) + '</div><div class="endpoint-meta">avg ' + fmtMs(ep.average) + ' &middot; max ' + fmtMs(ep.maximum) + '</div></div><div class="endpoint-p95">' + fmtMs(ep.p95) + '</div></div>';
+          }).join('')
+        : '<p style="color:var(--muted);font-size:13px;">No endpoint data available.</p>';
+
+      var passed = data.thresholds.filter(function(t){ return t.passed; });
+      var failed = data.thresholds.filter(function(t){ return !t.passed; });
+      $('#thresholdPassed').textContent = passed.length + ' passed';
+      var failEl = $('#thresholdFailed');
+      if (failed.length > 0) { failEl.textContent = failed.length + ' failed'; failEl.classList.remove('hidden'); }
+      else { failEl.classList.add('hidden'); }
+      $('#thresholdList').innerHTML = data.thresholds.map(function(t) {
+        return '<div class="threshold-item ' + (t.passed ? 'pass' : 'fail') + '"><div class="threshold-icon">' + (t.passed ? '&#10003;' : '&#10005;') + '</div><div class="threshold-body"><div class="threshold-metric">' + esc(t.metric) + '</div><div class="threshold-rule">' + esc(t.rule) + '</div></div><div class="threshold-result">' + (t.passed ? 'PASS' : 'FAIL') + '</div></div>';
+      }).join('');
+
+      $('#environment').textContent = (data.configuration && data.configuration.baseUrl) ? data.configuration.baseUrl : 'Unknown environment';
+      $('#generatedAt').textContent = 'Generated ' + new Date(data.generatedAt).toLocaleString();
+      $('#errorPanel').classList.add('hidden');
+      $('#dashboard').classList.remove('hidden');
+    }
+
+    function showError(err) {
+      var badge = $('#statusBadge');
+      badge.className = 'badge loading';
+      badge.innerHTML = '<span class="badge-dot"></span><span>Report needed</span>';
+      $('#subtitle').textContent = 'No data loaded yet.';
+      $('#errorText').textContent = err.message;
+      $('#dashboard').classList.add('hidden');
+      $('#errorPanel').classList.remove('hidden');
+    }
+
+    function loadFile(file) {
+      file.text().then(function(text) { try { render(JSON.parse(text)); } catch(e) { showError(e); } }).catch(showError);
+    }
+
+    $('#loadButton').addEventListener('click', function(){ $('#fileInput').click(); });
+    $('#errorLoadButton').addEventListener('click', function(){ $('#fileInput').click(); });
+    $('#fileInput').addEventListener('change', function(e){ if(e.target.files[0]) loadFile(e.target.files[0]); });
+
+    fetch('../results/summary.json', { cache: 'no-store' })
+      .then(function(r){ if(!r.ok) throw new Error('HTTP ' + r.status + ' \u2014 report not found. Run the k6 test first.'); return r.json(); })
+      .then(render)
+      .catch(showError);
+  </script>
 </body>
 </html>
