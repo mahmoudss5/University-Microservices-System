@@ -1,5 +1,11 @@
 name: UniSystem CI
 
+permissions:
+  contents: read
+  issues: read
+  checks: write
+  pull-requests: write
+
 on:
   push:
     branches:
