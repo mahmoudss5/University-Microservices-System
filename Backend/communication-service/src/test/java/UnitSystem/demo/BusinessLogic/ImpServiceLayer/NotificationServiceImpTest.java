@@ -113,7 +113,7 @@ class NotificationServiceImpTest {
 
         verify(notificationRepository, times(1)).save(any());
         verify(simpMessagingTemplate, times(1))
-                .convertAndSendToUser(eq("ahmed@uni.edu"), eq("/queue/notifications"), any());
+                .convertAndSendToUser(eq("ahmed_ali"), eq("/queue/notifications"), any());
     }
 
     @Test
@@ -140,9 +140,9 @@ class NotificationServiceImpTest {
 
         verify(notificationRepository, times(1)).saveAll(any());
         verify(simpMessagingTemplate, times(1))
-                .convertAndSendToUser(eq("ahmed@uni.edu"), eq("/queue/notifications"), any());
+                .convertAndSendToUser(eq("ahmed_ali"), eq("/queue/notifications"), any());
         verify(simpMessagingTemplate, times(1))
-                .convertAndSendToUser(eq("sara@uni.edu"), eq("/queue/notifications"), any());
+                .convertAndSendToUser(eq("sara"), eq("/queue/notifications"), any());
     }
 
     @Test

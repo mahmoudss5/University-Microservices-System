@@ -49,6 +49,9 @@ management:
   endpoint:
     health:
       show-details: always
+  health:
+    probes:
+      enabled: true
 
 feign:
   circuitbreaker:
