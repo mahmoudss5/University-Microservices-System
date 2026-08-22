@@ -346,6 +346,20 @@ All project diagrams are in the [`Diagrams/`](https://github.com/maariamashraf/U
 
 ---
 
+## CI/CD & Testing
+
+The project uses **GitHub Actions** for Continuous Integration (CI).
+- **Unit Testing**: Services are unit-tested using **JUnit 5** and **Mockito**.
+- **Test Reporting**: Automated XML test reports are generated and published visually directly on the GitHub PR using the `EnricoMi/publish-unit-test-result-action`.
+- **Multi-module builds**: The pipeline automatically detects and tests every Spring Boot microservice in the `Backend/` directory.
+
+## Observability & Kubernetes Readiness
+
+Every microservice exposes **Spring Boot Actuator** health endpoints configured specifically for Kubernetes (Liveness and Readiness probes):
+- **Secured via API Gateway**: Actuator endpoints (`/actuator/**`) are strictly blocked at the Gateway level preventing external internet access, while still allowing the internal Docker network or Kubernetes orchestrator to ping them safely.
+
+---
+
 ## How to Run
 
 The entire stack is orchestrated with **Docker Compose**.
