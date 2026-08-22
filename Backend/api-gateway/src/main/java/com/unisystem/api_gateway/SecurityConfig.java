@@ -23,7 +23,8 @@ public class SecurityConfig {
             // Let Spring Security handle CORS so OPTIONS preflight requests are
             // never rejected with 405 before the CORS headers are applied.
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .authorizeExchange(ex -> ex.anyExchange().permitAll())
+                .authorizeExchange(ex -> ex.pathMatchers("/actuator/**").denyAll()
+                        .anyExchange().permitAll())
             .build();
     }
 

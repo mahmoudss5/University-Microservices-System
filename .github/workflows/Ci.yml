@@ -1,0 +1,50 @@
+name: UniSystem CI
+
+permissions:
+  contents: read
+  issues: read
+  checks: write
+  pull-requests: write
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+
+jobs:
+  buildAndTest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build and Test All Microservices
+        run: |
+          # Loop through all directories in Backend/ that contain a pom.xml
+          for dir in Backend/*/; do
+            if [ -f "${dir}pom.xml" ]; then
+              echo "================================================="
+              echo "Building and Testing: ${dir}"
+              echo "================================================="
+              mvn -f "${dir}pom.xml" clean test
+            fi
+          done
+
+      - name: Publish Test Report
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: "Backend/**/target/surefire-reports/TEST-*.xml"
