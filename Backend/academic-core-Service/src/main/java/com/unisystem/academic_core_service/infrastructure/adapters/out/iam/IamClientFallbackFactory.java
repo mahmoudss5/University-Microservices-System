@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 public class IamClientFallbackFactory implements FallbackFactory<IamClient> {
 
     private static final Logger logger = LoggerFactory.getLogger(IamClientFallbackFactory.class);
+
     @Override
     public IamClient create(Throwable cause) {
         logger.error("IAM service call failed. cause={}, message={}",

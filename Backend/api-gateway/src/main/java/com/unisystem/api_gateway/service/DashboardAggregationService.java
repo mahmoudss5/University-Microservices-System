@@ -1,308 +1,98 @@
 package com.unisystem.api_gateway.service;
 
+import com.unisystem.api_gateway.client.AcademicCoreServiceClient;
+import com.unisystem.api_gateway.client.IamServiceClient;
 import com.unisystem.api_gateway.dto.DashboardDtos;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
+import com.unisystem.api_gateway.service.InternalRequestHeadersFactory.InternalRequestHeaders;
+import com.unisystem.api_gateway.util.DashboardUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Locale;
+import java.util.function.Supplier;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class DashboardAggregationService {
 
-    private final WebClient.Builder webClientBuilder;
-
-    @Value("${jwt.secret}")
-    private String jwtSecret;
+    private final IamServiceClient iamServiceClient;
+    private final AcademicCoreServiceClient academicCoreServiceClient;
+    private final InternalRequestHeadersFactory headersFactory;
 
     public Mono<DashboardDtos.StudentDashboardResponseDto> getStudentDashboard(Long studentId, String token) {
-        Mono<DashboardDtos.StudentProfileDto> profileMono = callGet(
-                "http://iam-service:8081/api/students/details/{id}",
-                token,
-                DashboardDtos.StudentProfileDto.class,
-                studentId);
-
-        Mono<List<DashboardDtos.EnrolledCourseSummaryDto>> enrolledCoursesMono = callGetList(
-            "http://academic-core:8082/api/enrolled-courses/student/{id}",
-            token,
-            DashboardDtos.EnrolledCourseSummaryDto.class,
-            studentId).onErrorResume(error -> {
-                log.warn("BFF: Failed to fetch enrolled courses for student {}: {}", studentId, error.getMessage());
-                return Mono.just(List.of());
-            });
-
-        return Mono.zip(profileMono, enrolledCoursesMono)
-            .map(tuple -> {
-                DashboardDtos.StudentProfileDto profile = tuple.getT1();
-                List<DashboardDtos.EnrolledCourseSummaryDto> enrolledCourses = tuple.getT2();
-
-                DashboardDtos.StudentProfileDto mergedProfile = new DashboardDtos.StudentProfileDto(
-                    profile.id(),
-                    profile.role(),
-                    profile.username(),
-                    profile.email(),
-                    profile.gpa(),
-                    profile.totalCredits(),
-                    enrolledCourses,
-                    enrolledCourses.size(),
-                    profile.enrollmentYear(),
-                    profile.academicStanding(),
-                    profile.announcements(),
-                    profile.upcomingEvents());
-
-                return new DashboardDtos.StudentDashboardResponseDto(mergedProfile);
-            });
-    }
-
-    public Mono<DashboardDtos.TeacherDashboardResponseDto> getTeacherDashboard(Long teacherId, String token) {
-        Mono<DashboardDtos.TeacherProfileDto> profileMono = callGet(
-                "http://iam-service:8081/api/teachers/details/{id}",
-                token,
-                DashboardDtos.TeacherProfileDto.class,
-                teacherId);
-
-        Mono<List<DashboardDtos.CourseDto>> coursesMono = callGetList(
-                "http://academic-core:8082/api/courses/teacher/{id}",
-                token,
-                DashboardDtos.CourseDto.class,
-                teacherId).onErrorResume(error -> {
-                    log.warn("BFF: Failed to fetch teacher courses for teacher {}: {}", teacherId, error.getMessage());
+        InternalRequestHeaders headers = headersFactory.create(token);
+        Mono<DashboardDtos.StudentProfileDto> profile = blockingCall(() ->
+                iamServiceClient.getStudentDetails(
+                        studentId, headers.authorization(), headers.userId(), headers.roles()));
+        Mono<List<DashboardDtos.EnrolledCourseSummaryDto>> courses = blockingCall(() ->
+                academicCoreServiceClient.getStudentCourses(
+                        studentId, headers.authorization(), headers.userId(), headers.roles()))
+                .onErrorResume(error -> {
+                    log.warn("BFF: Failed to fetch enrolled courses for student {}: {}",
+                            studentId, error.getMessage());
                     return Mono.just(List.of());
                 });
 
-        return Mono.zip(profileMono, coursesMono)
-                .map(tuple -> {
-                    DashboardDtos.TeacherProfileDto profile = tuple.getT1();
-                    List<DashboardDtos.CourseDto> courses = tuple.getT2();
-                    List<DashboardDtos.TeacherCourseSummaryDto> mappedCourses = courses.stream()
-                            .map(course -> toTeacherCourseSummary(course, profile))
-                            .toList();
-                    return new DashboardDtos.TeacherDashboardResponseDto(profile, mappedCourses, mappedCourses.size());
+        return Mono.zip(profile, courses)
+                .map(result -> new DashboardDtos.StudentDashboardResponseDto(
+                        DashboardUtils.mergeStudentCourses(result.getT1(), result.getT2())));
+    }
+
+    public Mono<DashboardDtos.TeacherDashboardResponseDto> getTeacherDashboard(Long teacherId, String token) {
+        InternalRequestHeaders headers = headersFactory.create(token);
+        Mono<DashboardDtos.TeacherProfileDto> profile = blockingCall(() ->
+                iamServiceClient.getTeacherDetails(
+                        teacherId, headers.authorization(), headers.userId(), headers.roles()));
+        Mono<List<DashboardDtos.CourseDto>> courses = blockingCall(() ->
+                academicCoreServiceClient.getTeacherCourses(
+                        teacherId, headers.authorization(), headers.userId(), headers.roles()))
+                .onErrorResume(error -> {
+                    log.warn("BFF: Failed to fetch teacher courses for teacher {}: {}",
+                            teacherId, error.getMessage());
+                    return Mono.just(List.of());
                 });
-    }
 
-    private DashboardDtos.TeacherCourseSummaryDto toTeacherCourseSummary(
-            DashboardDtos.CourseDto course,
-            DashboardDtos.TeacherProfileDto profile) {
-        if (course == null) {
-            return null;
-        }
-        DashboardDtos.TeacherCourseSummaryDto profileCourse = findProfileCourse(profile, course.id());
-        return new DashboardDtos.TeacherCourseSummaryDto(
-                course.id(),
-                course.name(),
-                course.description(),
-                profileCourse == null ? null : profileCourse.departmentName(),
-                profileCourse == null ? null : profileCourse.teacherUserName(),
-                profileCourse != null && profileCourse.creditHours() != null
-                        ? profileCourse.creditHours()
-                        : safeInt(course.credits()),
-                safeInt(course.maxStudents()),
-                safeInt(course.enrolledCount()));
-    }
-
-    private DashboardDtos.TeacherCourseSummaryDto findProfileCourse(
-            DashboardDtos.TeacherProfileDto profile,
-            Long courseId) {
-        if (profile == null || profile.courses() == null || courseId == null) {
-            return null;
-        }
-        return profile.courses().stream()
-                .filter(course -> course != null && courseId.equals(course.id()))
-                .findFirst()
-                .orElse(null);
-    }
-
-    private int safeInt(Integer value) {
-        return value == null ? 0 : value;
+        return Mono.zip(profile, courses).map(result -> {
+            List<DashboardDtos.TeacherCourseSummaryDto> mappedCourses =
+                    DashboardUtils.mapTeacherCourses(result.getT2(), result.getT1());
+            return new DashboardDtos.TeacherDashboardResponseDto(
+                    result.getT1(), mappedCourses, mappedCourses.size());
+        });
     }
 
     public Mono<DashboardDtos.UserDashboardResponseDto> getCurrentUserDashboard(String token) {
-        return callGet("http://iam-service:8081/api/users/me", token, DashboardDtos.UserDto.class)
-                .flatMap(user -> {
-                    String role = normalizeRole(user.role());
-                    if ("student".equals(role)) {
-                        return getStudentDashboard(user.id(), token)
-                                .map(studentDashboard -> new DashboardDtos.UserDashboardResponseDto(
-                                        user,
-                                        role,
-                                        studentDashboard,
-                                        null,
-                                        null));
-                    }
-
-                    if ("teacher".equals(role)) {
-                        return getTeacherDashboard(user.id(), token)
-                                .map(teacherDashboard -> new DashboardDtos.UserDashboardResponseDto(
-                                        user,
-                                        role,
-                                        null,
-                                        teacherDashboard,
-                                        null));
-                    }
-
-                    DashboardDtos.AdminDashboardResponseDto adminDashboard = new DashboardDtos.AdminDashboardResponseDto(
-                            user.id(),
-                            user.username(),
-                            user.email(),
-                            role);
-                    return Mono
-                            .just(new DashboardDtos.UserDashboardResponseDto(user, role, null, null, adminDashboard));
-                });
+        InternalRequestHeaders headers = headersFactory.create(token);
+        return blockingCall(() -> iamServiceClient.getCurrentUser(
+                headers.authorization(), headers.userId(), headers.roles()))
+                .flatMap(user -> dashboardForRole(user, token));
     }
 
-    private <T> Mono<T> callGet(String uriTemplate, String token, Class<T> responseType, Object... uriVariables) {
-        HttpHeaders internalHeaders = buildInternalHeaders(token);
-        return webClientBuilder
-                .build()
-                .get()
-                .uri(uriTemplate, uriVariables)
-                .headers(headers -> {
-                    headers.addAll(internalHeaders);
-                    if (token != null && !token.isBlank()) {
-                        headers.set(HttpHeaders.AUTHORIZATION, token);
-                    }
-                    headers.set("Content-Type", "application/json");
-                })
-                .retrieve()
-                .bodyToMono(responseType);
+    private Mono<DashboardDtos.UserDashboardResponseDto> dashboardForRole(
+            DashboardDtos.UserDto user,
+            String token) {
+        String role = DashboardUtils.normalizeRole(user.role());
+        return switch (role) {
+            case "student" -> getStudentDashboard(user.id(), token)
+                    .map(dashboard -> new DashboardDtos.UserDashboardResponseDto(
+                            user, role, dashboard, null, null));
+            case "teacher" -> getTeacherDashboard(user.id(), token)
+                    .map(dashboard -> new DashboardDtos.UserDashboardResponseDto(
+                            user, role, null, dashboard, null));
+            default -> Mono.just(new DashboardDtos.UserDashboardResponseDto(
+                    user,
+                    role,
+                    null,
+                    null,
+                    new DashboardDtos.AdminDashboardResponseDto(
+                            user.id(), user.username(), user.email(), role)));
+        };
     }
 
-    private <T> Mono<List<T>> callGetList(String uriTemplate, String token, Class<T> elementType,
-            Object... uriVariables) {
-        HttpHeaders internalHeaders = buildInternalHeaders(token);
-        return webClientBuilder
-                .build()
-                .get()
-                .uri(uriTemplate, uriVariables)
-                .headers(headers -> {
-                    headers.addAll(internalHeaders);
-                    if (token != null && !token.isBlank()) {
-                        headers.set(HttpHeaders.AUTHORIZATION, token);
-                    }
-                    headers.set("Content-Type", "application/json");
-                })
-                .retrieve()
-                .bodyToFlux(elementType)
-                .collectList();
-    }
-
-    private <B, T> Mono<T> callPost(
-            String uriTemplate,
-            String token,
-            B requestBody,
-            ParameterizedTypeReference<T> responseType,
-            Object... uriVariables) {
-        HttpHeaders internalHeaders = buildInternalHeaders(token);
-        return webClientBuilder
-                .build()
-                .post()
-                .uri(uriTemplate, uriVariables)
-                .headers(headers -> {
-                    headers.addAll(internalHeaders);
-                    if (token != null && !token.isBlank()) {
-                        headers.set(HttpHeaders.AUTHORIZATION, token);
-                    }
-                    headers.set("Content-Type", "application/json");
-                })
-                .bodyValue(requestBody)
-                .retrieve()
-                .bodyToMono(responseType);
-    }
-
-    private HttpHeaders buildInternalHeaders(String token) {
-        HttpHeaders headers = new HttpHeaders();
-        if (token == null || token.isBlank()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing token");
-        }
-
-        String rawToken = token.startsWith("Bearer ") ? token.substring(7) : token;
-
-        try {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8)))
-                    .build()
-                    .parseClaimsJws(rawToken)
-                    .getBody();
-
-            Object userId = claims.get("userId");
-            Object roles = claims.get("roles");
-
-            if (userId != null) {
-                headers.set("X-User-Id", userId.toString());
-            }
-
-            String roleValue = extractRoleValue(roles);
-            if (roleValue != null) {
-                headers.set("X-Roles", roleValue);
-            }
-        } catch (JwtException e) {
-            log.warn("BFF: Failed to parse JWT for internal headers: {}", e.getMessage());
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
-        }
-
-        return headers;
-    }
-
-    private String extractRoleValue(Object roles) {
-        if (roles == null) {
-            return null;
-        }
-
-        if (roles instanceof String text) {
-            return normalizeRoleHeader(text);
-        }
-
-        if (roles instanceof List<?> list && !list.isEmpty()) {
-            Object first = list.get(0);
-            return first == null ? null : normalizeRoleHeader(first.toString());
-        }
-
-        if (roles instanceof Object[] array && array.length > 0) {
-            return array[0] == null ? null : normalizeRoleHeader(array[0].toString());
-        }
-
-        return normalizeRoleHeader(roles.toString());
-    }
-
-    private String normalizeRoleHeader(String rawRoles) {
-        if (rawRoles == null || rawRoles.isBlank()) {
-            return null;
-        }
-
-        String cleaned = rawRoles.trim();
-
-        if (cleaned.startsWith("[") && cleaned.endsWith("]")) {
-            cleaned = cleaned.substring(1, cleaned.length() - 1);
-        }
-
-        String first = cleaned.split("[,\\s]+", 2)[0].trim();
-        if (first.isEmpty()) {
-            return null;
-        }
-
-        return first.startsWith("ROLE_") ? first : "ROLE_" + first.toUpperCase(Locale.ROOT);
-    }
-
-    private String normalizeRole(String role) {
-        if (role == null || role.isBlank()) {
-            return "unknown";
-        }
-        return role.replace("ROLE_", "").toLowerCase(Locale.ROOT);
+    private <T> Mono<T> blockingCall(Supplier<T> call) {
+        return Mono.fromCallable(call::get).subscribeOn(Schedulers.boundedElastic());
     }
 }
