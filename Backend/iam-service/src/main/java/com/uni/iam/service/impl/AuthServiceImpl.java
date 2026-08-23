@@ -20,6 +20,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import com.uni.iam.service.interfaces.KafkaEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
+    private final KafkaEventPublisher kafkaEventPublisher;
 
     @Override
     @ExecutionTime
@@ -50,6 +52,8 @@ public class AuthServiceImpl implements AuthService {
         User user = buildUser(request);
         userRepository.save(user);
         log.info("Registered new user: {} with role: {}", user.getUsername(), user.getRole());
+
+        kafkaEventPublisher.publishUserRegisteredEvent(user);
 
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail().trim(), request.getPassword())
