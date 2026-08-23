@@ -126,6 +126,7 @@ Services publish domain events consumed by downstream services:
 
 | Topic | Publisher | Consumer |
 |---|---|---|
+| `student-registered` | IAM Service | Academic Core |
 | `student-enrolled` | Academic Core | Communication Service |
 | `announcement-created` | Academic Core | Communication Service |
 | `course-created` | Academic Core | Communication Service |
