@@ -143,6 +143,13 @@ Services publish domain events consumed by downstream services:
 ### 7. Database Concurrency Control
 - **Pessimistic Locking** (`@Lock(LockModeType.PESSIMISTIC_WRITE)`): Implemented in the **Academic Core Service** (`CourseJpaRepository`) to prevent race conditions when multiple users attempt to enroll in the same course simultaneously. This guarantees that only one transaction can check and update course capacity at a time, ensuring strict data consistency without application-level retry logic.
 
+### 8. Caller Resilience Pattern (Fault Tolerance)
+Implemented using **Resilience4j** in the **API Gateway** and **Academic Core Service** to prevent cascading failures when making synchronous inter-service calls via Feign (e.g., calling the IAM Service).
+- **Circuit Breaker**: Fast-fails requests when the error rate exceeds a threshold, giving the failing remote service time to recover.
+- **Retry**: Automatically retries transient network failures.
+- **Bulkhead**: Limits concurrent calls to a specific remote service, ensuring a slow downstream service does not exhaust the caller's thread pool.
+- **Caller Wrapper**: Feign clients are encapsulated inside a dedicated "Caller" layer (e.g., `IamServiceCaller`, `IamUserClient`). This layer gracefully handles exceptions and executes local fallback methods (returning default responses) without cluttering the Feign interface.
+
 ---
 
 ## 🚦 Rate Limiting (Sliding Window — Lua + Redis)
