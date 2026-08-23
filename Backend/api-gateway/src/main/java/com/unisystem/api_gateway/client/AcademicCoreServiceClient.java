@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.List;
 
-@FeignClient(name = "academic-core")
+@FeignClient(name = "academic-core" ,fallback = com.unisystem.api_gateway.client.FallBack.AcademicCoreServiceClientFallBack.class)
 public interface AcademicCoreServiceClient {
 
     @GetMapping("/api/enrolled-courses/student/{id}")

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 
-@FeignClient(name = "iam-service", fallback = IamClientFallbackFactory.class)
+@FeignClient(name = "iam-service")
 public interface IamClient {
 
     @GetMapping("/api/teachers/basic/{teacherId}")

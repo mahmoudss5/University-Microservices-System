@@ -1,0 +1,132 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Redis — used by the Lua sliding-window rate limiters
+  # ─────────────────────────────────────────────────────────────────────────────
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+
+  cloud:
+    gateway:
+      # Remove duplicate CORS headers added by both Gateway and downstream services
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+      
+      # ─────────────────────────────────────────────────────────────────────────────
+      # Rate limiting overview
+      # ─────────────────────────────────────────────────────────────────────────────
+      # Layer 1 (Global)   — GlobalRateLimiterFilter   — 150 req/min per IP on ALL routes
+      # Layer 2 (Per-route) — LuaRateLimiterGateway… — 20  req/min per IP on /api/auth/**
+      # Both layers use the same sliding-window Lua script (scripts/rate_limiter.lua).
+      # ─────────────────────────────────────────────────────────────────────────────
+      routes:
+        # ── IAM SERVICE — Auth Routes (Lua Sliding-Window Rate Limited: 20 req/min) ──
+        - id: iam-service-auth
+          uri: lb://IAM-SERVICE
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - name: LuaRateLimiter
+              args:
+                requestsPerMinute: 20
+                
+        # ── IAM SERVICE — User/Student/Teacher Routes (Global limiter only) ───────────
+        - id: iam-service-other
+          uri: lb://IAM-SERVICE
+          predicates:
+            - Path=/api/users/**,/api/students/**,/api/teachers/**
+            
+        # ── ACADEMIC CORE ─────────────────────────────────────────────────────────────
+        - id: academic-core
+          uri: lb://ACADEMIC-CORE
+          predicates:
+            - Path=/api/courses/**,/api/departments/**,/api/enrollments/**,/api/enrolled-courses/**,/api/announcements/**,/api/feedbacks/**,/api/audit-logs/**
+            
+        # ── COMMUNICATION SERVICE — REST ──────────────────────────────────────────────
+        - id: communication-service
+          uri: lb://COMMUNICATION-SERVICE
+          predicates:
+            - Path=/api/notifications/**,/api/messages/**
+            
+        # ── COMMUNICATION SERVICE — WebSocket ────────────────────────────────────────
+        - id: communication-service-ws
+          uri: lb://COMMUNICATION-SERVICE
+          predicates:
+            - Path=/ws/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE:http://localhost:8761/eureka}
+
+jwt:
+  secret: ${JWT_SECRET:mySuperSecretKey2026UniSystemXYZ!}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when_authorized
+  health:
+    probes:
+      enabled: true
+
+# ── BFF Dashboard routes are served locally by DashboardController ────────────
+# No route config needed — Spring Boot's DispatcherHandler resolves them directly.
+
+resilience4j:
+  bulkhead:
+    instances:
+      iam-service:
+        maxConcurrentCalls: 20
+        maxWaitDuration: 5s
+      academic-core:
+        maxConcurrentCalls: 15
+        maxWaitDuration: 5s
+  circuitbreaker:
+    instances:
+      iam-service:
+        sliding-window-size: 10
+        sliding-window-type: COUNT_BASED
+        wait-duration-in-open-state: 10s
+        failure-rate-threshold: 50
+        permitted-number-of-calls-in-half-open-state: 5
+      academic-core:
+        sliding-window-size: 10
+        sliding-window-type: COUNT_BASED
+        wait-duration-in-open-state: 10s
+        failure-rate-threshold: 50
+        permitted-number-of-calls-in-half-open-state: 5
+  retry:
+    instances:
+      iam-service:
+        max-attempts: 3
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+      academic-core:
+        max-attempts: 3
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+
+feign:
+  circuitbreaker:
+    enabled: true
+  clients:
+    iam-service:
+      config:
+        connectTimeout: 5000
+        readTimeout: 5000
+    academic-core:
+      config:
+        connectTimeout: 5000
+        readTimeout: 5000
