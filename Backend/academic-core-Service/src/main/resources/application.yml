@@ -56,3 +56,29 @@ management:
 feign:
   circuitbreaker:
     enabled: true
+  clients:
+    iam-service:
+      config:
+        connectTimeout: 5000
+        readTimeout: 5000
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      iam-service:
+        sliding-window-size: 10
+        sliding-window-type: COUNT_BASED
+        wait-duration-in-open-state: 10s
+        failure-rate-threshold: 50
+        permitted-number-of-calls-in-half-open-state: 5
+  retry:
+    instances:
+      iam-service:
+        max-attempts: 3
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+  bulkhead:
+    instances:
+      iam-service:
+        maxConcurrentCalls: 20
+        maxWaitDuration: 5s

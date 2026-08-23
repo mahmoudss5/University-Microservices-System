@@ -1,7 +1,7 @@
 package com.unisystem.api_gateway.service;
 
-import com.unisystem.api_gateway.client.AcademicCoreServiceClient;
-import com.unisystem.api_gateway.client.IamServiceClient;
+import com.unisystem.api_gateway.client.caller.AcademicServiceCaller;
+import com.unisystem.api_gateway.client.caller.IamServiceCaller;
 import com.unisystem.api_gateway.dto.DashboardDtos;
 import com.unisystem.api_gateway.service.InternalRequestHeadersFactory.InternalRequestHeaders;
 import com.unisystem.api_gateway.util.DashboardUtils;
@@ -19,17 +19,17 @@ import java.util.function.Supplier;
 @Slf4j
 public class DashboardAggregationService {
 
-    private final IamServiceClient iamServiceClient;
-    private final AcademicCoreServiceClient academicCoreServiceClient;
+    private final IamServiceCaller iamServiceCaller;
+    private final AcademicServiceCaller academicServiceCaller;
     private final InternalRequestHeadersFactory headersFactory;
 
     public Mono<DashboardDtos.StudentDashboardResponseDto> getStudentDashboard(Long studentId, String token) {
         InternalRequestHeaders headers = headersFactory.create(token);
         Mono<DashboardDtos.StudentProfileDto> profile = blockingCall(() ->
-                iamServiceClient.getStudentDetails(
+                iamServiceCaller.getStudentDetails(
                         studentId, headers.authorization(), headers.userId(), headers.roles()));
         Mono<List<DashboardDtos.EnrolledCourseSummaryDto>> courses = blockingCall(() ->
-                academicCoreServiceClient.getStudentCourses(
+                academicServiceCaller.getStudentCourses(
                         studentId, headers.authorization(), headers.userId(), headers.roles()))
                 .onErrorResume(error -> {
                     log.warn("BFF: Failed to fetch enrolled courses for student {}: {}",
@@ -45,10 +45,10 @@ public class DashboardAggregationService {
     public Mono<DashboardDtos.TeacherDashboardResponseDto> getTeacherDashboard(Long teacherId, String token) {
         InternalRequestHeaders headers = headersFactory.create(token);
         Mono<DashboardDtos.TeacherProfileDto> profile = blockingCall(() ->
-                iamServiceClient.getTeacherDetails(
+                iamServiceCaller.getTeacherDetails(
                         teacherId, headers.authorization(), headers.userId(), headers.roles()));
         Mono<List<DashboardDtos.CourseDto>> courses = blockingCall(() ->
-                academicCoreServiceClient.getTeacherCourses(
+                academicServiceCaller.getTeacherCourses(
                         teacherId, headers.authorization(), headers.userId(), headers.roles()))
                 .onErrorResume(error -> {
                     log.warn("BFF: Failed to fetch teacher courses for teacher {}: {}",
@@ -66,7 +66,7 @@ public class DashboardAggregationService {
 
     public Mono<DashboardDtos.UserDashboardResponseDto> getCurrentUserDashboard(String token) {
         InternalRequestHeaders headers = headersFactory.create(token);
-        return blockingCall(() -> iamServiceClient.getCurrentUser(
+        return blockingCall(() -> iamServiceCaller.getCurrentUser(
                 headers.authorization(), headers.userId(), headers.roles()))
                 .flatMap(user -> dashboardForRole(user, token));
     }
