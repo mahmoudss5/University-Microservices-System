@@ -23,6 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.uni.iam.service.interfaces.KafkaEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @Slf4j
 @Service
@@ -53,7 +55,12 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
         log.info("Registered new user: {} with role: {}", user.getUsername(), user.getRole());
 
-        kafkaEventPublisher.publishUserRegisteredEvent(user);
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                kafkaEventPublisher.publishUserRegisteredEvent(user);
+            }
+        });
 
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail().trim(), request.getPassword())

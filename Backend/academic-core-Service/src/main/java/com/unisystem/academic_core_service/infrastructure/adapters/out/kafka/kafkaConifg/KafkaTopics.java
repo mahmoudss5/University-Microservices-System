@@ -5,6 +5,5 @@ public final class KafkaTopics {
     public static final String COURSE_CREATED       = "course-created";
     public static final String ANNOUNCEMENT_CREATED = "announcement-created";
     public static final String NOTIFICATION_PUSH    = "notification-push";
-    public static final String Student_Registered   = "student-registered";
     private KafkaTopics() {}
 }
