@@ -50,7 +50,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
     volumes:
       - kafka-data:/var/lib/kafka/data
     healthcheck:
@@ -76,6 +76,7 @@ services:
         kafka-topics --create --if-not-exists --topic announcement-created --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
         kafka-topics --create --if-not-exists --topic course-created --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
         kafka-topics --create --if-not-exists --topic notification-push --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
+        kafka-topics --create --if-not-exists --topic student-registered --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
         echo 'Topics created:'
         kafka-topics --list --bootstrap-server kafka:29092
     restart: on-failure
@@ -224,6 +225,8 @@ services:
       - ./Backend/iam-service:/app
       - maven-cache:/root/.m2
     depends_on:
+      kafka:
+        condition: service_healthy
       shared-db:
         condition: service_healthy
       db-init:
@@ -239,6 +242,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://shared-db:3306/helwanuni?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: "UniSys@Db#2026"
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:8761/eureka
       EUREKA_INSTANCE_PREFER_IP_ADDRESS: 'true'

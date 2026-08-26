@@ -109,6 +109,28 @@ public class KafkaConsumer {
         }
     }
 
+    // ── Topic: student-registered ─────────────────────────
+    // Sent by IAM Service when a new user registers
+    @KafkaListener(topics = "student-registered", groupId = "communication-group")
+    public void onStudentRegistered(Map<String, Object> event) {
+        log.info("Received student-registered event: {}", event);
+        try {
+            Long userId = toLong(event.get("userId"));
+            String username = String.valueOf(event.get("username"));
+
+            NotificationRequest request = NotificationRequest.builder()
+                    .recipientId(userId)
+                    .title("Welcome to Uni-System! 🎉")
+                    .message("Hello " + username + ", your account has been successfully created.")
+                    .type(NotificationType.SYSTEM)
+                    .build();
+
+            notificationService.sendNotificationToUser(request);
+        } catch (Exception e) {
+            log.error("Error handling student-registered event: {}", e.getMessage(), e);
+        }
+    }
+
     // ── Helper ────────────────────────────────────────────
 
     private Long toLong(Object value) {
