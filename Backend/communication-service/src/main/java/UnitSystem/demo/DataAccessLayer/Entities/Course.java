@@ -2,8 +2,6 @@ package UnitSystem.demo.DataAccessLayer.Entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Stub — the real Course entity lives in the Academic Core service.
@@ -11,7 +9,7 @@ import java.util.Set;
  * Read-only from this service's perspective.
  */
 @Entity
-@Table(name = "courses")
+@Table(name = "course_snapshots")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,14 +17,12 @@ import java.util.Set;
 @Builder
 public class Course {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+   @Id
+   @Column(name = "course_id")
+   private Long courseId;
 
-    @Column(name = "name", nullable = false, length = 255, insertable = false, updatable = false)
-    private String name;
+   @Column(name = "course_name", nullable = false, length = 255)
+   private String courseName;
 
-    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
-    @Builder.Default
-    private Set<EnrolledCourse> courseEnrollments = new HashSet<>();
+
 }

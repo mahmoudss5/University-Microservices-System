@@ -1,6 +1,8 @@
 package UnitSystem.demo.BusinessLogic.ImpServiceLayer;
 
+import UnitSystem.demo.BusinessLogic.InterfaceServiceLayer.CourseService;
 import UnitSystem.demo.BusinessLogic.InterfaceServiceLayer.MessageService;
+import UnitSystem.demo.BusinessLogic.InterfaceServiceLayer.UserService;
 import UnitSystem.demo.BusinessLogic.Mappers.MessageMapper;
 import UnitSystem.demo.DataAccessLayer.Dto.Message.MessageRequest;
 import UnitSystem.demo.DataAccessLayer.Dto.Message.MessageResponse;
@@ -33,7 +35,8 @@ public class MessageServiceImp implements MessageService {
     private final MessageRepository messageRepository;
     private final MessageMapper messageMapper;
     private final SimpMessagingTemplate messagingTemplate;
-
+   private final CourseService courseService;
+   private final UserService userService;
     // ────────────────────────────────────────────────────────
     // Write Operations — evict cache on every change
     // ────────────────────────────────────────────────────────
@@ -93,8 +96,11 @@ public class MessageServiceImp implements MessageService {
     // ────────────────────────────────────────────────────────
 
     private void broadcastMessageToCourse(Message message) {
-        log.info("Broadcasting message from user {} to course {}",
-                message.getSender().getUserName(), message.getCourse().getName());
+        String userName= userService.getUserName(message.getSenderId());
+        String courseName= courseService.getCourseName(message.getCourseId());
+
+        log.info("Broadcasting message from user {} to course {}", userName, courseName);
+
         MessageResponse response = messageMapper.mapToMessageResponse(message);
         messagingTemplate.convertAndSend(
                 "/topic/course/" + response.getCourseId(),

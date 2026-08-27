@@ -1,9 +1,15 @@
 package UnitSystem.demo.Kafka;
-
 import UnitSystem.demo.BusinessLogic.InterfaceServiceLayer.NotificationService;
 import UnitSystem.demo.DataAccessLayer.Dto.Notification.Course.NotificationCourseRequest;
 import UnitSystem.demo.DataAccessLayer.Dto.Notification.User.NotificationRequest;
+import UnitSystem.demo.DataAccessLayer.Entities.Course;
+import UnitSystem.demo.DataAccessLayer.Entities.EnrollmentSnapshot;
 import UnitSystem.demo.DataAccessLayer.Entities.NotificationType;
+import UnitSystem.demo.DataAccessLayer.Entities.Role;
+import UnitSystem.demo.DataAccessLayer.Entities.User;
+import UnitSystem.demo.DataAccessLayer.Repositories.CourseRepository;
+import UnitSystem.demo.DataAccessLayer.Repositories.EnrollmentSnapshotRepository;
+import UnitSystem.demo.DataAccessLayer.Repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -11,22 +17,15 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-/**
- * SOLID — Single Responsibility: only handles Kafka event consumption.
- * SOLID — Dependency Inversion: depends on NotificationService interface.
- *
- * Listens to 4 topics:
- *   - student-enrolled
- *   - announcement-created
- *   - course-created
- *   - notification-push
- */
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class KafkaConsumer {
 
     private final NotificationService notificationService;
+    private final UserRepository userRepository;
+    private final CourseRepository courseRepository;
+    private final EnrollmentSnapshotRepository enrollmentSnapshotRepository;
 
     // ── Topic: student-enrolled ───────────────────────────
     // Sent by Academic Core when a student enrolls in a course
@@ -35,7 +34,21 @@ public class KafkaConsumer {
         log.info("Received student-enrolled event: {}", event);
         try {
             Long studentId = toLong(event.get("studentId"));
-            String courseName = String.valueOf(event.get("courseName"));
+            Long courseId = toLong(event.get("enrolledCourseId"));
+            String courseName = requiredString(event, "courseName");
+
+            // The event contains enough course data to repair a missed course-created event.
+            upsertCourseSnapshot(courseId, courseName);
+            if (!userRepository.existsById(studentId)) {
+                throw new IllegalStateException(
+                        "Cannot save enrollment snapshot: user snapshot does not exist for " + studentId);
+            }
+            if (!enrollmentSnapshotRepository.existsByStudentIdAndCourseId(studentId, courseId)) {
+                enrollmentSnapshotRepository.save(EnrollmentSnapshot.builder()
+                        .studentId(studentId)
+                        .courseId(courseId)
+                        .build());
+            }
 
             NotificationRequest request = NotificationRequest.builder()
                     .recipientId(studentId)
@@ -49,18 +62,16 @@ public class KafkaConsumer {
             log.error("Error handling student-enrolled event: {}", e.getMessage(), e);
         }
     }
-
-    // ── Topic: announcement-created ───────────────────────
-    // Sent by Academic Core when a teacher posts an announcement
-    // Notifies ALL enrolled students in the course
     @KafkaListener(topics = "announcement-created", groupId = "communication-group")
     public void onAnnouncementCreated(Map<String, Object> event) {
         log.info("Received announcement-created event for course ID: {}", event.get("courseId"));
         try {
             Long courseId = toLong(event.get("courseId"));
-            String courseNameStr = String.valueOf(event.get("courseName"));
-            String title = String.valueOf(event.get("title"));
-            String description = String.valueOf(event.get("description"));
+            String courseNameStr = requiredString(event, "courseName");
+            String title = requiredString(event, "title");
+            String description = requiredString(event, "description");
+           // save a copy of the course in the local database
+            upsertCourseSnapshot(courseId, courseNameStr);
 
             NotificationCourseRequest request = NotificationCourseRequest.builder()
                     .courseId(courseId)
@@ -80,7 +91,13 @@ public class KafkaConsumer {
     @KafkaListener(topics = "course-created", groupId = "communication-group")
     public void onCourseCreated(Map<String, Object> event) {
         log.info("Received course-created event: {}", event);
-        // No notifications needed for course creation — logged for future use
+        try {
+            Long courseId = toLong(event.get("courseId"));
+            String courseName = requiredString(event, "courseName");
+            upsertCourseSnapshot(courseId, courseName);
+        } catch (Exception e) {
+            log.error("Error handling course-created event: {}", e.getMessage(), e);
+        }
     }
 
     // ── Topic: notification-push ──────────────────────────
@@ -90,8 +107,8 @@ public class KafkaConsumer {
         log.info("Received notification-push event: {}", event);
         try {
             Long recipientId = toLong(event.get("recipientId"));
-            String title = String.valueOf(event.get("title"));
-            String message = String.valueOf(event.get("message"));
+            String title = requiredString(event, "title");
+            String message = requiredString(event, "message");
             String typeStr = event.containsKey("type")
                     ? String.valueOf(event.get("type"))
                     : "SYSTEM";
@@ -116,7 +133,14 @@ public class KafkaConsumer {
         log.info("Received student-registered event: {}", event);
         try {
             Long userId = toLong(event.get("userId"));
-            String username = String.valueOf(event.get("username"));
+            String username = requiredString(event, "username");
+            Role role = Role.valueOf(requiredString(event, "role").toUpperCase());
+
+            userRepository.save(User.builder()
+                    .userId(userId)
+                    .userName(username)
+                    .userRole(role)
+                    .build());
 
             NotificationRequest request = NotificationRequest.builder()
                     .recipientId(userId)
@@ -138,5 +162,20 @@ public class KafkaConsumer {
         if (value instanceof Long) return (Long) value;
         if (value instanceof Integer) return ((Integer) value).longValue();
         return Long.parseLong(value.toString());
+    }
+
+    private String requiredString(Map<String, Object> event, String field) {
+        Object value = event.get(field);
+        if (value == null || value.toString().isBlank()) {
+            throw new IllegalArgumentException("Missing required event field: " + field);
+        }
+        return value.toString();
+    }
+
+    private void upsertCourseSnapshot(Long courseId, String courseName) {
+        courseRepository.save(Course.builder()
+                .courseId(courseId)
+                .courseName(courseName)
+                .build());
     }
 }
