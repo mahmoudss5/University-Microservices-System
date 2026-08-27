@@ -19,9 +19,8 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User recipient;
+    @Column(name = "user_id", nullable = false)
+   private Long recipientId;
 
     @Column(nullable = false, length = 255)
     private String title;
@@ -30,7 +29,7 @@ public class Notification {
     private String message;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 50)
+    @Column(name = "type", nullable = false, length = 50)
     @Builder.Default
     private NotificationType type = NotificationType.SYSTEM;
 

@@ -1,6 +1,8 @@
 package UnitSystem.demo.BusinessLogic.ImpServiceLayer;
 
 import UnitSystem.demo.BusinessLogic.Mappers.NotificationMapper;
+import UnitSystem.demo.BusinessLogic.InterfaceServiceLayer.CourseService;
+import UnitSystem.demo.BusinessLogic.InterfaceServiceLayer.UserService;
 import UnitSystem.demo.DataAccessLayer.Dto.Notification.Course.NotificationCourseRequest;
 import UnitSystem.demo.DataAccessLayer.Dto.Notification.User.NotificationRequest;
 import UnitSystem.demo.DataAccessLayer.Dto.Notification.User.NotificationResponse;
@@ -33,6 +35,8 @@ class NotificationServiceImpTest {
     @Mock private NotificationRepository notificationRepository;
     @Mock private SimpMessagingTemplate simpMessagingTemplate;
     @Mock private NotificationMapper notificationMapper;
+    @Mock private UserService userService;
+    @Mock private CourseService courseService;
 
     @InjectMocks private NotificationServiceImp notificationService;
 
@@ -44,14 +48,13 @@ class NotificationServiceImpTest {
     @BeforeEach
     void setUp() {
         mockUser = User.builder()
-                .id(1L)
+                .userId(1L)
                 .userName("ahmed_ali")
-                .email("ahmed@uni.edu")
                 .build();
 
         mockNotification = Notification.builder()
                 .id(1L)
-                .recipient(mockUser)
+                .recipientId(1L)
                 .title("Test Notification")
                 .message("Test message")
                 .type(NotificationType.SYSTEM)
@@ -89,6 +92,7 @@ class NotificationServiceImpTest {
         when(notificationMapper.mapToNotificationEntity(any())).thenReturn(mockNotification);
         when(notificationRepository.save(any())).thenReturn(mockNotification);
         when(notificationMapper.mapToNotificationResponse(any())).thenReturn(mockResponse);
+        when(userService.getUserName(1L)).thenReturn("ahmed_ali");
 
         NotificationResponse result = notificationService.createNotification(mockRequest);
 
@@ -119,9 +123,9 @@ class NotificationServiceImpTest {
     @Test
     @DisplayName("Should send notification to all course students and push via WebSocket")
     void sendNotificationToCourse_ShouldSaveAllAndPushToEachStudent() {
-        User student2 = User.builder().id(2L).userName("sara").email("sara@uni.edu").build();
+        User student2 = User.builder().userId(2L).userName("sara").build();
         Notification notification2 = Notification.builder()
-                .id(2L).recipient(student2).title("Course Update")
+                .id(2L).recipientId(student2.getUserId()).title("Course Update")
                 .message("Course updated").type(NotificationType.ANNOUNCEMENT).build();
         NotificationResponse response2 = NotificationResponse.builder()
                 .id(2L).recipientId(2L).recipientName("sara").build();
@@ -135,6 +139,8 @@ class NotificationServiceImpTest {
         when(notificationRepository.saveAll(any())).thenReturn(List.of(mockNotification, notification2));
         when(notificationMapper.mapToNotificationResponse(mockNotification)).thenReturn(mockResponse);
         when(notificationMapper.mapToNotificationResponse(notification2)).thenReturn(response2);
+        when(userService.getUserName(1L)).thenReturn("ahmed_ali");
+        when(userService.getUserName(2L)).thenReturn("sara");
 
         notificationService.sendNotificationToCourse(courseRequest);
 

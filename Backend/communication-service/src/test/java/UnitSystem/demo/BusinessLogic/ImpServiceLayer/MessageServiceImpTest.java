@@ -1,6 +1,8 @@
 package UnitSystem.demo.BusinessLogic.ImpServiceLayer;
 
 import UnitSystem.demo.BusinessLogic.Mappers.MessageMapper;
+import UnitSystem.demo.BusinessLogic.InterfaceServiceLayer.CourseService;
+import UnitSystem.demo.BusinessLogic.InterfaceServiceLayer.UserService;
 import UnitSystem.demo.DataAccessLayer.Dto.Message.MessageRequest;
 import UnitSystem.demo.DataAccessLayer.Dto.Message.MessageResponse;
 import UnitSystem.demo.DataAccessLayer.Entities.Course;
@@ -32,6 +34,8 @@ class MessageServiceImpTest {
     @Mock private MessageRepository messageRepository;
     @Mock private MessageMapper messageMapper;
     @Mock private SimpMessagingTemplate messagingTemplate;
+    @Mock private CourseService courseService;
+    @Mock private UserService userService;
 
     @InjectMocks private MessageServiceImp messageService;
 
@@ -44,20 +48,19 @@ class MessageServiceImpTest {
     @BeforeEach
     void setUp() {
         mockUser = User.builder()
-                .id(1L)
+                .userId(1L)
                 .userName("ahmed_ali")
-                .email("ahmed@uni.edu")
                 .build();
 
         mockCourse = Course.builder()
-                .id(1L)
-                .name("Data Structures")
+                .courseId(1L)
+                .courseName("Data Structures")
                 .build();
 
         mockMessage = Message.builder()
                 .id(1L)
-                .course(mockCourse)
-                .sender(mockUser)
+                .courseId(1L)
+                .senderId(1L)
                 .content("Hello everyone!")
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
@@ -90,6 +93,8 @@ class MessageServiceImpTest {
         when(messageMapper.mapToMessageEntity(any())).thenReturn(mockMessage);
         when(messageRepository.save(any())).thenReturn(mockMessage);
         when(messageMapper.mapToMessageResponse(any())).thenReturn(mockResponse);
+        when(userService.getUserName(1L)).thenReturn("ahmed_ali");
+        when(courseService.getCourseName(1L)).thenReturn("Data Structures");
 
         messageService.createMessage(mockRequest);
 
@@ -105,6 +110,8 @@ class MessageServiceImpTest {
         when(messageMapper.mapToMessageEntity(any())).thenReturn(mockMessage);
         when(messageRepository.save(any())).thenReturn(mockMessage);
         when(messageMapper.mapToMessageResponse(any())).thenReturn(mockResponse);
+        when(userService.getUserName(1L)).thenReturn("ahmed_ali");
+        when(courseService.getCourseName(1L)).thenReturn("Data Structures");
 
         messageService.createMessage(mockRequest);
 

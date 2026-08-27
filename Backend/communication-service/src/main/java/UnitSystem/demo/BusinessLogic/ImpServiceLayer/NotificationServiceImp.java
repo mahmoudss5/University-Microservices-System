@@ -1,6 +1,8 @@
 package UnitSystem.demo.BusinessLogic.ImpServiceLayer;
 
+import UnitSystem.demo.BusinessLogic.InterfaceServiceLayer.CourseService;
 import UnitSystem.demo.BusinessLogic.InterfaceServiceLayer.NotificationService;
+import UnitSystem.demo.BusinessLogic.InterfaceServiceLayer.UserService;
 import UnitSystem.demo.BusinessLogic.Mappers.NotificationMapper;
 import UnitSystem.demo.DataAccessLayer.Dto.Notification.Course.NotificationCourseRequest;
 import UnitSystem.demo.DataAccessLayer.Dto.Notification.User.NotificationRequest;
@@ -37,10 +39,9 @@ public class NotificationServiceImp implements NotificationService {
     private final NotificationRepository notificationRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final NotificationMapper notificationMapper;
+    private final UserService userService;
+    private final CourseService courseService;
 
-    // ────────────────────────────────────────────────────────
-    // Write Operations — evict cache on every change
-    // ────────────────────────────────────────────────────────
 
     @Override
     @Transactional
@@ -136,10 +137,12 @@ public class NotificationServiceImp implements NotificationService {
     }
 
     private String resolveWsPrincipal(Notification notification) {
-        String userName = notification.getRecipient().getUserName();
+
+
+        String userName = userService.getUserName(notification.getRecipientId());
         if (userName != null && !userName.isBlank()) return userName;
-        return Objects.requireNonNull(notification.getRecipient().getEmail(),
-                "Recipient email is required when username is missing");
+
+        return "user name is Required";
     }
 
     // ────────────────────────────────────────────────────────

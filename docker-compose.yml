@@ -7,7 +7,8 @@ volumes:
   redis-data:
   kafka-data:
   zookeeper-data:
-  maven-cache: # Named volume for maven dependencies to speed up builds
+  maven-cache:
+    # Named volume for maven dependencies to speed up builds
 
 services:
 
@@ -114,6 +115,23 @@ services:
   #  DATABASE
   # ══════════════════════════════════════════
 
+  communicationServiceDb:
+    image: mysql:8.0.33
+    container_name: communicationServiceDb
+    networks: [ unisystem-net ]
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "communicationUniSys@Db#2026"
+      MYSQL_DATABASE: communicationServiceDb
+    volumes:
+      - ./communicationServiceDb:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pcommunicationUniSys@Db#2026" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
   shared-db:
     image: mysql:8.0.33
     container_name: shared-db
@@ -177,7 +195,7 @@ services:
       EUREKA_CLIENT_REGISTER_WITH_EUREKA: 'false'
       EUREKA_CLIENT_FETCH_REGISTRY: 'false'
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8761/actuator/health || exit 1"]
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8761/actuator/health || exit 1" ]
       interval: 15s
       timeout: 10s
       retries: 8
@@ -208,7 +226,7 @@ services:
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1"]
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1" ]
       interval: 15s
       timeout: 10s
       retries: 5
@@ -251,7 +269,7 @@ services:
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8081/actuator/health || exit 1"]
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8081/actuator/health || exit 1" ]
       interval: 15s
       timeout: 10s
       retries: 8
@@ -292,7 +310,7 @@ services:
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:8761/eureka
       EUREKA_INSTANCE_PREFER_IP_ADDRESS: 'true'
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8082/actuator/health || exit 1"]
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8082/actuator/health || exit 1" ]
       interval: 15s
       timeout: 10s
       retries: 8
@@ -309,7 +327,7 @@ services:
       - ./Backend/communication-service:/app
       - maven-cache:/root/.m2
     depends_on:
-      shared-db:
+      communicationServiceDb:
         condition: service_healthy
       kafka:
         condition: service_healthy
@@ -321,10 +339,11 @@ services:
       SPRING_APPLICATION_NAME: communication-service
       SERVER_PORT: 8083
       SPRING_DEVTOOLS_RESTART_ENABLED: 'true'
-      SPRING_DATASOURCE_URL: jdbc:mysql://shared-db:3306/helwanuni?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://communicationServiceDb:3306/communicationServiceDb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: "UniSys@Db#2026"
+      SPRING_DATASOURCE_PASSWORD: "communicationUniSys@Db#2026"
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_FLYWAY_ENABLED: 'true'
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       SPRING_KAFKA_CONSUMER_GROUP_ID: communication-group
       JWT_SECRET: mySuperSecretKey2026UniSystemXYZ!
@@ -333,7 +352,7 @@ services:
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8083/actuator/health || exit 1"]
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8083/actuator/health || exit 1" ]
       interval: 15s
       timeout: 10s
       retries: 8

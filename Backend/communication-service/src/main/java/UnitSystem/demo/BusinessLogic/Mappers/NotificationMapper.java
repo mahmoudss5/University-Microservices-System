@@ -5,9 +5,9 @@ import UnitSystem.demo.DataAccessLayer.Dto.Notification.User.NotificationRequest
 import UnitSystem.demo.DataAccessLayer.Dto.Notification.User.NotificationResponse;
 import UnitSystem.demo.DataAccessLayer.Entities.*;
 import UnitSystem.demo.DataAccessLayer.Repositories.CourseRepository;
+import UnitSystem.demo.DataAccessLayer.Repositories.EnrollmentSnapshotRepository;
 import UnitSystem.demo.DataAccessLayer.Repositories.UserRepository;
 import UnitSystem.demo.ExcHandler.Entites.ResourceNotFoundException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -20,28 +20,37 @@ import java.util.stream.Collectors;
  * Notification entities and DTOs.
  */
 @Component
-@RequiredArgsConstructor
 public class NotificationMapper {
 
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
+    private final EnrollmentSnapshotRepository enrollmentSnapshotRepository;
+
+    public NotificationMapper(
+            UserRepository userRepository,
+            CourseRepository courseRepository,
+            EnrollmentSnapshotRepository enrollmentSnapshotRepository) {
+        this.userRepository = userRepository;
+        this.courseRepository = courseRepository;
+        this.enrollmentSnapshotRepository = enrollmentSnapshotRepository;
+    }
 
     public Notification mapToNotificationEntity(NotificationRequest request) {
-        User recipient = userRepository.findById(request.getRecipientId())
-                .orElseThrow(() -> new ResourceNotFoundException("User", request.getRecipientId()));
+        userRepository.findById(request.getRecipientId())
+                .orElseThrow(() -> new ResourceNotFoundException("User snapshot", request.getRecipientId()));
 
         return Notification.builder()
-                .recipient(recipient)
+                .recipientId(request.getRecipientId())
                 .title(request.getTitle())
                 .message(request.getMessage())
                 .type(request.getType() != null ? request.getType() : NotificationType.SYSTEM)
                 .build();
     }
 
-    public Notification buildNotificationForUser(User recipient, String title,
+    public Notification buildNotificationForUser(Long recipientId, String title,
                                                   String message, NotificationType type) {
         return Notification.builder()
-                .recipient(recipient)
+                .recipientId(recipientId)
                 .title(title)
                 .message(message)
                 .type(type)
@@ -51,8 +60,9 @@ public class NotificationMapper {
     public NotificationResponse mapToNotificationResponse(Notification notification) {
         return NotificationResponse.builder()
                 .id(notification.getId())
-                .recipientId(notification.getRecipient().getId())
-                .recipientName(notification.getRecipient().getUserName())
+                .recipientId(notification.getRecipientId())
+                .recipientName(userRepository.findById(notification.getRecipientId())
+                        .map(User::getUserName).orElse(null))
                 .title(notification.getTitle())
                 .message(notification.getMessage())
                 .type(notification.getType().name())
@@ -63,10 +73,11 @@ public class NotificationMapper {
     }
 
     public List<Notification> mapCourseRequestToNotifications(NotificationCourseRequest request) {
-        Course course = courseRepository.findById(request.getCourseId())
-                .orElseThrow(() -> new ResourceNotFoundException("Course", request.getCourseId()));
-
-        if (course.getCourseEnrollments().isEmpty()) {
+        if (!courseRepository.existsById(request.getCourseId())) {
+            throw new ResourceNotFoundException("Course snapshot", request.getCourseId());
+        }
+        var enrollments = enrollmentSnapshotRepository.findByCourseId(request.getCourseId());
+        if (enrollments.isEmpty()) {
             return Collections.emptyList();
         }
 
@@ -74,9 +85,9 @@ public class NotificationMapper {
                 ? request.getType()
                 : NotificationType.ANNOUNCEMENT;
 
-        return course.getCourseEnrollments().stream()
+        return enrollments.stream()
                 .map(enrollment -> buildNotificationForUser(
-                        enrollment.getStudent(),
+                        enrollment.getStudentId(),
                         request.getTitle(),
                         request.getMessage(),
                         type))
