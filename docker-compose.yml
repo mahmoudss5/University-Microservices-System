@@ -4,6 +4,7 @@ networks:
 
 volumes:
   shared-db-data:
+  communication-db-data:
   redis-data:
   kafka-data:
   zookeeper-data:
@@ -55,7 +56,7 @@ services:
     volumes:
       - kafka-data:/var/lib/kafka/data
     healthcheck:
-      test: [ "CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092" ]
+      test: [ "CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:29092" ]
       interval: 15s
       timeout: 10s
       retries: 10
@@ -125,7 +126,7 @@ services:
       MYSQL_ROOT_PASSWORD: "communicationUniSys@Db#2026"
       MYSQL_DATABASE: communicationServiceDb
     volumes:
-      - ./communicationServiceDb:/var/lib/mysql
+      - communication-db-data:/var/lib/mysql
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pcommunicationUniSys@Db#2026" ]
       interval: 10s
