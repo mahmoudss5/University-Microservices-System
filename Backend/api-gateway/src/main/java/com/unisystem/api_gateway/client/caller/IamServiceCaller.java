@@ -7,10 +7,12 @@ import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class IamServiceCaller {
 
     private final IamServiceClient iamServiceClient;
@@ -26,6 +28,7 @@ public class IamServiceCaller {
 
     public DashboardDtos.StudentProfileDto getStudentDetailsFallback(
             Long studentId, String authorization, String userId, String roles, Throwable t) {
+        log.error("Fallback triggered for getStudentDetails for studentId: {}. Reason: {}", studentId, t.getMessage(), t);
         return fallback.getStudentDetails(studentId, authorization, userId, roles);
     }
 
@@ -39,6 +42,7 @@ public class IamServiceCaller {
 
     public DashboardDtos.TeacherProfileDto getTeacherDetailsFallback(
             Long teacherId, String authorization, String userId, String roles, Throwable t) {
+        log.error("Fallback triggered for getTeacherDetails for teacherId: {}. Reason: {}", teacherId, t.getMessage(), t);
         return fallback.getTeacherDetails(teacherId, authorization, userId, roles);
     }
 
@@ -52,6 +56,7 @@ public class IamServiceCaller {
 
     public DashboardDtos.UserDto getCurrentUserFallback(
             String authorization, String userId, String roles, Throwable t) {
+        log.error("Fallback triggered for getCurrentUser for userId: {}. Reason: {}", userId, t.getMessage(), t);
         return fallback.getCurrentUser(authorization, userId, roles);
     }
 }

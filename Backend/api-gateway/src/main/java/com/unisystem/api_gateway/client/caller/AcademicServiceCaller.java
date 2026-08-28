@@ -7,12 +7,14 @@ import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AcademicServiceCaller {
 
     private final AcademicCoreServiceClient academicCoreServiceClient;
@@ -28,6 +30,7 @@ public class AcademicServiceCaller {
 
     public List<DashboardDtos.EnrolledCourseSummaryDto> getStudentCoursesFallback(
             Long studentId, String authorization, String userId, String roles, Throwable t) {
+        log.error("Fallback triggered for getStudentCourses for studentId: {}. Reason: {}", studentId, t.getMessage(), t);
         return fallback.getStudentCourses(studentId, authorization, userId, roles);
     }
 
@@ -41,6 +44,7 @@ public class AcademicServiceCaller {
 
     public List<DashboardDtos.CourseDto> getTeacherCoursesFallback(
             Long teacherId, String authorization, String userId, String roles, Throwable t) {
+        log.error("Fallback triggered for getTeacherCourses for teacherId: {}. Reason: {}", teacherId, t.getMessage(), t);
         return fallback.getTeacherCourses(teacherId, authorization, userId, roles);
     }
 }

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-@FeignClient(name = "iam-service",fallback = com.unisystem.api_gateway.client.FallBack.IamServiceFallBack.class)
+@FeignClient(name = "iam-service")
 public interface IamServiceClient {
 
     @GetMapping("/api/students/details/{id}")
