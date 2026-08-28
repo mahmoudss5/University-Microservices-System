@@ -92,7 +92,6 @@ class NotificationServiceImpTest {
         when(notificationMapper.mapToNotificationEntity(any())).thenReturn(mockNotification);
         when(notificationRepository.save(any())).thenReturn(mockNotification);
         when(notificationMapper.mapToNotificationResponse(any())).thenReturn(mockResponse);
-        when(userService.getUserName(1L)).thenReturn("ahmed_ali");
 
         NotificationResponse result = notificationService.createNotification(mockRequest);
 
@@ -112,6 +111,7 @@ class NotificationServiceImpTest {
         when(notificationMapper.mapToNotificationEntity(any())).thenReturn(mockNotification);
         when(notificationRepository.save(any())).thenReturn(mockNotification);
         when(notificationMapper.mapToNotificationResponse(any())).thenReturn(mockResponse);
+        when(userService.getUserName(1L)).thenReturn("ahmed_ali");
 
         notificationService.sendNotificationToUser(mockRequest);
 
