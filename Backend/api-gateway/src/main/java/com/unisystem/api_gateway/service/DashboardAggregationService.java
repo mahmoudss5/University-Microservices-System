@@ -27,7 +27,8 @@ public class DashboardAggregationService {
         InternalRequestHeaders headers = headersFactory.create(token);
         Mono<DashboardDtos.StudentProfileDto> profile = blockingCall(() ->
                 iamServiceCaller.getStudentDetails(
-                        studentId, headers.authorization(), headers.userId(), headers.roles()));
+                        studentId, headers.authorization(), headers.userId(), headers.roles()))
+                .doOnNext(p -> log.info("BFF Aggregation: Fetched student profile: {}", p));
         Mono<List<DashboardDtos.EnrolledCourseSummaryDto>> courses = blockingCall(() ->
                 academicServiceCaller.getStudentCourses(
                         studentId, headers.authorization(), headers.userId(), headers.roles()))
@@ -39,14 +40,16 @@ public class DashboardAggregationService {
 
         return Mono.zip(profile, courses)
                 .map(result -> new DashboardDtos.StudentDashboardResponseDto(
-                        DashboardUtils.mergeStudentCourses(result.getT1(), result.getT2())));
+                        DashboardUtils.mergeStudentCourses(result.getT1(), result.getT2())))
+                .doOnNext(dto -> log.info("BFF Aggregation: Aggregated Student Dashboard: {}", dto));
     }
 
     public Mono<DashboardDtos.TeacherDashboardResponseDto> getTeacherDashboard(Long teacherId, String token) {
         InternalRequestHeaders headers = headersFactory.create(token);
         Mono<DashboardDtos.TeacherProfileDto> profile = blockingCall(() ->
                 iamServiceCaller.getTeacherDetails(
-                        teacherId, headers.authorization(), headers.userId(), headers.roles()));
+                        teacherId, headers.authorization(), headers.userId(), headers.roles()))
+                .doOnNext(p -> log.info("BFF Aggregation: Fetched teacher profile: {}", p));
         Mono<List<DashboardDtos.CourseDto>> courses = blockingCall(() ->
                 academicServiceCaller.getTeacherCourses(
                         teacherId, headers.authorization(), headers.userId(), headers.roles()))
@@ -61,14 +64,16 @@ public class DashboardAggregationService {
                     DashboardUtils.mapTeacherCourses(result.getT2(), result.getT1());
             return new DashboardDtos.TeacherDashboardResponseDto(
                     result.getT1(), mappedCourses, mappedCourses.size());
-        });
+        }).doOnNext(dto -> log.info("BFF Aggregation: Aggregated Teacher Dashboard: {}", dto));
     }
 
     public Mono<DashboardDtos.UserDashboardResponseDto> getCurrentUserDashboard(String token) {
         InternalRequestHeaders headers = headersFactory.create(token);
         return blockingCall(() -> iamServiceCaller.getCurrentUser(
                 headers.authorization(), headers.userId(), headers.roles()))
-                .flatMap(user -> dashboardForRole(user, token));
+                .doOnNext(u -> log.info("BFF Aggregation: Fetched current user: {}", u))
+                .flatMap(user -> dashboardForRole(user, token))
+                .doOnNext(dto -> log.info("BFF Aggregation: Final User Dashboard: {}", dto));
     }
 
     private Mono<DashboardDtos.UserDashboardResponseDto> dashboardForRole(

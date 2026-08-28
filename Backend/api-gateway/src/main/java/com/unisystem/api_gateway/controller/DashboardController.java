@@ -28,6 +28,7 @@ public class DashboardController {
 
         log.info("BFF: Fetching student details for student ID: {}", studentId);
         return dashboardAggregationService.getStudentDashboard(studentId, token)
+                .doOnNext(data -> log.info("BFF: Student details response data: {}", data))
                 .map(ResponseEntity::ok)
                 .doOnError(error -> log.error("BFF: Error fetching student details: {}", error.getMessage()));
     }
@@ -39,6 +40,7 @@ public class DashboardController {
 
         log.info("BFF: Fetching teacher details for teacher ID: {}", teacherId);
         return dashboardAggregationService.getTeacherDashboard(teacherId, token)
+                .doOnNext(data -> log.info("BFF: Teacher details response data: {}", data))
                 .map(ResponseEntity::ok)
                 .doOnError(error -> log.error("BFF: Error fetching teacher details: {}", error.getMessage()));
     }
@@ -48,6 +50,7 @@ public class DashboardController {
             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String token) {
 
         return dashboardAggregationService.getCurrentUserDashboard(token)
+                .doOnNext(data -> log.info("BFF: User dashboard response data: {}", data))
                 .map(ResponseEntity::ok)
                 .doOnSuccess(response -> log.info("BFF: Successfully fetched user dashboard data"))
                 .doOnError(error -> log.error("BFF: Error fetching dashboard data: {}", error.getMessage()));
