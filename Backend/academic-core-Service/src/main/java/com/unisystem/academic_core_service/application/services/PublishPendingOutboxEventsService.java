@@ -47,7 +47,6 @@ public class PublishPendingOutboxEventsService implements PublishPendingOutboxEv
             }
         }
     }
-
     private long backoffSeconds(int attempt) { return Math.min(600L, 1L << Math.min(attempt - 1, 9)); }
     private String abbreviate(String value) { return value == null ? "Unknown broker failure" : value.substring(0, Math.min(value.length(), 2000)); }
     private String resolveWorkerId() {

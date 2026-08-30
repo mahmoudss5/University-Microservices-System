@@ -20,7 +20,7 @@
 └──────────────┬───────────────────────────┘
                │
 ┌──────────────▼───────────────────────────┐
-│  MySQL Database (shared: helwanuni)      │
+│  MySQL Database (communicationServiceDb) │
 └──────────────────────────────────────────┘
 ```
 
@@ -121,6 +121,6 @@ mvn spring-boot:run
 ## Important Notes for Team
 
 - Port: **8083** (matches project convention)
-- Database: **helwanuni** (same as all other services)
+- Database: **communicationServiceDb** (owned only by Communication Service)
 - JWT Secret: must match IAM Service secret in `application.yml`
 - Security is enabled — get a JWT token from IAM Service first, then use it as `Bearer {token}` in Swagger

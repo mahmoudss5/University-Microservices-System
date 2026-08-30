@@ -5,15 +5,16 @@ spring:
   application:
     name: iam-service
   datasource:
-    url: jdbc:mysql://localhost:3306/helwanuni
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3310/iamDb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
     username: root
-    password: ${MYSQL_PASSWORD:UniSys@Db#2026}
+    password: ${MYSQL_PASSWORD:iamUniSys@Db#2026}
   jpa:
     hibernate:
       ddl-auto: validate
     show-sql: false
   flyway:
-    enabled: false
+    enabled: true
+    locations: classpath:db/migration
   data:
     redis:
       host: ${SPRING_DATA_REDIS_HOST:localhost}
@@ -26,6 +27,13 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: ${SPRING_KAFKA_CONSUMER_GROUP_ID:iam-security-audit-v1}
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
 
 # JWT — ⚠️ Move to environment variable or secrets manager in production
 jwt:

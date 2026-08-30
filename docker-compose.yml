@@ -3,9 +3,9 @@ networks:
     driver: bridge
 
 volumes:
-  shared-db-data:
   communication-db-data:
   academic-db-data:
+  iam-db-data:
   redis-data:
   kafka-data:
   zookeeper-data:
@@ -78,6 +78,17 @@ services:
         kafka-topics --create --if-not-exists --topic student-enrolled --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
         kafka-topics --create --if-not-exists --topic announcement-created --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
         kafka-topics --create --if-not-exists --topic course-created --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
+        kafka-topics --create --if-not-exists --topic course-deleted --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
+        kafka-topics --create --if-not-exists --topic student-unenrolled --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
+        kafka-topics --create --if-not-exists --topic feedback-created --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
+        kafka-topics --create --if-not-exists --topic security-audit-events.v1 --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
+        kafka-topics --create --if-not-exists --topic security-audit-events.v1.DLT --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
+        kafka-topics --create --if-not-exists --topic student-enrolled.DLT --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
+        kafka-topics --create --if-not-exists --topic student-unenrolled.DLT --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
+        kafka-topics --create --if-not-exists --topic course-created.DLT --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
+        kafka-topics --create --if-not-exists --topic course-deleted.DLT --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
+        kafka-topics --create --if-not-exists --topic announcement-created.DLT --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
+        kafka-topics --create --if-not-exists --topic feedback-created.DLT --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
         kafka-topics --create --if-not-exists --topic notification-push --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
         kafka-topics --create --if-not-exists --topic student-registered --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
         kafka-topics --create --if-not-exists --topic user-registered-v1 --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
@@ -137,6 +148,23 @@ services:
       timeout: 5s
       retries: 10
 
+  iamDb:
+    image: mysql:8.0.33
+    container_name: iamDb
+    networks: [ unisystem-net ]
+    ports:
+      - "3310:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "iamUniSys@Db#2026"
+      MYSQL_DATABASE: iamDb
+    volumes:
+      - iam-db-data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-piamUniSys@Db#2026" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
   communicationServiceDb:
     image: mysql:8.0.33
     container_name: communicationServiceDb
@@ -153,47 +181,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-
-  shared-db:
-    image: mysql:8.0.33
-    container_name: shared-db
-    networks: [ unisystem-net ]
-    ports:
-      - "3307:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: "UniSys@Db#2026"
-      MYSQL_DATABASE: helwanuni
-    volumes:
-      - shared-db-data:/var/lib/mysql
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pUniSys@Db#2026" ]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-
-  db-init:
-    image: mysql:8.0.33
-    container_name: db-init
-    networks: [ unisystem-net ]
-    depends_on:
-      shared-db:
-        condition: service_healthy
-    environment:
-      MYSQL_ROOT_PASSWORD: "UniSys@Db#2026"
-    volumes:
-      - ./init.sql:/init.sql:ro
-    entrypoint: [ "/bin/sh", "-c" ]
-    command:
-      - |
-        set -e
-        schema_exists=$$(mysql --host=shared-db --port=3306 --user=root --password="$$MYSQL_ROOT_PASSWORD" --skip-column-names --silent -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='helwanuni' AND table_name='users';")
-        if [ "$$schema_exists" -gt 0 ]; then
-          echo 'Database schema already exists; skipping bootstrap.'
-          exit 0
-        fi
-        echo 'Running database bootstrap...'
-        mysql --host=shared-db --port=3306 --user=root --password="$$MYSQL_ROOT_PASSWORD" --database=helwanuni < /init.sql
-    restart: "no"
 
   # ══════════════════════════════════════════
   #  MICROSERVICES (With Hot Reload Support)
@@ -238,6 +225,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      kafka:
+        condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: api-gateway
       SERVER_PORT: 8080
@@ -247,6 +236,7 @@ services:
       JWT_SECRET: mySuperSecretKey2026UniSystemXYZ!
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
     healthcheck:
       test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1" ]
       interval: 15s
@@ -267,10 +257,8 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
-      shared-db:
+      iamDb:
         condition: service_healthy
-      db-init:
-        condition: service_completed_successfully
       eureka-server:
         condition: service_healthy
       redis:
@@ -279,11 +267,13 @@ services:
       SPRING_APPLICATION_NAME: iam-service
       SERVER_PORT: 8081
       SPRING_DEVTOOLS_RESTART_ENABLED: 'true'
-      SPRING_DATASOURCE_URL: jdbc:mysql://shared-db:3306/helwanuni?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://iamDb:3306/iamDb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: "UniSys@Db#2026"
+      SPRING_DATASOURCE_PASSWORD: "iamUniSys@Db#2026"
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_FLYWAY_ENABLED: 'true'
+      SPRING_KAFKA_CONSUMER_GROUP_ID: iam-security-audit-v1
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:8761/eureka
       EUREKA_INSTANCE_PREFER_IP_ADDRESS: 'true'
       JWT_SECRET: mySuperSecretKey2026UniSystemXYZ!
@@ -320,9 +310,10 @@ services:
       SPRING_APPLICATION_NAME: academic-core
       SERVER_PORT: 8082
       SPRING_DEVTOOLS_RESTART_ENABLED: 'true'
-      SPRING_DATASOURCE_URL: jdbc:mysql://shared-db:3306/helwanuni?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://academicDb:3306/academicDb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: "UniSys@Db#2026"
+      SPRING_DATASOURCE_PASSWORD: "academicUniSys@Db#2026"
+      SPRING_FLYWAY_ENABLED: 'true'
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       SPRING_DATA_REDIS_HOST: redis
