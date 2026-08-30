@@ -4,6 +4,10 @@ import com.unisystem.academic_core_service.domain.exceptions.AlreadyEnrolledExce
 import com.unisystem.academic_core_service.domain.exceptions.CourseNotFoundException;
 import com.unisystem.academic_core_service.domain.exceptions.DuplicateCourseException;
 import com.unisystem.academic_core_service.domain.exceptions.InvalidEnrollmentException;
+import com.unisystem.academic_core_service.domain.exceptions.InvalidPrerequisiteException;
+import com.unisystem.academic_core_service.domain.exceptions.PrerequisiteNotMetException;
+import com.unisystem.academic_core_service.domain.exceptions.InvalidUserRoleException;
+import com.unisystem.academic_core_service.domain.exceptions.UserSnapshotNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,11 +39,31 @@ public class GlobalExceptionHandler {
         return buildError(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
+    @ExceptionHandler(UserSnapshotNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleUserNotFound(UserSnapshotNotFoundException ex) {
+        return buildError(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
     // ─── 400 Bad Request ───────────────────────────────────────────────────────
 
     @ExceptionHandler(InvalidEnrollmentException.class)
     public ResponseEntity<Map<String, Object>> handleInvalidEnrollment(InvalidEnrollmentException ex) {
         return buildError(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler({InvalidPrerequisiteException.class, InvalidUserRoleException.class})
+    public ResponseEntity<Map<String, Object>> handleDomainValidation(RuntimeException ex) {
+        return buildError(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(PrerequisiteNotMetException.class)
+    public ResponseEntity<Map<String, Object>> handlePrerequisitesNotMet(PrerequisiteNotMetException ex) {
+        Map<String, Object> body = errorBody(HttpStatus.CONFLICT, ex.getMessage());
+        body.put("code", "PREREQUISITES_NOT_COMPLETED");
+        body.put("studentId", ex.getStudentId());
+        body.put("requestedCourseId", ex.getRequestedCourseId());
+        body.put("missingPrerequisites", ex.getMissingPrerequisites());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -57,11 +81,15 @@ public class GlobalExceptionHandler {
     // ─── Helper ────────────────────────────────────────────────────────────────
 
     private ResponseEntity<Map<String, Object>> buildError(HttpStatus status, String message) {
+        return ResponseEntity.status(status).body(errorBody(status, message));
+    }
+
+    private Map<String, Object> errorBody(HttpStatus status, String message) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now().toString());
         body.put("status", status.value());
         body.put("error", status.getReasonPhrase());
         body.put("message", message);
-        return ResponseEntity.status(status).body(body);
+        return body;
     }
 }

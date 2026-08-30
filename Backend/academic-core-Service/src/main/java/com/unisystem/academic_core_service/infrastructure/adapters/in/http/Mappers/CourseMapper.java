@@ -1,12 +1,11 @@
 package com.unisystem.academic_core_service.infrastructure.adapters.in.http.Mappers;
 
-import com.unisystem.academic_core_service.domain.model.Department;
 import com.unisystem.academic_core_service.infrastructure.adapters.out.persistence.entity.DepartmentEntity;
 import com.unisystem.academic_core_service.infrastructure.adapters.out.persistence.repository.DepartmentJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import com.unisystem.academic_core_service.domain.application.port.in.CreateCourseUseCase;
+import com.unisystem.academic_core_service.application.port.in.CreateCourseUseCase;
 import com.unisystem.academic_core_service.domain.model.Course;
 import com.unisystem.academic_core_service.infrastructure.adapters.in.http.Dto.Request.CreateCourseRequest;
 import com.unisystem.academic_core_service.infrastructure.adapters.in.http.Dto.Request.UpdateCourseRequest;

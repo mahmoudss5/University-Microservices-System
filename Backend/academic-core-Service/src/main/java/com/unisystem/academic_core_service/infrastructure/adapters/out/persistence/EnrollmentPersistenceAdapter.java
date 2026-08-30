@@ -1,19 +1,16 @@
 package com.unisystem.academic_core_service.infrastructure.adapters.out.persistence;
 
-import com.unisystem.academic_core_service.domain.application.port.out.EnrollmentRepositoryPort;
+import com.unisystem.academic_core_service.application.port.out.EnrollmentRepositoryPort;
 import com.unisystem.academic_core_service.domain.model.Enrollment;
 import com.unisystem.academic_core_service.infrastructure.adapters.out.persistence.entity.EnrollmentEntity;
 import com.unisystem.academic_core_service.infrastructure.adapters.out.persistence.mapper.EnrollmentPersistenceMapper;
 import com.unisystem.academic_core_service.infrastructure.adapters.out.persistence.repository.EnrollmentJpaRepository;
-import com.unisystem.academic_core_service.infrastructure.config.CacheConfig;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import com.unisystem.academic_core_service.domain.model.EnrollmentStatus;
 
 @Component
 @RequiredArgsConstructor
@@ -57,5 +54,11 @@ public class EnrollmentPersistenceAdapter implements EnrollmentRepositoryPort {
     @Override
     public void deleteById(Long enrollmentId) {
         enrollmentJpaRepository.deleteById(enrollmentId);
+    }
+
+    @Override
+    public boolean hasStudentCompletedCourse(Long studentId, Long courseId) {
+        return enrollmentJpaRepository.existsByStudentIdAndCourseIdAndStatusAndPassedTrue(
+                studentId, courseId, EnrollmentStatus.COMPLETED);
     }
 }

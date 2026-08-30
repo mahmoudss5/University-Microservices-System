@@ -5,6 +5,7 @@ networks:
 volumes:
   shared-db-data:
   communication-db-data:
+  academic-db-data:
   redis-data:
   kafka-data:
   zookeeper-data:
@@ -79,6 +80,10 @@ services:
         kafka-topics --create --if-not-exists --topic course-created --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
         kafka-topics --create --if-not-exists --topic notification-push --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
         kafka-topics --create --if-not-exists --topic student-registered --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
+        kafka-topics --create --if-not-exists --topic user-registered-v1 --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
+        kafka-topics --create --if-not-exists --topic user-updated-v1 --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
+        kafka-topics --create --if-not-exists --topic user-deactivated-v1 --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
+        kafka-topics --create --if-not-exists --topic user-deleted-v1 --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
         echo 'Topics created:'
         kafka-topics --list --bootstrap-server kafka:29092
     restart: on-failure
@@ -115,6 +120,22 @@ services:
   # ══════════════════════════════════════════
   #  DATABASE
   # ══════════════════════════════════════════
+  academicDb:
+    image: mysql:8.0.33
+    container_name: academicDb
+    networks: [ unisystem-net ]
+    ports:
+      - "3309:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "academicUniSys@Db#2026"
+      MYSQL_DATABASE: academicDb
+    volumes:
+      - academic-db-data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pacademicUniSys@Db#2026" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   communicationServiceDb:
     image: mysql:8.0.33
@@ -287,10 +308,8 @@ services:
       - ./Backend/academic-core-Service:/app
       - maven-cache:/root/.m2
     depends_on:
-      shared-db:
+      academicDb:
         condition: service_healthy
-      db-init:
-        condition: service_completed_successfully
       kafka:
         condition: service_healthy
       eureka-server:

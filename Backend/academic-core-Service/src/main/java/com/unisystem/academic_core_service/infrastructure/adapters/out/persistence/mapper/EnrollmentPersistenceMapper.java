@@ -13,6 +13,9 @@ public class EnrollmentPersistenceMapper {
         entity.setStudentId(enrollment.getStudentId());
         entity.setCourseId(enrollment.getCourseId());
         entity.setEnrolledAt(enrollment.getEnrolledAt());
+        entity.setStatus(enrollment.getStatus());
+        entity.setGrade(enrollment.getGrade());
+        entity.setPassed(enrollment.getPassed());
         return entity;
     }
 
@@ -22,6 +25,9 @@ public class EnrollmentPersistenceMapper {
         enrollment.setStudentId(entity.getStudentId());
         enrollment.setCourseId(entity.getCourseId());
         enrollment.setEnrolledAt(entity.getEnrolledAt());
+        enrollment.setStatus(entity.getStatus());
+        enrollment.setGrade(entity.getGrade());
+        enrollment.setPassed(entity.getPassed());
         return enrollment;
     }
 }

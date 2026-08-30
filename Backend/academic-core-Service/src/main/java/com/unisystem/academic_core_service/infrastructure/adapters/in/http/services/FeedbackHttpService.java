@@ -1,7 +1,7 @@
 package com.unisystem.academic_core_service.infrastructure.adapters.in.http.services;
 
-import com.unisystem.academic_core_service.domain.application.port.in.GetFeedBackQuery;
-import com.unisystem.academic_core_service.domain.application.port.in.SubmitFeedbackUseCase;
+import com.unisystem.academic_core_service.application.port.in.GetFeedBackQuery;
+import com.unisystem.academic_core_service.application.port.in.SubmitFeedbackUseCase;
 import com.unisystem.academic_core_service.domain.model.Feedback;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

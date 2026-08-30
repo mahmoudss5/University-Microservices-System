@@ -1,8 +1,12 @@
 package com.unisystem.academic_core_service.infrastructure.adapters.in.http.services;
 
-import com.unisystem.academic_core_service.domain.application.port.in.CreateCourseUseCase;
-import com.unisystem.academic_core_service.domain.application.port.in.GetCoursesQuery;
-import com.unisystem.academic_core_service.domain.application.port.out.CourseRepositoryPort;
+import com.unisystem.academic_core_service.application.port.in.CreateCourseUseCase;
+import com.unisystem.academic_core_service.application.port.in.GetCoursesQuery;
+import com.unisystem.academic_core_service.application.port.out.CourseRepositoryPort;
+import com.unisystem.academic_core_service.application.port.out.CoursePrerequisiteRepositoryPort;
+import com.unisystem.academic_core_service.application.port.out.EventPublisherPort;
+import com.unisystem.academic_core_service.domain.events.CourseDeletedEvent;
+import com.unisystem.academic_core_service.domain.exceptions.InvalidPrerequisiteException;
 import com.unisystem.academic_core_service.domain.exceptions.CourseNotFoundException;
 import com.unisystem.academic_core_service.domain.model.Course;
 import com.unisystem.academic_core_service.infrastructure.adapters.in.http.Dto.Request.CreateCourseRequest;
@@ -17,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +33,10 @@ public class CourseHttpService {
     private final DepartmentJpaRepository departmentJpaRepository;
     private final IamUserClient iamUserClient;
     private final CourseMapper courseMapper;
+    private final CoursePrerequisiteRepositoryPort prerequisiteRepository;
+    private final EventPublisherPort events;
 
+    @Transactional
     public Course createCourse(CreateCourseRequest request, String userIdHeader) {
         Long teacherId = resolveTeacherId(userIdHeader, request.userId());
         Long departmentId = resolveDepartmentId(request.departmentName());
@@ -37,9 +45,14 @@ public class CourseHttpService {
         return createCourseUseCase.create(command);
     }
 
+    @Transactional
     public void deleteCourse(Long id) {
         getExistingCourse(id);
+        if (prerequisiteRepository.isRequiredByAnyCourse(id)) {
+            throw new InvalidPrerequisiteException("Course cannot be deleted while another course requires it");
+        }
         courseRepositoryPort.deleteById(id);
+        events.publishCourseDeleted(new CourseDeletedEvent(id.toString()));
     }
 
     public Course updateCourse(Long id, UpdateCourseRequest request, String userIdHeader) {

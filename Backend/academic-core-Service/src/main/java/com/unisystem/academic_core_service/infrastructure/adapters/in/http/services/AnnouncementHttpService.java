@@ -1,8 +1,8 @@
 package com.unisystem.academic_core_service.infrastructure.adapters.in.http.services;
 
-import com.unisystem.academic_core_service.domain.application.port.in.CreateAnnouncementUseCase;
-import com.unisystem.academic_core_service.domain.application.port.in.GetAnnouncementsQuery;
-import com.unisystem.academic_core_service.domain.application.port.in.GetAnnouncementsQuery.AnnouncementDTO;
+import com.unisystem.academic_core_service.application.port.in.CreateAnnouncementUseCase;
+import com.unisystem.academic_core_service.application.port.in.GetAnnouncementsQuery;
+import com.unisystem.academic_core_service.application.port.in.GetAnnouncementsQuery.AnnouncementDTO;
 import com.unisystem.academic_core_service.domain.model.Announcement;
 import com.unisystem.academic_core_service.infrastructure.adapters.in.http.Dto.Request.CreateAnnouncementRequest;
 import com.unisystem.academic_core_service.infrastructure.adapters.in.http.Dto.Response.AnnouncementResponse;

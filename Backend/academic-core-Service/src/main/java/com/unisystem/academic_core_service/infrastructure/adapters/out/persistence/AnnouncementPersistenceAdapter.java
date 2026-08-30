@@ -1,6 +1,6 @@
 package com.unisystem.academic_core_service.infrastructure.adapters.out.persistence;
 
-import com.unisystem.academic_core_service.domain.application.port.out.AnnouncementRepositoryPort;
+import com.unisystem.academic_core_service.application.port.out.AnnouncementRepositoryPort;
 import com.unisystem.academic_core_service.domain.model.Announcement;
 import com.unisystem.academic_core_service.infrastructure.adapters.out.persistence.entity.AnnouncementEntity;
 import com.unisystem.academic_core_service.infrastructure.adapters.out.persistence.mapper.AnnouncementPersistenceMapper;

@@ -18,4 +18,6 @@ public interface EnrollmentSnapshotRepository
             Long studentId,
             Long courseId
     );
+
+    void deleteByStudentIdAndCourseId(Long studentId, Long courseId);
 }

@@ -21,7 +21,11 @@ This microservice handles user identities, authentication, authorization, and ba
    - Manages Many-to-Many relationships between users and courses.
    - API to enroll users, remove users, and query participants of a course.
 
-4. **Database Migrations (Flyway)**
+4. **Event-Driven Architecture (Kafka)**
+   - Publishes `user-registered` events to Apache Kafka asynchronously when a new user registers.
+   - Allows decoupled downstream processing by the Communication Service (e.g., sending welcome notifications).
+
+5. **Database Migrations (Flyway)**
    - Replaced automatic Hibernate DDL generation (`ddl-auto=update`) with **Flyway** for reliable schema versioning.
    - Schema defined in `src/main/resources/db/migration/`.
 

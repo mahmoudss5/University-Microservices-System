@@ -65,7 +65,7 @@ University-Management-System-Microservices/
 │   │       │   └── SecurityConfig.java                   # WebFlux security + CORS
 │   │       └── resources/
 │   │           ├── scripts/rate_limiter.lua              # Lua sliding-window algorithm
-│   │           └── application.properties
+│   │           └── application.yml
 │   │
 │   ├── iam-service/                   # Spring MVC (Servlet)
 │   │   └── src/main/java/com/uni/iam/
@@ -210,7 +210,7 @@ X-RateLimit-Remaining: 0
 
 **File:** [`LuaRateLimiterGatewayFilterFactory.java`](Backend/api-gateway/src/main/java/com/unisystem/api_gateway/filter/LuaRateLimiterGatewayFilterFactory.java)
 
-A **configurable** Spring Cloud Gateway filter factory — attach it to any route and set the limit in `application.properties`.
+A **configurable** Spring Cloud Gateway filter factory — attach it to any route and set the limit in `application.yml`.
 
 | Property | Value |
 |---|---|
@@ -219,10 +219,17 @@ A **configurable** Spring Cloud Gateway filter factory — attach it to any rout
 | Algorithm | Sliding Window (same Lua script as Layer 1) |
 | Redis key pattern | `rl:route:{routeId}:{clientIp}` |
 
-**Configuration syntax:**
-```properties
-spring.cloud.gateway.routes[0].filters[0].name=LuaRateLimiter
-spring.cloud.gateway.routes[0].filters[0].args.requestsPerMinute=20
+**Configuration syntax (`application.yml`):**
+```yaml
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: some-route
+          filters:
+            - name: LuaRateLimiter
+              args:
+                requestsPerMinute: 20
 ```
 
 ---

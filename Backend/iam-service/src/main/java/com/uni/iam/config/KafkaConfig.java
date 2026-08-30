@@ -15,4 +15,11 @@ public class KafkaConfig {
                 .replicas(1)
                 .build();
     }
+
+    @Bean public NewTopic userRegisteredTopic() { return topic("user-registered-v1"); }
+    @Bean public NewTopic userUpdatedTopic() { return topic("user-updated-v1"); }
+    @Bean public NewTopic userDeactivatedTopic() { return topic("user-deactivated-v1"); }
+    @Bean public NewTopic userDeletedTopic() { return topic("user-deleted-v1"); }
+
+    private NewTopic topic(String name) { return TopicBuilder.name(name).partitions(1).replicas(1).build(); }
 }

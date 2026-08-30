@@ -1,6 +1,6 @@
 package com.unisystem.academic_core_service.infrastructure.aop.aspects;
 
-import com.unisystem.academic_core_service.domain.application.port.in.GetCoursesQuery;
+import com.unisystem.academic_core_service.application.port.in.GetCoursesQuery;
 import com.unisystem.academic_core_service.domain.model.Course;
 import com.unisystem.academic_core_service.infrastructure.aop.annotations.CourseTeacherOnly;
 import org.aspectj.lang.JoinPoint;
