@@ -17,6 +17,7 @@ Spring Boot microservice for core academic operations in Uni-System:
 - MySQL
 - Flyway (schema migrations)
 - Kafka (event publishing)
+- **Transactional Outbox Pattern** (guaranteed event delivery)
 - Eureka Client (service discovery)
 - Maven
 
@@ -28,10 +29,10 @@ src/main/java/com/unisystem/academic_core_service/
 │   ├── application/
 │   │   ├── port/in/          # Use case & query interfaces
 │   │   ├── port/out/         # Repository & event publisher ports
-│   │   └── services/         # Application business services
+│   │   └── services/         # Application business services & Outbox publisher
 │   ├── events/               # Kafka event payload models
 │   ├── exceptions/           # Domain exception hierarchy
-│   └── model/                # Domain entities & value objects
+│   └── model/                # Domain entities (Course, Enrollment, OutboxEvent, etc.)
 └── infrastructure/
     ├── adapters/
     │   ├── ExcepHandler/     # Global exception handler (@RestControllerAdvice)

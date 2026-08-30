@@ -127,10 +127,17 @@ Services publish domain events consumed by downstream services:
 
 | Topic | Publisher | Consumer |
 |---|---|---|
-| `student-registered` | IAM Service | Academic Core |
+| `user-registered-v1` | IAM Service | Academic Core, Communication |
+| `user-updated-v1` | IAM Service | Academic Core, Communication |
+| `user-deactivated-v1`| IAM Service | Academic Core, Communication |
+| `user-deleted-v1` | IAM Service | Academic Core, Communication |
+| `security-audit-events`| API Gateway | IAM Service |
 | `student-enrolled` | Academic Core | Communication Service |
-| `announcement-created` | Academic Core | Communication Service |
+| `student-unenrolled` | Academic Core | Communication Service |
 | `course-created` | Academic Core | Communication Service |
+| `course-deleted` | Academic Core | Communication Service |
+| `announcement-created` | Academic Core | Communication Service |
+| `feedback-created` | Academic Core | Communication Service |
 | `notification-push` | Communication Service | Downstream |
 
 ### 5. Aspect-Oriented Programming (AOP)
