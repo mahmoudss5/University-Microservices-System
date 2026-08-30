@@ -47,11 +47,11 @@ src/main/java/com/unisystem/academic_core_service/
 
 ## Configuration
 
-Main config file: `src/main/resources/application.properties`
+Main config file: `src/main/resources/application.yml`
 
 Key properties:
-- `spring.application.name=academic-core-service`
-- `server.port=8082`
+- `spring.application.name: academic-core-service`
+- `server.port: 8082`
 - MySQL datasource config
 - Redis connection config
 - Kafka bootstrap servers
@@ -59,14 +59,28 @@ Key properties:
 
 **Security note**: For production, prefer environment variables:
 
-```properties
-spring.datasource.url=${DB_URL}
-spring.datasource.username=${DB_USERNAME}
-spring.datasource.password=${DB_PASSWORD}
-spring.kafka.bootstrap-servers=${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
-eureka.client.service-url.defaultZone=${EUREKA_URL:http://localhost:8761/eureka}
-spring.data.redis.host=${REDIS_HOST:localhost}
+```yaml
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
 ```
+
+## Caller Resilience Pattern (Fault Tolerance)
+
+This service uses **Resilience4j** to manage synchronous inter-service calls (e.g., calling the IAM service). The Feign clients are encapsulated inside a "Caller" layer (`IamUserClient` wrapped by `IamServiceCaller`), which manages the circuit breaker, fallback logic, bulkhead, and retry configurations defined in `application.yml`.
+
 
 ## Domain Exception Hierarchy
 

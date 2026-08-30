@@ -10,6 +10,7 @@ import com.uni.iam.exception.UserNotFoundByUsernameException;
 import com.uni.iam.exception.UserNotFoundException;
 import com.uni.iam.repository.UserRepository;
 import com.uni.iam.service.interfaces.UserService;
+import com.uni.iam.service.interfaces.KafkaEventPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final KafkaEventPublisher kafkaEventPublisher;
 
     @Override
     @ExecutionTime
@@ -76,7 +78,9 @@ public class UserServiceImpl implements UserService {
             user.setPassword(passwordEncoder.encode(request.getPassword()));
         }
 
-        return toUserResponse(userRepository.save(user));
+        User saved = userRepository.save(user);
+        kafkaEventPublisher.publishUserUpdatedEvent(saved);
+        return toUserResponse(saved);
     }
 
     @Override
@@ -84,10 +88,9 @@ public class UserServiceImpl implements UserService {
     @GeneralLog
     @Transactional
     public void deleteUser(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new UserNotFoundException(id);
-        }
+        User user = findUserOrThrow(id);
         userRepository.deleteById(id);
+        kafkaEventPublisher.publishUserDeletedEvent(user);
     }
 
     @Override
@@ -97,6 +100,7 @@ public class UserServiceImpl implements UserService {
         User user = findUserOrThrow(id);
         user.setActive(true);
         userRepository.save(user);
+        kafkaEventPublisher.publishUserUpdatedEvent(user);
     }
 
     @Override
@@ -106,6 +110,7 @@ public class UserServiceImpl implements UserService {
     User user = findUserOrThrow(id);
     user.setActive(false);
     userRepository.save(user);
+    kafkaEventPublisher.publishUserDeactivatedEvent(user);
     }
 
     private User findUserOrThrow(Long id) {

@@ -122,5 +122,5 @@ mvn spring-boot:run
 
 - Port: **8083** (matches project convention)
 - Database: **helwanuni** (same as all other services)
-- JWT Secret: must match IAM Service secret in `application.properties`
+- JWT Secret: must match IAM Service secret in `application.yml`
 - Security is enabled — get a JWT token from IAM Service first, then use it as `Bearer {token}` in Swagger

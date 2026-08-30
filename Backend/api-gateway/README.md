@@ -46,6 +46,7 @@ React (Frontend)
 - Runs **JWT validation filter** before forwarding any request
 - Routes requests to correct microservice using `lb://` (load balanced via Eureka)
 - Injects user info (userId, role) into headers after JWT validation
+- Implements **Resilience4j Caller Pattern** (Circuit Breaker, Retry, Bulkhead, Fallback) for graceful failure handling of downstream services
 - No service is directly accessible from outside
 
 ---
@@ -257,4 +258,5 @@ open http://localhost:8761
 | Spring Cloud Gateway | API Gateway & routing |
 | Spring Cloud Netflix Eureka | Service discovery |
 | JWT (jjwt) | Token validation in filter |
+| Resilience4j | Circuit breaker, retry, and fault tolerance |
 | Docker Compose | Container orchestration |

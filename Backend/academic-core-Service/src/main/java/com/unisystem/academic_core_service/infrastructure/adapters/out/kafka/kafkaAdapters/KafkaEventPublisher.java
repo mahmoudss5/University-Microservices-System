@@ -1,9 +1,8 @@
 package com.unisystem.academic_core_service.infrastructure.adapters.out.kafka.kafkaAdapters;
 
-import com.unisystem.academic_core_service.domain.application.port.out.EventPublisherPort;
-import com.unisystem.academic_core_service.domain.events.AnnouncementCreatedEvent;
-import com.unisystem.academic_core_service.domain.events.CourseCreatedEvent;
-import com.unisystem.academic_core_service.domain.events.StudentEnrollend;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.unisystem.academic_core_service.application.port.out.MessageBrokerPort;
+import com.unisystem.academic_core_service.domain.model.OutboxEvent;
 import com.unisystem.academic_core_service.infrastructure.adapters.out.kafka.kafkaConifg.KafkaTopics;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,58 +12,23 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class KafkaEventPublisher implements EventPublisherPort {
+public class KafkaEventPublisher implements MessageBrokerPort {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final ObjectMapper objectMapper;
 
     @Override
-    public void publishStudentEnrolled(StudentEnrollend event) {
-        String key = event.studentId();
-        kafkaTemplate.send(KafkaTopics.STUDENT_ENROLLED, key, event)
-                .thenAccept(result -> log.info(
-                        "Published StudentEnrolled → topic={} partition={} offset={} key={}",
-                        result.getRecordMetadata().topic(),
-                        result.getRecordMetadata().partition(),
-                        result.getRecordMetadata().offset(),
-                        key
-                ))
-                .exceptionally(ex -> {
-                    log.error("Failed to publish StudentEnrolled event: {}", ex.getMessage(), ex);
-                    return null;
-                });
-    }
-
-    @Override
-    public void publishCourseCreated(CourseCreatedEvent event) {
-        String key = event.courseId();
-        kafkaTemplate.send(KafkaTopics.COURSE_CREATED, key, event)
-                .thenAccept(result -> log.info(
-                        "Published CourseCreated → topic={} partition={} offset={} key={}",
-                        result.getRecordMetadata().topic(),
-                        result.getRecordMetadata().partition(),
-                        result.getRecordMetadata().offset(),
-                        key
-                ))
-                .exceptionally(ex -> {
-                    log.error("Failed to publish CourseCreated event: {}", ex.getMessage(), ex);
-                    return null;
-                });
-    }
-
-    @Override
-    public void publishAnnouncementCreated(AnnouncementCreatedEvent event) {
-        String key = event.id();
-        kafkaTemplate.send(KafkaTopics.ANNOUNCEMENT_CREATED, key, event)
-                .thenAccept(result -> log.info(
-                        "Published AnnouncementCreated → topic={} partition={} offset={} key={}",
-                        result.getRecordMetadata().topic(),
-                        result.getRecordMetadata().partition(),
-                        result.getRecordMetadata().offset(),
-                        key
-                ))
-                .exceptionally(ex -> {
-                    log.error("Failed to publish AnnouncementCreated event: {}", ex.getMessage(), ex);
-                    return null;
-                });
+    public void publish(OutboxEvent event) throws Exception {
+        String topic = switch (event.eventType()) {
+            case STUDENT_ENROLLED -> KafkaTopics.STUDENT_ENROLLED;
+            case STUDENT_UNENROLLED -> KafkaTopics.STUDENT_UNENROLLED;
+            case COURSE_CREATED -> KafkaTopics.COURSE_CREATED;
+            case COURSE_DELETED -> KafkaTopics.COURSE_DELETED;
+            case ANNOUNCEMENT_CREATED -> KafkaTopics.ANNOUNCEMENT_CREATED;
+            case FEEDBACK_CREATED -> KafkaTopics.FEEDBACK_CREATED;
+        };
+        var result = kafkaTemplate.send(topic, event.aggregateId(), objectMapper.readTree(event.eventData())).get();
+        log.info("Published outbox event eventId={} type={} topic={} partition={} offset={}", event.eventId(),
+                event.eventType(), topic, result.getRecordMetadata().partition(), result.getRecordMetadata().offset());
     }
 }

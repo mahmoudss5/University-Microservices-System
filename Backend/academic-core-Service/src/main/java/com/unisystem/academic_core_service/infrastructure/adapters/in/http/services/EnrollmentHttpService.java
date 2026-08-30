@@ -1,8 +1,8 @@
 package com.unisystem.academic_core_service.infrastructure.adapters.in.http.services;
 
-import com.unisystem.academic_core_service.domain.application.port.in.EnrollStudentUseCase;
-import com.unisystem.academic_core_service.domain.application.port.out.CourseRepositoryPort;
-import com.unisystem.academic_core_service.domain.application.port.out.EnrollmentRepositoryPort;
+import com.unisystem.academic_core_service.application.port.in.EnrollStudentUseCase;
+import com.unisystem.academic_core_service.application.port.out.CourseRepositoryPort;
+import com.unisystem.academic_core_service.application.port.out.EnrollmentRepositoryPort;
 import com.unisystem.academic_core_service.domain.exceptions.InvalidEnrollmentException;
 import com.unisystem.academic_core_service.domain.model.Course;
 import com.unisystem.academic_core_service.domain.model.Enrollment;
@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +38,10 @@ public class EnrollmentHttpService {
 
     public void drop(Long studentId, Long courseId) {
         enrollStudentUseCase.drop(studentId, courseId);
+    }
+
+    public Enrollment complete(Long studentId, Long courseId, BigDecimal grade, boolean passed) {
+        return enrollStudentUseCase.complete(studentId, courseId, grade, passed);
     }
 
     public List<EnrolledCourseResponse> getByStudentId(Long studentId, String authorization) {

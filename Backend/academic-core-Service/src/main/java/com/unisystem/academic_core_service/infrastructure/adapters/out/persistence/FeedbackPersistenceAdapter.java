@@ -1,6 +1,6 @@
 package com.unisystem.academic_core_service.infrastructure.adapters.out.persistence;
 
-import com.unisystem.academic_core_service.domain.application.port.out.FeedbackRepsitoryPort;
+import com.unisystem.academic_core_service.application.port.out.FeedbackRepsitoryPort;
 import com.unisystem.academic_core_service.domain.model.Feedback;
 import com.unisystem.academic_core_service.infrastructure.adapters.out.persistence.entity.FeedbackEntity;
 import com.unisystem.academic_core_service.infrastructure.adapters.out.persistence.mapper.FeedbackPersistenceMapper;

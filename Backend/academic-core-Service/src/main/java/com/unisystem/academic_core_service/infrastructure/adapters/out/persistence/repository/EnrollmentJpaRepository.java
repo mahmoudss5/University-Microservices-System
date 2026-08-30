@@ -5,9 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
+import com.unisystem.academic_core_service.domain.model.EnrollmentStatus;
 
 public interface EnrollmentJpaRepository extends JpaRepository<EnrollmentEntity, Long> {
     Optional<EnrollmentEntity> findByStudentIdAndCourseId(Long studentId, Long courseId);
     List<EnrollmentEntity> findByStudentId(Long studentId);
     List<EnrollmentEntity> findByCourseId(Long courseId);
+    boolean existsByStudentIdAndCourseIdAndStatusAndPassedTrue(Long studentId, Long courseId, EnrollmentStatus status);
 }

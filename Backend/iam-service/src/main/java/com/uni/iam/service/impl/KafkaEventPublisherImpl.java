@@ -19,13 +19,24 @@ public class KafkaEventPublisherImpl implements KafkaEventPublisher {
 
     @Override
     public void publishUserRegisteredEvent(User user) {
+        publish("user-registered-v1", user);
+        // Temporary compatibility for existing consumers; remove after migration.
+        publish("student-registered", user);
+    }
+
+    @Override public void publishUserUpdatedEvent(User user) { publish("user-updated-v1", user); }
+    @Override public void publishUserDeactivatedEvent(User user) { publish("user-deactivated-v1", user); }
+    @Override public void publishUserDeletedEvent(User user) { publish("user-deleted-v1", user); }
+
+    private void publish(String topic, User user) {
         Map<String, Object> event = new HashMap<>();
         event.put("userId", user.getId());
         event.put("username", user.getUsername());
         event.put("email", user.getEmail());
         event.put("role", user.getRole().name());
+        event.put("active", user.isActive());
         
-        kafkaTemplate.send("student-registered", String.valueOf(user.getId()), event);
-        log.info("Published user registered event for userId: {}", user.getId());
+        kafkaTemplate.send(topic, String.valueOf(user.getId()), event);
+        log.info("Published {} event for userId: {}", topic, user.getId());
     }
 }

@@ -3,12 +3,16 @@ package com.unisystem.academic_core_service.domain.application.services;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.unisystem.academic_core_service.domain.application.port.in.CreateCourseUseCase.CreateCourseCommand;
-import com.unisystem.academic_core_service.domain.application.port.out.CourseRepositoryPort;
-import com.unisystem.academic_core_service.domain.application.port.out.EventPublisherPort;
+import com.unisystem.academic_core_service.application.port.in.CreateCourseUseCase.CreateCourseCommand;
+import com.unisystem.academic_core_service.application.port.out.CourseRepositoryPort;
+import com.unisystem.academic_core_service.application.port.out.EventPublisherPort;
+import com.unisystem.academic_core_service.application.port.out.UserSnapshotRepositoryPort;
+import com.unisystem.academic_core_service.application.services.CreateCourseService;
 import com.unisystem.academic_core_service.domain.events.CourseCreatedEvent;
 import com.unisystem.academic_core_service.domain.exceptions.DuplicateCourseException;
 import com.unisystem.academic_core_service.domain.model.Course;
+import com.unisystem.academic_core_service.domain.model.UserRole;
+import com.unisystem.academic_core_service.domain.model.UserSnapshot;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -16,10 +20,17 @@ import org.mockito.ArgumentCaptor;
 class CreateCourseServiceTest {
     private final CourseRepositoryPort repository = mock(CourseRepositoryPort.class);
     private final EventPublisherPort publisher = mock(EventPublisherPort.class);
-    private final CreateCourseService service = new CreateCourseService(repository, publisher);
+    private final UserSnapshotRepositoryPort users = mock(UserSnapshotRepositoryPort.class);
+    private final CreateCourseService service = new CreateCourseService(repository, publisher, users);
+
+    private void teacherExists() {
+        when(users.findById(9L)).thenReturn(java.util.Optional.of(
+                new UserSnapshot(9L, "teacher", UserRole.TEACHER, true, java.time.LocalDateTime.now())));
+    }
 
     @Test
     void createsCourseAndPublishesEvent() {
+        teacherExists();
         CreateCourseCommand command = new CreateCourseCommand(
                 "Algorithms", "CS301", "Core algorithms", 40, 3, 2L, 9L,
                 LocalDate.of(2026, 9, 1), LocalDate.of(2026, 12, 20));
@@ -40,11 +51,12 @@ class CreateCourseServiceTest {
         ArgumentCaptor<CourseCreatedEvent> event = ArgumentCaptor.forClass(CourseCreatedEvent.class);
         verify(publisher).publishCourseCreated(event.capture());
         assertEquals("11", event.getValue().courseId());
-        assertEquals("CS301", event.getValue().departmentName());
+        assertEquals("CS301", event.getValue().courseCode());
     }
 
     @Test
     void rejectsDuplicateCourseCodeWithoutSaving() {
+        teacherExists();
         when(repository.existsByCourseCode("CS301")).thenReturn(true);
 
         assertThrows(DuplicateCourseException.class, () -> service.create(commandWithDates(null, null)));
@@ -55,6 +67,7 @@ class CreateCourseServiceTest {
 
     @Test
     void rejectsEndDateBeforeStartDate() {
+        teacherExists();
         CreateCourseCommand command = commandWithDates(LocalDate.of(2026, 9, 2), LocalDate.of(2026, 9, 1));
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> service.create(command));

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/enrolled-courses")
@@ -58,5 +59,13 @@ public class EnrollmentController {
 
     public record EnrollRequest(Long studentId, Long courseId) {
     }
+
+    @PatchMapping("/student/{studentId}/course/{courseId}/result")
+    public ResponseEntity<Enrollment> complete(
+            @PathVariable Long studentId, @PathVariable Long courseId, @RequestBody CompletionRequest request) {
+        return ResponseEntity.ok(enrollmentHttpService.complete(studentId, courseId, request.grade(), request.passed()));
+    }
+
+    public record CompletionRequest(BigDecimal grade, boolean passed) {}
 
 }

@@ -9,6 +9,10 @@ import jakarta.persistence.Table;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import com.unisystem.academic_core_service.domain.model.EnrollmentStatus;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 @Entity
 @Table(name = "enrollments")
@@ -32,4 +36,13 @@ public class EnrollmentEntity {
 
     @Column(name = "enrolled_at", nullable = false)
     private LocalDateTime enrolledAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private EnrollmentStatus status;
+
+    @Column(precision = 5, scale = 2)
+    private BigDecimal grade;
+
+    private Boolean passed;
 }

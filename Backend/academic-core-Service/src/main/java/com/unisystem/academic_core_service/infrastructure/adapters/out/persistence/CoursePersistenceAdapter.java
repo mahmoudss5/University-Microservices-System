@@ -1,6 +1,6 @@
 package com.unisystem.academic_core_service.infrastructure.adapters.out.persistence;
 
-import com.unisystem.academic_core_service.domain.application.port.out.CourseRepositoryPort;
+import com.unisystem.academic_core_service.application.port.out.CourseRepositoryPort;
 import com.unisystem.academic_core_service.domain.model.Course;
 import com.unisystem.academic_core_service.infrastructure.adapters.out.persistence.entity.CourseEntity;
 import com.unisystem.academic_core_service.infrastructure.adapters.out.persistence.entity.DepartmentEntity;

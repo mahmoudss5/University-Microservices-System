@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public record CourseCreatedEvent(
         String courseId,
         String courseName,
-        String departmentName,
+        String courseCode,
         LocalDate createdAt
 ) {
 }

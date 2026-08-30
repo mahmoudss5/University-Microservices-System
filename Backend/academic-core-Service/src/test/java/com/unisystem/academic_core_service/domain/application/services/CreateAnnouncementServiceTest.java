@@ -3,10 +3,11 @@ package com.unisystem.academic_core_service.domain.application.services;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.unisystem.academic_core_service.domain.application.port.in.CreateAnnouncementUseCase.CreateAnnouncementCommand;
-import com.unisystem.academic_core_service.domain.application.port.out.AnnouncementRepositoryPort;
-import com.unisystem.academic_core_service.domain.application.port.out.CourseRepositoryPort;
-import com.unisystem.academic_core_service.domain.application.port.out.EventPublisherPort;
+import com.unisystem.academic_core_service.application.port.in.CreateAnnouncementUseCase.CreateAnnouncementCommand;
+import com.unisystem.academic_core_service.application.port.out.AnnouncementRepositoryPort;
+import com.unisystem.academic_core_service.application.port.out.CourseRepositoryPort;
+import com.unisystem.academic_core_service.application.port.out.EventPublisherPort;
+import com.unisystem.academic_core_service.application.services.CreateAnnouncementService;
 import com.unisystem.academic_core_service.domain.events.AnnouncementCreatedEvent;
 import com.unisystem.academic_core_service.domain.exceptions.CourseNotFoundException;
 import com.unisystem.academic_core_service.domain.model.Announcement;

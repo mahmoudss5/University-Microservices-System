@@ -3,8 +3,10 @@ package com.unisystem.academic_core_service.domain.application.services;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.unisystem.academic_core_service.domain.application.port.out.CourseRepositoryPort;
-import com.unisystem.academic_core_service.domain.application.port.out.EnrollmentRepositoryPort;
+import com.unisystem.academic_core_service.application.port.out.CourseRepositoryPort;
+import com.unisystem.academic_core_service.application.port.out.EnrollmentRepositoryPort;
+import com.unisystem.academic_core_service.application.services.GetCoursesService;
+import com.unisystem.academic_core_service.application.services.GetEnrollmentsService;
 import com.unisystem.academic_core_service.domain.exceptions.CourseNotFoundException;
 import com.unisystem.academic_core_service.domain.model.Course;
 import com.unisystem.academic_core_service.domain.model.Enrollment;
