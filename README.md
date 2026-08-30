@@ -158,6 +158,16 @@ Implemented using **Resilience4j** in the **API Gateway** and **Academic Core Se
 - **Bulkhead**: Limits concurrent calls to a specific remote service, ensuring a slow downstream service does not exhaust the caller's thread pool.
 - **Caller Wrapper**: Feign clients are encapsulated inside a dedicated "Caller" layer (e.g., `IamServiceCaller`, `IamUserClient`). This layer gracefully handles exceptions and executes local fallback methods (returning default responses) without cluttering the Feign interface.
 
+### 9. Database-per-Service Pattern
+To ensure true loose coupling and independent scaling, the system eschews a monolithic shared database in favor of dedicated datastores for each service boundary:
+- **`iamDb`**: Owned exclusively by the IAM Service (Users, Roles, Security Audit Logs).
+- **`academicDb`**: Owned exclusively by the Academic Core Service (Courses, Enrollments, Feedback, Outbox).
+- **`communicationServiceDb`**: Owned exclusively by the Communication Service (Messages, Notifications).
+
+### 10. Transactional Outbox Pattern
+Implemented in the **Academic Core Service** to guarantee at-least-once delivery of domain events (e.g., `student-enrolled`, `course-deleted`) to Kafka, even in the event of message broker downtime.
+- Events are persisted to an `outbox_event` table in the exact same database transaction that updates the business entities.
+- A background relayer then safely publishes these pending events to Kafka and marks them as processed, preventing data inconsistencies between the database and the event stream.
 ---
 
 ## 🚦 Rate Limiting (Sliding Window — Lua + Redis)
