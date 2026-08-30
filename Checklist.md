@@ -51,7 +51,7 @@ The `docker-compose.yml` file provides orchestration for the following:
 
 | Issue | Problem | Fix |
 |--------|---------|-----|
-| **Shared MySQL / schema** | One **`shared-db`** / **`helwanuni`** for multiple services = **shared-database anti-pattern** (coupling, unclear ownership). | Prefer **DB per service** or separate schemas + no cross-service tables; use APIs/events across boundaries. For coursework, document as intentional **modular monolith split**. |
+| **Database per service—DONE✅** | IAM, Academic Core, and Communication use independent MySQL databases and Flyway-owned schemas. | Keep cross-service synchronization behind APIs and versioned Kafka events; never add cross-database foreign keys. |
 | **Event payload mismatch** | e.g. `StudentEnrollend(studentId, enrolledCourseId)` vs consumer expecting **`courseName`**, etc.; `AnnouncementCreatedEvent` fields vs consumer expecting **title/description/courseName**. | Shared **schema/DTO** (or versioned contract) + **contract tests** (e.g. Pact). |
 
 #### Medium

@@ -39,7 +39,9 @@ The project follows a modern microservices architecture where each service owns 
 
 | Component | Port | Purpose |
 |---|---|---|
-| **MySQL** | `3307` (host) / `3306` (container) | Shared relational database |
+| **IAM MySQL** | `3310` (host) / `3306` (container) | IAM users and security audit records |
+| **Academic MySQL** | `3309` (host) / `3306` (container) | Courses, enrollments, prerequisites, and outbox |
+| **Communication MySQL** | `3308` (host) / `3306` (container) | Notifications, messages, and local snapshots |
 | **Redis** | `6379` | Rate limiting (sorted sets), response caching |
 | **Apache Kafka** | `9092` | Async event bus between services |
 | **Zookeeper** | `2181` | Kafka coordination |
@@ -101,7 +103,6 @@ University-Management-System-Microservices/
 ├── FrontEnd/my-app/                   # React + Vite (port 5173)
 ├── Diagrams/                          # ERD, Sequence, Use Case, Activity, Class diagrams
 ├── docker-compose.yml                 # Full stack orchestration
-├── init.sql                           # Database bootstrap script
 └── Checklist.md
 ```
 
@@ -409,7 +410,9 @@ docker-compose up --build
 
 | Component | Host Port | Credentials |
 |---|---|---|
-| MySQL | `3307` | root / `UniSys@Db#2026`, DB: `helwanuni` |
+| IAM MySQL | `3310` | root / `iamUniSys@Db#2026`, DB: `iamDb` |
+| Academic MySQL | `3309` | root / `academicUniSys@Db#2026`, DB: `academicDb` |
+| Communication MySQL | `3308` | root / `communicationUniSys@Db#2026`, DB: `communicationServiceDb` |
 | Redis | `6379` | no auth |
 | Kafka | `9092` | no auth |
 

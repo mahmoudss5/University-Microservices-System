@@ -2,6 +2,11 @@
 
 This microservice handles user identities, authentication, authorization, and basic profile management for the University System.
 
+IAM owns its data and security audit history in the dedicated `iamDb` database. Flyway manages the
+user hierarchy and `security_audit_logs`. Gateway security events and Academic Core domain events
+are consumed with dedicated Kafka consumer groups, idempotency by `event_id`, retry, and `.DLT`
+handling. Administrators can query the audit history at `GET /api/security-audit-logs`.
+
 ## 🚀 Core Features
 
 1. **Polymorphic User Management (JOINED Inheritance)**
@@ -101,7 +106,7 @@ This microservice handles user identities, authentication, authorization, and ba
    Ensure MySQL is running locally on port `3306`.
    Create the database:
    ```sql
-   CREATE DATABASE helwanuni;
+   CREATE DATABASE iamDb;
    ```
 
 2. **Environment Variables**: 

@@ -1,5 +1,7 @@
 package com.unisystem.api_gateway.filter;
 
+import com.unisystem.api_gateway.audit.SecurityAuditEvent;
+import com.unisystem.api_gateway.audit.SecurityAuditPublisher;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -52,14 +54,17 @@ public class LuaRateLimiterGatewayFilterFactory
 
     private final ReactiveRedisTemplate<String, String> reactiveRedisTemplate;
     private final DefaultRedisScript<List>              rateLimiterRedisScript;
+    private final SecurityAuditPublisher auditPublisher;
 
     public LuaRateLimiterGatewayFilterFactory(
             ReactiveRedisTemplate<String, String> reactiveRedisTemplate,
-            DefaultRedisScript<List>              rateLimiterRedisScript) {
+            DefaultRedisScript<List> rateLimiterRedisScript,
+            SecurityAuditPublisher auditPublisher) {
 
         super(Config.class);
         this.reactiveRedisTemplate = reactiveRedisTemplate;
         this.rateLimiterRedisScript = rateLimiterRedisScript;
+        this.auditPublisher = auditPublisher;
     }
 
     // ── Config POJO ──────────────────────────────────────────────────────────
@@ -131,6 +136,10 @@ public class LuaRateLimiterGatewayFilterFactory
                         } else {
                             log.warn("[LuaRateLimit] Route '{}' — IP {} exceeded {} req/min",
                                     routeId, clientIp, limit);
+                            auditPublisher.publish(SecurityAuditEvent.rateLimitExceeded(
+                                    clientIp, exchange.getRequest().getMethod().name(),
+                                    exchange.getRequest().getURI().getPath(), exchange.getRequest().getId(),
+                                    "route:" + routeId, limit));
 
                             var response = exchange.getResponse();
                             response.setStatusCode(HttpStatus.TOO_MANY_REQUESTS);
