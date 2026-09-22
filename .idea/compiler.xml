@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="api-gateway" />
         <module name="iam-service" />
+        <module name="audit-log-service" />
         <module name="eureka-server" />
       </profile>
       <profile name="Annotation profile for academic-core-service" enabled="true">
@@ -35,6 +36,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="academic-core-service" options="-parameters" />
       <module name="api-gateway" options="-parameters" />
+      <module name="audit-log-service" options="-parameters" />
       <module name="communication-service" options="-parameters" />
       <module name="eureka-server" options="-parameters" />
       <module name="iam-service" options="-parameters" />

@@ -32,14 +32,14 @@ The project follows a modern microservices architecture where each service owns 
 | **API Gateway** | `8080` | Single entry point — routing, JWT auth, rate limiting, BFF dashboard aggregation |
 | **Eureka Server** | `8761` | Service discovery registry |
 | **IAM Service** | `8081` | Identity & access — registration, login, JWT issuance, user profiles |
-| **Academic Core** | `8082` | Courses, departments, enrollments, announcements, feedback, audit logs |
+| **Academic Core** | `8082` | Courses, departments, enrollments, announcements, and feedback |
 | **Communication** | `8083` | Notifications, direct messages, WebSocket real-time messaging |
 
 ### Infrastructure
 
 | Component | Port | Purpose |
 |---|---|---|
-| **IAM MySQL** | `3310` (host) / `3306` (container) | IAM users and security audit records |
+| **IAM MySQL** | `3310` (host) / `3306` (container) | IAM users and roles |
 | **Academic MySQL** | `3309` (host) / `3306` (container) | Courses, enrollments, prerequisites, and outbox |
 | **Communication MySQL** | `3308` (host) / `3306` (container) | Notifications, messages, and local snapshots |
 | **Redis** | `6379` | Rate limiting (sorted sets), response caching |
@@ -88,7 +88,7 @@ University-Management-System-Microservices/
 │   │           ├── adapters/in/web/     (REST controllers)
 │   │           ├── adapters/out/kafka/  (Kafka producers)
 │   │           ├── adapters/out/persistence/ (JPA adapters)
-│   │           ├── aop/         (AuditLog, CourseTeacherOnly aspects)
+│   │           ├── aop/         (CourseTeacherOnly aspect)
 │   │           └── config/      (Security, Cache, Bean configs)
 │   │
 │   ├── communication-service/         # Spring MVC + WebSocket
@@ -131,7 +131,6 @@ Services publish domain events consumed by downstream services:
 | `user-updated-v1` | IAM Service | Academic Core, Communication |
 | `user-deactivated-v1`| IAM Service | Academic Core, Communication |
 | `user-deleted-v1` | IAM Service | Academic Core, Communication |
-| `security-audit-events`| API Gateway | IAM Service |
 | `student-enrolled` | Academic Core | Communication Service |
 | `student-unenrolled` | Academic Core | Communication Service |
 | `course-created` | Academic Core | Communication Service |
@@ -141,7 +140,7 @@ Services publish domain events consumed by downstream services:
 | `notification-push` | Communication Service | Downstream |
 
 ### 5. Aspect-Oriented Programming (AOP)
-- **Academic Core** — `@AuditLog` records every write operation; `@CourseTeacherOnly` enforces access control
+- **Academic Core** — `@CourseTeacherOnly` enforces access control
 - **IAM Service** — `@RateLimit` enforces per-endpoint sliding-window rate limits (see Rate Limiting section)
 - **Communication Service** — `LoggingAspect` provides method-level telemetry
 
@@ -160,7 +159,7 @@ Implemented using **Resilience4j** in the **API Gateway** and **Academic Core Se
 
 ### 9. Database-per-Service Pattern
 To ensure true loose coupling and independent scaling, the system eschews a monolithic shared database in favor of dedicated datastores for each service boundary:
-- **`iamDb`**: Owned exclusively by the IAM Service (Users, Roles, Security Audit Logs).
+- **`iamDb`**: Owned exclusively by the IAM Service (Users and Roles).
 - **`academicDb`**: Owned exclusively by the Academic Core Service (Courses, Enrollments, Feedback, Outbox).
 - **`communicationServiceDb`**: Owned exclusively by the Communication Service (Messages, Notifications).
 
@@ -345,7 +344,7 @@ Client Request
 | `POST` | `/api/feedbacks` | ✓ JWT | Submit course feedback |
 | `GET` | `/api/feedbacks/recent` | ✗ Public | Recent feedback |
 | `GET` | `/api/semesters` | ✓ JWT | Academic semesters |
-| `GET` | `/api/audit-logs` | ✓ JWT | Audit trail (admin only) |
+| `GET` | `/api/audit-logs` | ✓ JWT | Audit trail served by AuditLogService (admin only) |
 
 ### Communication Service
 

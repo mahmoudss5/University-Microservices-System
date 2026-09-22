@@ -2,10 +2,8 @@
 
 This microservice handles user identities, authentication, authorization, and basic profile management for the University System.
 
-IAM owns its data and security audit history in the dedicated `iamDb` database. Flyway manages the
-user hierarchy and `security_audit_logs`. Gateway security events and Academic Core domain events
-are consumed with dedicated Kafka consumer groups, idempotency by `event_id`, retry, and `.DLT`
-handling. Administrators can query the audit history at `GET /api/security-audit-logs`.
+IAM owns its identity and access data in the dedicated `iamDb` database. Flyway manages the user
+hierarchy. Audit-log storage and querying belong to the dedicated AuditLogService.
 
 ## 🚀 Core Features
 
@@ -85,7 +83,6 @@ handling. Administrators can query the audit history at `GET /api/security-audit
 | GET | `/api/users/teachers` | Get all teachers | Admin Only |
 | PUT | `/api/users/{id}` | Update a user's profile | Admin Only |
 | DELETE | `/api/users/{id}` | Delete a user | Admin Only |
-| GET | `/api/security-audit-logs` | Get security audit logs | Admin Only |
 
 ### Course Enrollment
 | Method | Endpoint | Description | Access |

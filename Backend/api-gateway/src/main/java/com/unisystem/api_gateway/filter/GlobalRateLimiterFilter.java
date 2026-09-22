@@ -1,7 +1,5 @@
 package com.unisystem.api_gateway.filter;
 
-import com.unisystem.api_gateway.audit.SecurityAuditEvent;
-import com.unisystem.api_gateway.audit.SecurityAuditPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -52,8 +50,6 @@ public class GlobalRateLimiterFilter implements GlobalFilter, Ordered {
 
     private final ReactiveRedisTemplate<String, String> reactiveRedisTemplate;
     private final DefaultRedisScript<List>              rateLimiterRedisScript;
-    private final SecurityAuditPublisher auditPublisher;
-
     @Override
     @SuppressWarnings("unchecked")
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -100,11 +96,6 @@ public class GlobalRateLimiterFilter implements GlobalFilter, Ordered {
                         // ── Denied: return 429 Too Many Requests
                         log.warn("[GlobalRateLimit] IP {} exceeded {} req/min limit",
                                 clientIp, REQUESTS_PER_MINUTE);
-                        auditPublisher.publish(SecurityAuditEvent.rateLimitExceeded(
-                                clientIp, exchange.getRequest().getMethod().name(),
-                                exchange.getRequest().getURI().getPath(), exchange.getRequest().getId(),
-                                "global-ip", REQUESTS_PER_MINUTE));
-
                         var response = exchange.getResponse();
                         response.setStatusCode(HttpStatus.TOO_MANY_REQUESTS);
                         response.getHeaders().add("Retry-After",           "60");
