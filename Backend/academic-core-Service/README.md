@@ -41,7 +41,7 @@ src/main/java/com/unisystem/academic_core_service/
     │       ├── kafka/        # Kafka producer adapter & config
     │       └── persistence/  # JPA adapters, entities, mappers, repositories
     ├── aop/
-    │   ├── annotations/      # @AuditLog, @TeachersOnly, @CourseTeacherOnly
+    │   ├── annotations/      # @TeachersOnly, @CourseTeacherOnly
     │   └── aspects/          # AOP aspect implementations
     └── config/               # BeanConfig, CacheConfig
 ```
@@ -152,7 +152,6 @@ Eviction runs on every mutating operation to prevent stale reads:
 |---|---|---|
 | `@TeachersOnly` | `TeachersOnlyAspect` | Restricts endpoint to users with the teacher role (via request header) |
 | `@CourseTeacherOnly` | `CourseTeacherOnlyAspect` | Restricts endpoint to the teacher who owns the specific course |
-| `@AuditLog` | `AuditLogAspect` | Logs the action and user identity to the audit log |
 
 ## Run Locally
 

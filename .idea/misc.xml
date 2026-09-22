@@ -9,6 +9,7 @@
         <option value="$PROJECT_DIR$/Backend/eureka-server/pom.xml" />
         <option value="$PROJECT_DIR$/Backend/academic-core-Service/pom.xml" />
         <option value="$PROJECT_DIR$/Backend/communication-service/pom.xml" />
+        <option value="$PROJECT_DIR$/Backend/AuditLogService/pom.xml" />
       </list>
     </option>
   </component>

@@ -3,7 +3,6 @@ package com.unisystem.academic_core_service.infrastructure.adapters.in.http;
 import com.unisystem.academic_core_service.infrastructure.adapters.in.http.Dto.Request.CreateAnnouncementRequest;
 import com.unisystem.academic_core_service.infrastructure.adapters.in.http.Dto.Response.AnnouncementResponse;
 import com.unisystem.academic_core_service.infrastructure.adapters.in.http.services.AnnouncementHttpService;
-import com.unisystem.academic_core_service.infrastructure.aop.annotations.AuditLog;
 import com.unisystem.academic_core_service.infrastructure.aop.annotations.CourseTeacherOnly;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,6 @@ public class AnnouncementController {
     private final AnnouncementHttpService announcementHttpService;
 
     @CourseTeacherOnly(bodyParam = "request")
-    @AuditLog(action = "CREATE_ANNOUNCEMENT")
     @PostMapping("/create")
     public ResponseEntity<AnnouncementResponse> createAnnouncement(@RequestBody CreateAnnouncementRequest request) {
         return ResponseEntity.ok(announcementHttpService.createAnnouncement(request));

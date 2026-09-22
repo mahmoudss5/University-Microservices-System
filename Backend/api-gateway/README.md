@@ -46,7 +46,7 @@ React (Frontend)
 - Runs **JWT validation filter** before forwarding any request
 - Routes requests to correct microservice using `lb://` (load balanced via Eureka)
 - Injects user info (userId, role) into headers after JWT validation
-- Publishes **Security Audit Events** to Kafka (e.g., unauthorized access attempts, rate limit breaches)
+- Routes audit-log requests to the dedicated **AuditLogService**
 - Implements **Resilience4j Caller Pattern** (Circuit Breaker, Retry, Bulkhead, Fallback) for graceful failure handling of downstream services
 - No service is directly accessible from outside
 

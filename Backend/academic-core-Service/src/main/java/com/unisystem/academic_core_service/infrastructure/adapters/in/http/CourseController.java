@@ -6,7 +6,6 @@ import com.unisystem.academic_core_service.infrastructure.adapters.in.http.Dto.R
 import com.unisystem.academic_core_service.infrastructure.adapters.in.http.Dto.Response.CourseCardResponse;
 import com.unisystem.academic_core_service.infrastructure.adapters.in.http.Dto.Response.CoureseDetailsResponse;
 import com.unisystem.academic_core_service.infrastructure.adapters.in.http.services.CourseHttpService;
-import com.unisystem.academic_core_service.infrastructure.aop.annotations.AuditLog;
 import com.unisystem.academic_core_service.infrastructure.aop.annotations.CourseTeacherOnly;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,6 @@ public class CourseController {
 
     private final CourseHttpService courseHttpService;
 
-    @AuditLog(action = "CREATE_COURSE")
     @CourseTeacherOnly(requireCourseOwnership = false)
     @PostMapping
     public ResponseEntity<Course> createCourse(
@@ -37,7 +35,6 @@ public class CourseController {
         return ResponseEntity.noContent().build();
     }
 
-    @AuditLog(action = "UPDATE_COURSE")
     @CourseTeacherOnly(param = "id")
     @PutMapping("/{id}")
     public ResponseEntity<Course> updateCourse(

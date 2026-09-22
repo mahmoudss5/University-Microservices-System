@@ -4,11 +4,6 @@ server:
 spring:
   application:
     name: api-gateway
-  kafka:
-    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
   # ─────────────────────────────────────────────────────────────────────────────
   # Redis — used by the Lua sliding-window rate limiters
@@ -46,7 +41,7 @@ spring:
         - id: iam-service-other
           uri: lb://IAM-SERVICE
           predicates:
-            - Path=/api/users/**,/api/students/**,/api/teachers/**,/api/security-audit-logs/**
+            - Path=/api/users/**,/api/students/**,/api/teachers/**
             
         # ── ACADEMIC CORE ─────────────────────────────────────────────────────────────
         - id: academic-core
@@ -65,6 +60,11 @@ spring:
           uri: lb://COMMUNICATION-SERVICE
           predicates:
             - Path=/ws/**
+
+        - id: auditLog-service
+          uri: lb://AUDIT-LOG-SERVICE
+          predicates:
+            - Path=/api/audit-logs/**
 
 eureka:
   client:

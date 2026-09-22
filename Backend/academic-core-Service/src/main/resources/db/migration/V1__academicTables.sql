@@ -75,19 +75,6 @@ CREATE TABLE IF NOT EXISTS users_snapshot(
     INDEX idx_users_snapshot_role_active (user_role, active)
 );
 
-CREATE TABLE IF NOT EXISTS audit_logs (
-    id         BIGINT AUTO_INCREMENT PRIMARY KEY,
-    user_id    BIGINT,
-    user_name  VARCHAR(255),
-    user_role  VARCHAR(20),
-    action     VARCHAR(255) NOT NULL,
-    details    TEXT,
-    ip_address VARCHAR(50),
-    created_at DATETIME NOT NULL,
-    INDEX idx_audit_logs_user_id (user_id),
-    INDEX idx_audit_logs_created_at (created_at)
-);
-
 CREATE TABLE IF NOT EXISTS outbox_events(
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     event_id VARCHAR(36) NOT NULL UNIQUE,
