@@ -385,6 +385,16 @@ The project uses **GitHub Actions** for Continuous Integration (CI).
 - **Test Reporting**: Automated XML test reports are generated and published visually directly on the GitHub PR using the `EnricoMi/publish-unit-test-result-action`.
 - **Multi-module builds**: The pipeline automatically detects and tests every Spring Boot microservice in the `Backend/` directory.
 
+### Stress Testing
+
+Service-level stress tests are implemented with [k6](https://k6.io/) under [`performance/`](performance/):
+
+- **Academic Core** — course and department reads plus a 200-VU enrollment race for a course with one available seat. The report detects oversubscription.
+- **IAM** — 200-VU login, current-profile, and admin user-list traffic. Login `429` responses are reported separately as expected gateway rate limiting.
+- **Audit Log** — 200-VU HTTP queries for paginated, filtered, and weekly audit logs. Kafka ingestion is intentionally excluded.
+
+The suites target the API Gateway at `http://localhost:8080` by default. Each suite produces a JSON summary and a standalone HTML/CSS/JavaScript dashboard. See [`performance/README.md`](performance/README.md) for prerequisites, commands, environment variables, and dashboard URLs.
+
 ## Observability & Kubernetes Readiness
 
 Every microservice exposes **Spring Boot Actuator** health endpoints configured specifically for Kubernetes (Liveness and Readiness probes):
