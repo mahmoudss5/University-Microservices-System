@@ -2,6 +2,8 @@ package com.AuditLog.AuditLogService.DataAccessLayer.Repositories;
 
 import com.AuditLog.AuditLogService.DataAccessLayer.Entities.AuditEventType;
 import com.AuditLog.AuditLogService.DataAccessLayer.Entities.AuditLog;
+
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,4 +24,6 @@ public interface AuditLogRepository
     Page<AuditLog> findBySource(String source, Pageable pageable);
 
     Page<AuditLog> findByUserId(Long userId, Pageable pageable);
+
+    List<AuditLog> findAll();
 }

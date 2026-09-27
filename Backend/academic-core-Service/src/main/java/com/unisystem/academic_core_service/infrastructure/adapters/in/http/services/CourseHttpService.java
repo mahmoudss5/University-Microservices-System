@@ -39,6 +39,7 @@ public class CourseHttpService {
     @Transactional
     public Course createCourse(CreateCourseRequest request, String userIdHeader) {
         Long teacherId = resolveTeacherId(userIdHeader, request.userId());
+        ensureTeacherExists(teacherId);
         Long departmentId = resolveDepartmentId(request.departmentName());
         CreateCourseUseCase.CreateCourseCommand command =
                 courseMapper.courseRequestToCreateCourseCommand(request, teacherId, departmentId);
@@ -59,6 +60,7 @@ public class CourseHttpService {
         Course existingCourse = getExistingCourse(id);
         Long teacherId = resolveTeacherId(userIdHeader, request.userId());
         Long departmentId = resolveDepartmentId(request.departmentName());
+        ensureTeacherExists(teacherId);
         Course course = courseMapper.UpdateCourseRequestToCourse(request, existingCourse, teacherId, departmentId);
         return courseRepositoryPort.save(course);
     }
@@ -125,6 +127,12 @@ public class CourseHttpService {
             return userId;
         }
         throw new IllegalArgumentException("Teacher id is required");
+    }
+
+    private void ensureTeacherExists(Long teacherId) {
+        if (!iamUserClient.teacherExists(teacherId)) {
+            throw new IllegalArgumentException("Teacher not found with id: " + teacherId);
+        }
     }
 
     private Long parseLong(String value) {

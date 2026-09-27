@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/audit-logs")
 public class AuditLogController {
@@ -53,5 +55,18 @@ public class AuditLogController {
         } catch (EntityNotFoundException exception) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/last-week-students-logs")
+    public ResponseEntity<List<AuditLog>> findLastWeekStudentLogs() {
+        return ResponseEntity.ok(auditLogService.findLastWeekStudentLogs());
+    }
+    @GetMapping("/last-week-teachers-logs")
+    public ResponseEntity<List<AuditLog>> findLastWeekTeachersLogs() {
+        return ResponseEntity.ok(auditLogService.findLastWeekTeachersLogs());
+    }
+    @GetMapping("last-week-admins-logs")
+    public ResponseEntity<List<AuditLog>> findLastWeekAdminLogs() {
+        return ResponseEntity.ok(auditLogService.findLastWeekAdminLogs());
     }
 }

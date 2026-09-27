@@ -5,6 +5,8 @@ import com.AuditLog.AuditLogService.DataAccessLayer.Entities.AuditEventType;
 import com.AuditLog.AuditLogService.DataAccessLayer.Entities.AuditLog;
 import com.AuditLog.AuditLogService.DataAccessLayer.Repositories.AuditLogRepository;
 import jakarta.persistence.EntityNotFoundException;
+
+import java.util.List;
 import java.util.Objects;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -90,6 +92,21 @@ public class AuditLogServiceImpl implements AuditLogService {
     public void deleteById(Long id) {
         getById(id);
         auditLogRepository.deleteById(id);
+    }
+
+    @Override
+    public List<AuditLog> findLastWeekStudentLogs() {
+        return auditLogRepository.findAll();
+    }
+
+    @Override
+    public List<AuditLog> findLastWeekTeachersLogs() {
+        return auditLogRepository.findAll();
+    }
+
+    @Override
+    public List<AuditLog> findLastWeekAdminLogs() {
+        return auditLogRepository.findAll();
     }
 
     private void validate(AuditLog auditLog) {

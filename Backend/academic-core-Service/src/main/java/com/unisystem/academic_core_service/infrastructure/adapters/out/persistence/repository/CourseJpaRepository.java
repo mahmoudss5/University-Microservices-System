@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface CourseJpaRepository extends JpaRepository<CourseEntity, Long> {
     boolean existsByCourseCode(String courseCode);
+    Optional<CourseEntity> findByCourseCode(String courseCode);
     List<CourseEntity> findAllByOrderByEnrolledCountDesc(Pageable pageable);
     List<CourseEntity> findByTeacherId(Long teacherId);
     Optional<CourseEntity> findByNameIgnoreCase(String name);

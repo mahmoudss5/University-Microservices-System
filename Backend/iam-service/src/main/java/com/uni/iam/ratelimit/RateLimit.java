@@ -47,12 +47,6 @@ import java.lang.annotation.Target;
 @Documented
 public @interface RateLimit {
 
-    /**
-     * Maximum number of requests allowed per client IP within a 60-second
-     * sliding window.  Defaults to 20, which is suitable for authentication
-     * and registration endpoints.
-     *
-     * @return the per-minute request cap (must be &gt; 0)
-     */
-    int requestsPerMinute() default 20;
+  
+    int requestsPerMinute() default 100;
 }

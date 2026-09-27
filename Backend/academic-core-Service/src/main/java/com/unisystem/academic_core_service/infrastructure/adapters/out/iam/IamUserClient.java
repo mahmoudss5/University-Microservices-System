@@ -3,6 +3,7 @@ package com.unisystem.academic_core_service.infrastructure.adapters.out.iam;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,17 @@ public class IamUserClient {
             return new TeacherBasic(teacherId, UNKNOWN);
         }
         return new TeacherBasic(response.getId(), resolveName(response.getTeacherName()));
+    }
+
+    public boolean teacherExists(Long teacherId) {
+        if (teacherId == null) {
+            return false;
+        }
+        try {
+            return iamClient.getTeacherBasic(teacherId, null) != null;
+        } catch (FeignException.NotFound ex) {
+            return false;
+        }
     }
 
     public TeacherBasic getTeacherBasicFallback(Long teacherId, String authHeader, Throwable t) {

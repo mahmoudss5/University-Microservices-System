@@ -2,15 +2,30 @@ import axios from "axios";
 import { ApiUrl, getAuthHeaders } from "./config";
 import type { AuditLog } from "../Interfaces/auditLog";
 
-function mapAuditLog(dto: AuditLog): AuditLog {
+type AuditLogPage = {
+    content: BackendAuditLog[];
+};
+
+type BackendAuditLog = {
+    id: number;
+    userId?: number | null;
+    eventType?: string | null;
+    source?: string | null;
+    details?: string | null;
+    clientIp?: string | null;
+    occurredAt?: string | null;
+    createdAt?: string | null;
+};
+
+function mapAuditLog(dto: BackendAuditLog): AuditLog {
     return {
         id: Number(dto.id),
-        userId: Number(dto.userId),
-        userName: dto.userName,
-        action: dto.action,
-        details: dto.details,
-        ipAddress: dto.ipAddress,
-        createdAt: dto.createdAt,
+        userId: Number(dto.userId ?? 0),
+        userName: dto.source ?? "Unknown",
+        action: dto.eventType ?? "UNKNOWN",
+        details: dto.details ?? "",
+        ipAddress: dto.clientIp ?? "-",
+        createdAt: dto.createdAt ?? dto.occurredAt ?? "",
     };
 }
 
@@ -27,10 +42,10 @@ function getApiErrorMessage(error: unknown, fallback: string): string {
 
 export async function getAllAuditLogs(): Promise<AuditLog[]> {
     try {
-        const response = await axios.get<AuditLog[]>(`${ApiUrl}/api/audit-logs`, {
+        const response = await axios.get<AuditLogPage>(`${ApiUrl}/api/audit-logs`, {
             headers: getAuthHeaders(),
         });
-        return response.data.map(mapAuditLog);
+        return response.data.content.map(mapAuditLog);
     } catch (error) {
         throw new Error(getApiErrorMessage(error, "Error fetching audit logs"));
     }

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import java.util.List;
+
 
 @FeignClient(name = "iam-service")
 public interface IamClient {
@@ -18,6 +20,9 @@ public interface IamClient {
             @PathVariable Long teacherId,
             @RequestHeader(value = "Authorization", required = false) String authHeader
     );
+
+    @GetMapping("/api/teachers/basic/all")
+    List<TeacherBasicResponse> getAllTeacherBasics();
 
     @GetMapping("/api/students/basic/{id}")
     StudentBasicResponse getStudentBasic(

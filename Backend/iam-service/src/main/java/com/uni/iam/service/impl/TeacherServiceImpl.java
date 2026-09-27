@@ -38,6 +38,12 @@ public class TeacherServiceImpl implements TeacherService {
         }
 
         @Override
+        @Transactional(readOnly = true)
+        public List<TeacherBasicResponse> getAllTeacherBasics() {
+                return teacherRepository.findAll().stream().map(teacherMapper::toTeacherBasicResponse).toList();
+        }
+
+        @Override
         @ExecutionTime
         @GeneralLog
         @Transactional(readOnly = true)

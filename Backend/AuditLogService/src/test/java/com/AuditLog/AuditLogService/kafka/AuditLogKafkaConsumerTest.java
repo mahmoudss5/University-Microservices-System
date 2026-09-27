@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -78,6 +80,21 @@ class AuditLogKafkaConsumerTest {
         @Override
         public void deleteById(Long id) {
             throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public List<AuditLog> findLastWeekStudentLogs() {
+            return List.of();
+        }
+
+        @Override
+        public List<AuditLog> findLastWeekTeachersLogs() {
+            return List.of();
+        }
+
+        @Override
+        public List<AuditLog> findLastWeekAdminLogs() {
+            return List.of();
         }
     }
 }
