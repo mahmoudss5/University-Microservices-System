@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 2,
+  "service": "iam",
+  "title": "IAM · Authentication Stress Test",
+  "generatedAt": null,
+  "configuration": {
+    "baseUrl": "http://localhost:8080",
+    "scenario": "200-VU login, current-profile, and admin user-list load",
+    "peakVUs": 200,
+    "credentials": {
+      "email": "admin@gmail.com",
+      "password": "••••••••"
+    }
+  },
+  "overview": {
+    "status": "not-run",
+    "requests": 0,
+    "requestsPerSecond": 0,
+    "failureRate": 0,
+    "rawHttpFailureRate": 0,
+    "checkPassRate": 0,
+    "maxVirtualUsers": 0,
+    "durationMs": 0
+  },
+  "latency": {
+    "average": 0,
+    "median": 0,
+    "p90": 0,
+    "p95": 0,
+    "p99": 0,
+    "maximum": 0
+  },
+  "endpoints": [
+    {
+      "name": "Login",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "requests": 0,
+      "average": 0,
+      "median": 0,
+      "p90": 0,
+      "p95": 0,
+      "p99": 0,
+      "maximum": 0,
+      "failureRate": 0,
+      "statusCodes": {
+        "2xx": 0,
+        "4xx": 0,
+        "5xx": 0
+      }
+    },
+    {
+      "name": "Current profile",
+      "method": "GET",
+      "path": "/api/users/me",
+      "requests": 0,
+      "average": 0,
+      "median": 0,
+      "p90": 0,
+      "p95": 0,
+      "p99": 0,
+      "maximum": 0,
+      "failureRate": 0,
+      "statusCodes": {
+        "2xx": 0,
+        "4xx": 0,
+        "5xx": 0
+      }
+    },
+    {
+      "name": "Users list",
+      "method": "GET",
+      "path": "/api/users",
+      "requests": 0,
+      "average": 0,
+      "median": 0,
+      "p90": 0,
+      "p95": 0,
+      "p99": 0,
+      "maximum": 0,
+      "failureRate": 0,
+      "statusCodes": {
+        "2xx": 0,
+        "4xx": 0,
+        "5xx": 0
+      }
+    }
+  ],
+  "rateLimiting": {
+    "loginSuccesses": 0,
+    "loginRateLimited": 0,
+    "note": "HTTP 429 responses from login will be reported separately because the gateway rate-limits authentication traffic."
+  },
+  "thresholds": []
+}
