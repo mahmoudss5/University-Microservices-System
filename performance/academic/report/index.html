@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Academic Core concurrency stress-test report">
+  <title>Academic Core · Stress Report</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="app.js"></script>
+</head>
+<body data-service="academic">
+  <header class="topbar"><div class="shell topbar-inner"><div class="brand"><span class="brand-mark">A</span><span>University Platform <small>/ Academic Core</small></span></div><button id="loadButton" class="button">Load JSON report</button><input id="fileInput" type="file" accept="application/json,.json" hidden></div></header>
+  <main class="shell">
+    <section class="hero"><div><p class="eyebrow">Concurrency &amp; capacity</p><h1>Academic Core<br><span>stress intelligence.</span></h1><p id="subtitle" class="subtitle">Loading report…</p></div><div id="statusBadge" class="status loading">Loading</div></section>
+    <section id="errorPanel" class="empty hidden"><h2>No report loaded</h2><p id="errorText">Run the k6 test or choose a summary JSON file.</p><button id="errorLoadButton" class="button">Choose JSON</button></section>
+    <div id="dashboard" class="hidden">
+      <section id="metrics" class="metric-grid"></section>
+      <section class="grid two"><article class="panel"><div class="panel-heading"><div><p class="eyebrow">Distribution</p><h2>Latency profile</h2></div><span class="tag">milliseconds</span></div><div id="latencyChart" class="bars"></div></article><article class="panel"><div class="panel-heading"><div><p class="eyebrow">Service map</p><h2>Endpoint performance</h2></div><span class="tag">p95</span></div><div id="endpointList" class="endpoint-list"></div></article></section>
+      <section class="panel special"><div class="panel-heading"><div><p class="eyebrow">Race result</p><h2>Enrollment capacity invariant</h2></div><span id="invariantBadge" class="tag">—</span></div><div id="specialContent" class="special-grid"></div></section>
+      <section class="panel"><div class="panel-heading"><div><p class="eyebrow">Release gates</p><h2>Threshold assessment</h2></div></div><div id="thresholdList" class="threshold-grid"></div></section>
+      <footer><span id="environment">—</span><span id="generatedAt">—</span></footer>
+    </div>
+  </main>
+</body>
+</html>
