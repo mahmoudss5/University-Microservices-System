@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 2,
+  "service": "audit-log",
+  "title": "Audit Log · HTTP Query Stress Test",
+  "generatedAt": "2026-09-27T18:11:28.015Z",
+  "configuration": {
+    "baseUrl": "http://localhost:8080",
+    "scenario": "200-VU paginated, filtered, and weekly audit-log queries",
+    "peakVUs": 200,
+    "credentials": {
+      "email": "admin@gmail.com",
+      "password": "••••••••"
+    },
+    "filterSource": "iam-service"
+  },
+  "overview": {
+    "status": "passed",
+    "requests": 62260,
+    "requestsPerSecond": 654.2482463915186,
+    "failureRate": 0,
+    "rawHttpFailureRate": 0,
+    "checkPassRate": 1,
+    "maxVirtualUsers": 200,
+    "durationMs": 95162.654762
+  },
+  "latency": {
+    "average": 61.72482593186632,
+    "median": 51.684818,
+    "p90": 133.8015255,
+    "p95": 144.7849388999999,
+    "p99": 0,
+    "maximum": 229.158553
+  },
+  "endpoints": [
+    {
+      "name": "Paginated audit logs",
+      "method": "GET",
+      "path": "/api/audit-logs?page=0&size=20",
+      "requests": 20753,
+      "average": 61.916892383029264,
+      "median": 51.603648,
+      "p90": 134.31140639999998,
+      "p95": 145.3037228,
+      "p99": 0,
+      "maximum": 229.12637,
+      "failureRate": 0,
+      "statusCodes": {
+        "2xx": 20753,
+        "4xx": 0,
+        "5xx": 0
+      }
+    },
+    {
+      "name": "Filtered audit logs",
+      "method": "GET",
+      "path": "/api/audit-logs?page=0&size=20&source=...",
+      "requests": 20753,
+      "average": 62.224569793764516,
+      "median": 52.185284,
+      "p90": 134.035359,
+      "p95": 144.93172719999998,
+      "p99": 0,
+      "maximum": 229.158553,
+      "failureRate": 0,
+      "statusCodes": {
+        "2xx": 20753,
+        "4xx": 0,
+        "5xx": 0
+      }
+    },
+    {
+      "name": "Weekly admin logs",
+      "method": "GET",
+      "path": "/api/audit-logs/last-week-admins-logs",
+      "requests": 20753,
+      "average": 61.03237886397163,
+      "median": 51.313923,
+      "p90": 133.14757219999998,
+      "p95": 144.15975899999992,
+      "p99": 0,
+      "maximum": 229.027829,
+      "failureRate": 0,
+      "statusCodes": {
+        "2xx": 20753,
+        "4xx": 0,
+        "5xx": 0
+      }
+    }
+  ],
+  "queryProfile": {
+    "filterSource": "iam-service",
+    "pageSize": 20,
+    "note": "This suite intentionally tests HTTP reads only; Kafka ingestion is excluded by request."
+  },
+  "thresholds": [
+    {
+      "metric": "audit_valid_response_failures",
+      "rule": "rate<0.02",
+      "passed": true
+    },
+    {
+      "metric": "checks",
+      "rule": "rate>0.95",
+      "passed": true
+    }
+  ]
+}
