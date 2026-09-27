@@ -5,6 +5,8 @@ import com.AuditLog.AuditLogService.DataAccessLayer.Entities.AuditLog;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface AuditLogService {
 
 
@@ -21,4 +23,7 @@ public interface AuditLogService {
             Pageable pageable);
 
     void deleteById(Long id);
+    List<AuditLog> findLastWeekStudentLogs();
+    List<AuditLog> findLastWeekTeachersLogs();
+    List<AuditLog> findLastWeekAdminLogs();
 }

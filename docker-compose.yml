@@ -358,6 +358,8 @@ services:
     depends_on:
       academicDb:
         condition: service_healthy
+      iam-service:
+        condition: service_healthy
       kafka:
         condition: service_healthy
       eureka-server:

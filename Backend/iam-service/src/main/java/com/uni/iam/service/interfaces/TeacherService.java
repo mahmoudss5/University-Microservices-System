@@ -10,6 +10,8 @@ public interface TeacherService {
 
     List<TeacherResponse> getAllTeachers();
 
+    List<TeacherBasicResponse> getAllTeacherBasics();
+
     TeacherBasicResponse getTeacherBasic(Long id);
 
     TeacherProfileResponse getTeacherDetails(Long id);

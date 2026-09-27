@@ -39,6 +39,8 @@ server:
 
 app:
   iam-base-url: ${IAM_BASE_URL:http://localhost:8081}
+  seed-data:
+    enabled: ${APP_SEED_DATA_ENABLED:true}
 
 outbox:
   relay:

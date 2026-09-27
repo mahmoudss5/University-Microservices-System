@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Global Sliding-Window Rate Limiter — 150 requests / minute / client IP
+ * Global Sliding-Window Rate Limiter — 100,000 requests / minute / client IP
  * ────────────────────────────────────────────────────────────────────────
  * This filter sits at order -2 (before the JWT filter at -1) and applies a
  * broad-traffic guard to *every* incoming request, regardless of route.
@@ -44,7 +44,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class GlobalRateLimiterFilter implements GlobalFilter, Ordered {
 
-    private static final int  REQUESTS_PER_MINUTE  = 150;
+    private static final int  REQUESTS_PER_MINUTE  = 100_000;
     private static final long WINDOW_MS             = 60_000L;   // 1 minute in ms
     private static final String KEY_PREFIX          = "rl:global:";
 

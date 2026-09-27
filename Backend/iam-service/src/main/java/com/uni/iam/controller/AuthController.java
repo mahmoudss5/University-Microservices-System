@@ -49,7 +49,7 @@ public class AuthController {
      * of the gateway-level filter.
      */
     @PostMapping("/register")
-    @RateLimit(requestsPerMinute = 20)
+    @RateLimit(requestsPerMinute = 200)
     public ResponseEntity<AuthResponse> register(
             @Valid @RequestBody RegisterRequest request
     ) {
@@ -65,7 +65,7 @@ public class AuthController {
      * of the gateway-level filter.
      */
     @PostMapping("/login")
-    @RateLimit(requestsPerMinute = 20)
+    @RateLimit(requestsPerMinute = 100)
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         AuthResponse response = authService.login(request);
         return ResponseEntity.ok(response);

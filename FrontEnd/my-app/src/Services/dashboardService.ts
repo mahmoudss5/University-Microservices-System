@@ -79,6 +79,6 @@ export function transformEnrolledCourses(courses: EnrolledCourseResponse[]): Das
         courseName: c.courseName,
         instructor: c.teacherName,
         credits:    c.credits,
-        status:     c.status ?? "In Progress",
+        status:     "Pending",
     }));
 }
