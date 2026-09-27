@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 2,
+  "service": "academic-core",
+  "title": "Academic Core · Concurrency Stress Test",
+  "generatedAt": "2026-09-27T18:01:10.223Z",
+  "configuration": {
+    "baseUrl": "http://localhost:8080",
+    "scenario": "200-VU catalogue load followed by one-wave enrollment race",
+    "peakVUs": 200,
+    "credentials": {
+      "email": "admin@gmail.com",
+      "password": "••••••••"
+    },
+    "courseId": 1,
+    "studentIdsConfigured": 0,
+    "expectedAvailableSeats": 1
+  },
+  "overview": {
+    "status": "failed",
+    "requests": 23274,
+    "requestsPerSecond": 211.33152893430207,
+    "failureRate": 0,
+    "rawHttpFailureRate": 0,
+    "checkPassRate": 1,
+    "maxVirtualUsers": 200,
+    "durationMs": 110130.27785
+  },
+  "latency": {
+    "average": 244.86052531335494,
+    "median": 237.0146775,
+    "p90": 451.42613700000004,
+    "p95": 509.15889494999993,
+    "p99": 0,
+    "maximum": 1476.603711
+  },
+  "endpoints": [
+    {
+      "name": "Course catalogue",
+      "method": "GET",
+      "path": "/api/courses/all",
+      "requests": 0,
+      "average": 0,
+      "median": 0,
+      "p90": 0,
+      "p95": 0,
+      "p99": 0,
+      "maximum": 0,
+      "failureRate": 0,
+      "statusCodes": {
+        "2xx": 0,
+        "4xx": 0,
+        "5xx": 0
+      }
+    },
+    {
+      "name": "Departments",
+      "method": "GET",
+      "path": "/api/departments/all",
+      "requests": 11636,
+      "average": 212.86228679417394,
+      "median": 204.357656,
+      "p90": 419.0637065,
+      "p95": 472.05220875,
+      "p99": 0,
+      "maximum": 1476.603711,
+      "failureRate": 0,
+      "statusCodes": {
+        "2xx": 11636,
+        "4xx": 0,
+        "5xx": 0
+      }
+    },
+    {
+      "name": "Enrollment race",
+      "method": "POST",
+      "path": "/api/enrolled-courses",
+      "requests": 0,
+      "average": 0,
+      "median": 0,
+      "p90": 0,
+      "p95": 0,
+      "p99": 0,
+      "maximum": 0,
+      "failureRate": 0,
+      "statusCodes": {
+        "2xx": 0,
+        "4xx": 0,
+        "5xx": 0
+      }
+    }
+  ],
+  "concurrency": {
+    "courseId": 1,
+    "courseStateBeforeRace": {
+      "status": 200,
+      "availableSeats": 40,
+      "maxStudents": 40,
+      "enrolledCount": 0
+    },
+    "studentIdsConfigured": 0,
+    "attempts": 0,
+    "successfulEnrollments": 0,
+    "capacityRejections": 0,
+    "unknownResponses": 0,
+    "expectedAvailableSeats": 1,
+    "readyForOneSeatRace": false,
+    "invariant": "not-ready",
+    "invariantPassed": false,
+    "note": "Capacity rejections are expected. Any successful enrollments above the available-seat limit indicate oversubscription."
+  },
+  "thresholds": [
+    {
+      "metric": "academic_valid_response_failures",
+      "rule": "rate<0.02",
+      "passed": true
+    },
+    {
+      "metric": "checks",
+      "rule": "rate>0.95",
+      "passed": true
+    },
+    {
+      "metric": "academic_enrollment_successes",
+      "rule": "count<=1",
+      "passed": true
+    }
+  ]
+}
