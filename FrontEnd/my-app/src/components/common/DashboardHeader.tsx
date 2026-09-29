@@ -52,9 +52,9 @@ export default function DashboardHeader() {
                     />
                 </div>
 
-                <button className="relative p-2 rounded-full hover:bg-gray-100 transition-colors cursor-pointer">
+                <div className="relative p-2 rounded-full hover:bg-gray-100 transition-colors cursor-pointer">
                     <NotificationBell />
-                </button>
+                </div>
 
                 <div className="flex items-center gap-2 cursor-pointer">
                     <div className="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm select-none">

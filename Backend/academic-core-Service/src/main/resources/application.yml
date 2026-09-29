@@ -97,3 +97,8 @@ resilience4j:
       iam-service:
         maxConcurrentCalls: 20
         maxWaitDuration: 5s
+aws:
+  region:
+    static: us-east-1
+  s3:
+    bucket: academic-core-service
