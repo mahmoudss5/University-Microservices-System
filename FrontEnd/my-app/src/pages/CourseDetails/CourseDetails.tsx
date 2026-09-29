@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { BookOpen, ClipboardList, FolderOpen, GraduationCap } from "lucide-react";
+import { ClipboardList, GraduationCap } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useGetCourseById } from "../../CustomeHooks/CoursesHooks/UseGetCourseById";
 import { getUserDashboardData, getRole } from "../../Services/userService";
@@ -13,6 +13,7 @@ import CourseOverview from "../../components/CourseDetails/CourseOverview";
 import CourseStudentsTab from "../../components/CourseDetails/CourseStudentsTab";
 import CourseChatTab from "../../components/CourseDetails/CourseChatTab";
 import CoursePlaceholderTab from "../../components/CourseDetails/CoursePlaceholderTab";
+import CourseMaterialsTab from "../../components/CourseDetails/CourseMaterialsTab";
 import type { CourseTab } from "../../Interfaces/courseDetails";
 import type { course } from "../../Interfaces/course";
 import type { Student } from "../../Interfaces/student";
@@ -99,10 +100,11 @@ function TabContent({ activeTab, course, displayName, userId }: TabContentProps)
 
         case "lectures":
             return (
-                <CoursePlaceholderTab
-                    icon={BookOpen}
+                <CourseMaterialsTab
+                    courseId={course.id}
                     title="Lectures"
                     description="Lecture materials and recordings will appear here once uploaded by your instructor."
+                    canManage={role === "teacher" || role === "admin"}
                 />
             );
 
@@ -117,10 +119,11 @@ function TabContent({ activeTab, course, displayName, userId }: TabContentProps)
 
         case "resources":
             return (
-                <CoursePlaceholderTab
-                    icon={FolderOpen}
+                <CourseMaterialsTab
+                    courseId={course.id}
                     title="Resources"
                     description="Course materials, slides, and reference documents will be available here."
+                    canManage={role === "teacher" || role === "admin"}
                 />
             );
 

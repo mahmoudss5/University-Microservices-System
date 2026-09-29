@@ -19,9 +19,13 @@ class FlywayMigrationTest {
     void migratesAnEmptyAcademicDatabase() throws Exception {
         var result = Flyway.configure().dataSource(MYSQL.getJdbcUrl(), MYSQL.getUsername(), MYSQL.getPassword())
                 .locations("classpath:db/migration").load().migrate();
-        assertEquals(1, result.migrationsExecuted);
+        assertEquals(2, result.migrationsExecuted);
         try (var connection = DriverManager.getConnection(MYSQL.getJdbcUrl(), MYSQL.getUsername(), MYSQL.getPassword());
              var tables = connection.getMetaData().getTables(MYSQL.getDatabaseName(), null, "users_snapshot", null)) {
+            assertTrue(tables.next());
+        }
+        try (var connection = DriverManager.getConnection(MYSQL.getJdbcUrl(), MYSQL.getUsername(), MYSQL.getPassword());
+             var tables = connection.getMetaData().getTables(MYSQL.getDatabaseName(), null, "course_materials", null)) {
             assertTrue(tables.next());
         }
     }

@@ -23,7 +23,7 @@ interface CourseSidebarProps {
 
 const NAV_ITEMS = [
     { id: "overview" as CourseTab,     label: "Overview",     icon: LayoutDashboard },
-    { id: "lectures" as CourseTab,     label: "Lectures",     icon: BookOpen,         badge: "8/12" },
+    { id: "lectures" as CourseTab,     label: "Lectures",     icon: BookOpen },
     { id: "assignments" as CourseTab,  label: "Assignments",  icon: ClipboardList,    badge: 3 },
     { id: "resources" as CourseTab,    label: "Resources",    icon: FolderOpen },
     { id: "grades" as CourseTab,       label: "Grades",       icon: GraduationCap },

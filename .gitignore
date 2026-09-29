@@ -14,3 +14,4 @@ target/
 
 ### Others ###
 *.log
+.env

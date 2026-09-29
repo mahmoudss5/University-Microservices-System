@@ -13,6 +13,7 @@ import com.unisystem.academic_core_service.application.port.in.SynchronizeUserSn
 import com.unisystem.academic_core_service.application.port.in.ManageCoursePrerequisitesUseCase;
 import com.unisystem.academic_core_service.application.port.in.GetCoursePrerequisitesQuery;
 import com.unisystem.academic_core_service.application.port.in.PublishPendingOutboxEventsUseCase;
+import com.unisystem.academic_core_service.application.port.in.CourseMaterialUseCase;
 import com.unisystem.academic_core_service.application.port.out.AnnouncementRepositoryPort;
 import com.unisystem.academic_core_service.application.port.out.CourseRepositoryPort;
 import com.unisystem.academic_core_service.application.port.out.EnrollmentRepositoryPort;
@@ -22,6 +23,8 @@ import com.unisystem.academic_core_service.application.port.out.UserSnapshotRepo
 import com.unisystem.academic_core_service.application.port.out.CoursePrerequisiteRepositoryPort;
 import com.unisystem.academic_core_service.application.port.out.OutboxRepositoryPort;
 import com.unisystem.academic_core_service.application.port.out.MessageBrokerPort;
+import com.unisystem.academic_core_service.application.port.out.CourseMaterialRepositoryPort;
+import com.unisystem.academic_core_service.application.port.out.ObjectStoragePort;
 import com.unisystem.academic_core_service.application.services.CreateAnnouncementService;
 import com.unisystem.academic_core_service.application.services.CreateCourseService;
 import com.unisystem.academic_core_service.application.services.EnrollStudentService;
@@ -33,6 +36,7 @@ import com.unisystem.academic_core_service.application.services.SubmitFeedbackSe
 import com.unisystem.academic_core_service.application.services.SynchronizeUserSnapshotService;
 import com.unisystem.academic_core_service.application.services.ManageCoursePrerequisitesService;
 import com.unisystem.academic_core_service.application.services.PublishPendingOutboxEventsService;
+import com.unisystem.academic_core_service.application.services.CourseMaterialApplicationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -126,6 +130,19 @@ public class BeanConfig {
             @Value("${outbox.relay.max-retries:5}") int maxRetries,
             @Value("${outbox.relay.claim-timeout-seconds:60}") long claimTimeoutSeconds) {
         return new PublishPendingOutboxEventsService(repository, broker, batchSize, maxRetries, claimTimeoutSeconds);
+    }
+
+    @Bean
+    public CourseMaterialUseCase courseMaterialUseCase(
+            CourseMaterialRepositoryPort materialRepository,
+            CourseRepositoryPort courseRepository,
+            ObjectStoragePort objectStorage
+    ) {
+        return new CourseMaterialApplicationService(
+                materialRepository,
+                objectStorage,
+                courseRepository
+        );
     }
 
 }

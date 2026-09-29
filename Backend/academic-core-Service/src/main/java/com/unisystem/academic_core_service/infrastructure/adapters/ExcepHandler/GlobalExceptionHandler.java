@@ -1,6 +1,7 @@
 package com.unisystem.academic_core_service.infrastructure.adapters.ExcepHandler;
 
 import com.unisystem.academic_core_service.domain.exceptions.AlreadyEnrolledException;
+import com.unisystem.academic_core_service.domain.exceptions.AwsError;
 import com.unisystem.academic_core_service.domain.exceptions.CourseNotFoundException;
 import com.unisystem.academic_core_service.domain.exceptions.DuplicateCourseException;
 import com.unisystem.academic_core_service.domain.exceptions.InvalidEnrollmentException;
@@ -69,6 +70,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalArgument(IllegalArgumentException ex) {
         return buildError(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(AwsError.class)
+    public ResponseEntity<Map<String, Object>> handleAwsError(AwsError ex) {
+        return buildError(HttpStatus.BAD_GATEWAY, ex.getMessage());
     }
 
     // ─── 500 Internal Server Error (fallback) ──────────────────────────────────
