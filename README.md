@@ -23,7 +23,7 @@ The **University Management System** is a robust, scalable, and modular platform
 
 ## Architecture
 
-The project follows a modern microservices architecture where each service owns a specific business domain. Services communicate via **REST** (synchronous) and **Apache Kafka** (asynchronous events).
+The project follows a modern microservices architecture where each service owns a specific business domain. Services communicate via **REST** (synchronous) and **Apache Kafka** (asynchronous events). The **Academic Core** service also integrates with **Amazon S3** for storing course materials, uploaded documents, and presigned file access.
 
 ### Core Services
 
@@ -44,6 +44,7 @@ The project follows a modern microservices architecture where each service owns 
 | **Communication MySQL** | `3308` (host) / `3306` (container) | Notifications, messages, and local snapshots |
 | **Redis** | `6379` | Rate limiting (sorted sets), response caching |
 | **Apache Kafka** | `9092` | Async event bus between services |
+| **Amazon S3** | N/A | Object storage for Academic Core course materials and uploaded files |
 | **Zookeeper** | `2181` | Kafka coordination |
 | **Kafka UI** | `8090` | Web console for Kafka topic monitoring |
 
