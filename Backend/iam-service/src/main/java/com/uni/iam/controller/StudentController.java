@@ -38,9 +38,18 @@ public class StudentController {
     @GetMapping("/basic/{id}")
     public ResponseEntity<StudentBasicResponse> getStudentBasic(@PathVariable Long id) {
         log.info("Fetching basic info for student with ID: {}", id);
-        String name=studentService.getStudneName(id);
-        StudentBasicResponse response=new StudentBasicResponse(name);
+        var student = studentService.getById(id);
+        StudentBasicResponse response = new StudentBasicResponse(
+                student.getId(),
+                student.getUsername(),
+                student.getRole() == null ? null : student.getRole().name(),
+                student.isActive());
         log.info("Basic info fetched successfully: {}", response);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/basic/all")
+    public ResponseEntity<List<StudentBasicResponse>> getAllStudentBasics() {
+        return ResponseEntity.ok(studentService.getAllStudentBasics());
     }
 }

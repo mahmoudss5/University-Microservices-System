@@ -13,4 +13,6 @@ public class TeacherBasicResponse {
     private Long id;
     private String teacherName;
     private String officeLocation;
+    private String role;
+    private boolean active;
 }

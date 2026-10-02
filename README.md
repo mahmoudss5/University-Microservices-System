@@ -15,7 +15,7 @@
 
 ## Project Overview
 
-The **University Management System** is a robust, scalable, and modular platform designed to manage university operations — including student enrollment, course management, teacher assignments, and inter-service communication. Built with a **Microservices Architecture**, the system ensures high availability, independent deployability, and fault tolerance.
+The **University Management System** is a robust, scalable, and modular platform designed to manage university operations — including student enrollment, course management, teacher assignments, course-material storage, audit logging, and inter-service communication. Built with a **Microservices Architecture**, the system ensures high availability, independent deployability, and fault tolerance.
 
 ![High Level Architecture Design](https://raw.githubusercontent.com/maariamashraf/University-Management-System-Microservices/main/Diagrams/High%20Level%20Architecture%20Design.jpg)
 
@@ -34,6 +34,7 @@ The project follows a modern microservices architecture where each service owns 
 | **IAM Service** | `8081` | Identity & access — registration, login, JWT issuance, user profiles |
 | **Academic Core** | `8082` | Courses, departments, enrollments, announcements, and feedback |
 | **Communication** | `8083` | Notifications, direct messages, WebSocket real-time messaging |
+| **Audit Log Service** | `8085` | Kafka audit-event ingestion, durable audit storage, filtering, and admin queries |
 
 ### Infrastructure
 
@@ -42,6 +43,7 @@ The project follows a modern microservices architecture where each service owns 
 | **IAM MySQL** | `3310` (host) / `3306` (container) | IAM users and roles |
 | **Academic MySQL** | `3309` (host) / `3306` (container) | Courses, enrollments, prerequisites, and outbox |
 | **Communication MySQL** | `3308` (host) / `3306` (container) | Notifications, messages, and local snapshots |
+| **Audit Log MySQL** | `3311` (host) / `3306` (container) | Durable audit events consumed from Kafka |
 | **Redis** | `6379` | Rate limiting (sorted sets), response caching |
 | **Apache Kafka** | `9092` | Async event bus between services |
 | **Amazon S3** | N/A | Object storage for Academic Core course materials and uploaded files |
@@ -90,7 +92,7 @@ University-Management-System-Microservices/
 │   │           ├── adapters/out/kafka/  (Kafka producers)
 │   │           ├── adapters/out/persistence/ (JPA adapters)
 │   │           ├── aop/         (CourseTeacherOnly aspect)
-│   │           └── config/      (Security, Cache, Bean configs)
+│   │           └── config/      (Security, Cache, Seeding, Snapshot bootstrap)
 │   │
 │   ├── communication-service/         # Spring MVC + WebSocket
 │   │   └── src/main/java/UnitSystem/demo/
@@ -99,10 +101,18 @@ University-Management-System-Microservices/
 │   │       ├── Kafka/           (KafkaConsumer — processes events from academic-core)
 │   │       └── Security/        (JWT + WebSocket auth interceptor)
 │   │
+│   ├── AuditLogService/                # Kafka-backed audit log service (port 8085)
+│   │   └── src/main/java/com/AuditLog/AuditLogService/
+│   │       ├── Controllers/             (paginated and role-based audit queries)
+│   │       ├── BusinessLogic/           (audit validation and persistence)
+│   │       ├── DataAccessLayer/         (AuditLog entity and repository)
+│   │       └── kafka/                   (domain/security event consumer)
+│   │
 │   └── eureka-server/                 # Netflix Eureka service registry
 │
 ├── FrontEnd/my-app/                   # React + Vite (port 5173)
 ├── Diagrams/                          # ERD, Sequence, Use Case, Activity, Class diagrams
+├── performance/                        # k6 stress tests and HTML dashboards
 ├── docker-compose.yml                 # Full stack orchestration
 └── Checklist.md
 ```
@@ -128,22 +138,27 @@ Services publish domain events consumed by downstream services:
 
 | Topic | Publisher | Consumer |
 |---|---|---|
-| `user-registered-v1` | IAM Service | Academic Core, Communication |
-| `user-updated-v1` | IAM Service | Academic Core, Communication |
-| `user-deactivated-v1`| IAM Service | Academic Core, Communication |
-| `user-deleted-v1` | IAM Service | Academic Core, Communication |
-| `student-enrolled` | Academic Core | Communication Service |
-| `student-unenrolled` | Academic Core | Communication Service |
-| `course-created` | Academic Core | Communication Service |
-| `course-deleted` | Academic Core | Communication Service |
-| `announcement-created` | Academic Core | Communication Service |
-| `feedback-created` | Academic Core | Communication Service |
-| `notification-push` | Communication Service | Downstream |
+| `security-audit-events.v1` | Gateway/security producers | Audit Log Service |
+| `user-registered-v1` | IAM Service | Academic Core, Communication, Audit Log Service |
+| `user-updated-v1` | IAM Service | Academic Core, Communication, Audit Log Service |
+| `user-deactivated-v1`| IAM Service | Academic Core, Communication, Audit Log Service |
+| `user-deleted-v1` | IAM Service | Academic Core, Communication, Audit Log Service |
+| `student-registered` | IAM Service | Academic Core, Communication, Audit Log Service |
+| `student-enrolled` | Academic Core | Communication Service, Audit Log Service |
+| `student-unenrolled` | Academic Core | Communication Service, Audit Log Service |
+| `course-created` | Academic Core | Communication Service, Audit Log Service |
+| `course-deleted` | Academic Core | Communication Service, Audit Log Service |
+| `announcement-created` | Academic Core | Communication Service, Audit Log Service |
+| `feedback-created` | Academic Core | Communication Service, Audit Log Service |
+| `notification-push` | Communication Service | Downstream, Audit Log Service |
+
+The Audit Log Service consumes the security and domain-event topics in its own consumer group (`audit-log-v1`) and persists normalized events in `auditLogDb`. Kafka dead-letter topics (`*.DLT`) are provisioned for failed event processing.
 
 ### 5. Aspect-Oriented Programming (AOP)
 - **Academic Core** — `@CourseTeacherOnly` enforces access control
 - **IAM Service** — `@RateLimit` enforces per-endpoint sliding-window rate limits (see Rate Limiting section)
 - **Communication Service** — `LoggingAspect` provides method-level telemetry
+- **Audit Log Service** — Kafka consumers normalize and persist security and domain events for later investigation
 
 ### 6. Backend for Frontend (BFF)
 `DashboardController` in the **API Gateway** aggregates data from IAM, Academic Core, and Communication services into single-call responses optimised for the React frontend.
@@ -163,11 +178,29 @@ To ensure true loose coupling and independent scaling, the system eschews a mono
 - **`iamDb`**: Owned exclusively by the IAM Service (Users and Roles).
 - **`academicDb`**: Owned exclusively by the Academic Core Service (Courses, Enrollments, Feedback, Outbox).
 - **`communicationServiceDb`**: Owned exclusively by the Communication Service (Messages, Notifications).
+- **`auditLogDb`**: Owned exclusively by the Audit Log Service (normalized audit events).
 
 ### 10. Transactional Outbox Pattern
 Implemented in the **Academic Core Service** to guarantee at-least-once delivery of domain events (e.g., `student-enrolled`, `course-deleted`) to Kafka, even in the event of message broker downtime.
 - Events are persisted to an `outbox_event` table in the exact same database transaction that updates the business entities.
 - A background relayer then safely publishes these pending events to Kafka and marks them as processed, preventing data inconsistencies between the database and the event stream.
+
+### 11. Course Materials with Amazon S3
+
+Academic Core stores course-material metadata in `academicDb` and uses Amazon S3 for the file contents. Teachers request a short-lived presigned upload URL, upload directly to S3, and then mark the material as complete. Students and teachers receive presigned download URLs through the API. This keeps large files out of the service containers and avoids proxying file data through the gateway.
+
+Material endpoints are exposed through the gateway under `/api/courses/{courseId}/materials`:
+
+- `POST /upload-url` — teacher-only upload initialization
+- `POST /{materialId}/complete` — teacher-only upload completion and metadata verification
+- `GET /` — list materials for a course
+- `GET /{materialId}/download-url` — create a presigned download URL
+- `DELETE /{materialId}` — teacher-only deletion
+
+### 12. Recoverable User Snapshots
+
+Academic Core keeps a local `UserSnapshot` read model for operations that need user names and roles without synchronous IAM calls. IAM domain events remain the primary synchronization path. A startup bootstrapper and scheduled retry reconcile student and teacher snapshots from IAM (`/api/students/basic/all` and `/api/teachers/basic/all`) so deployments or missed Kafka events can repair the local read model without blocking Academic Core startup.
+
 ---
 
 ## 🚦 Rate Limiting (Sliding Window — Lua + Redis)
@@ -328,6 +361,8 @@ Client Request
 | `POST` | `/api/auth/register` | ✗ Public | Register a new user, returns JWT |
 | `POST` | `/api/auth/login` | ✗ Public | Authenticate user, returns JWT |
 | `GET` | `/api/users/me` | ✓ JWT | Get current user profile |
+| `GET` | `/api/students/basic/all` | ✓ Internal service access | Basic student IDs, usernames, roles, and active status for Academic Core snapshot repair |
+| `GET` | `/api/teachers/basic/all` | ✓ Internal service access | Basic teacher IDs, names, roles, and active status for Academic Core snapshot repair |
 | `GET` | `/api/students/details/{id}` | ✓ JWT | Detailed student profile |
 | `GET` | `/api/teachers/details/{id}` | ✓ JWT | Detailed teacher profile |
 | `PUT` | `/api/users/{id}` | ✓ JWT | Update user information |
@@ -345,7 +380,11 @@ Client Request
 | `POST` | `/api/feedbacks` | ✓ JWT | Submit course feedback |
 | `GET` | `/api/feedbacks/recent` | ✗ Public | Recent feedback |
 | `GET` | `/api/semesters` | ✓ JWT | Academic semesters |
-| `GET` | `/api/audit-logs` | ✓ JWT | Audit trail served by AuditLogService (admin only) |
+| `GET` | `/api/courses/{courseId}/materials` | ✓ JWT | List course materials |
+| `POST` | `/api/courses/{courseId}/materials/upload-url` | ✓ Teacher | Create a presigned S3 upload URL |
+| `POST` | `/api/courses/{courseId}/materials/{materialId}/complete` | ✓ Teacher | Verify and complete an S3 upload |
+| `GET` | `/api/courses/{courseId}/materials/{materialId}/download-url` | ✓ JWT | Create a presigned S3 download URL |
+| `DELETE` | `/api/courses/{courseId}/materials/{materialId}` | ✓ Teacher | Delete course material and its S3 object |
 
 ### Communication Service
 
@@ -355,6 +394,17 @@ Client Request
 | `POST` | `/api/messages` | ✓ JWT | Send a direct message |
 | `GET` | `/api/messages/course/{courseId}` | ✓ JWT | Course group messages |
 | `WS` | `/ws/**` | ✓ JWT (interceptor) | Real-time WebSocket channel |
+
+### Audit Log Service (`/api/audit-logs`)
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| `GET` | `/api/audit-logs` | ✓ JWT | Paginated audit events; supports `eventType`, `source`, `userId`, `page`, and `size` filters |
+| `GET` | `/api/audit-logs/{id}` | ✓ JWT | Find an audit event by database ID |
+| `GET` | `/api/audit-logs/event/{eventId}` | ✓ JWT | Find an audit event by event ID |
+| `GET` | `/api/audit-logs/last-week-students-logs` | ✓ JWT | Recent student activity |
+| `GET` | `/api/audit-logs/last-week-teachers-logs` | ✓ JWT | Recent teacher activity |
+| `GET` | `/api/audit-logs/last-week-admins-logs` | ✓ JWT | Recent administrator activity |
 
 ### API Gateway — BFF Dashboard
 
@@ -390,11 +440,12 @@ The project uses **GitHub Actions** for Continuous Integration (CI).
 
 Service-level stress tests are implemented with [k6](https://k6.io/) under [`performance/`](performance/):
 
+- **General University API** — ramping authenticated and public journeys covering profiles, courses, departments, and recent feedback (`performance/genreal/`). The directory name is kept for compatibility with the existing scripts.
 - **Academic Core** — course and department reads plus a 200-VU enrollment race for a course with one available seat. The report detects oversubscription.
 - **IAM** — 200-VU login, current-profile, and admin user-list traffic. Login `429` responses are reported separately as expected gateway rate limiting.
 - **Audit Log** — 200-VU HTTP queries for paginated, filtered, and weekly audit logs. Kafka ingestion is intentionally excluded.
 
-The suites target the API Gateway at `http://localhost:8080` by default. Each suite produces a JSON summary and a standalone HTML/CSS/JavaScript dashboard. See [`performance/README.md`](performance/README.md) for prerequisites, commands, environment variables, and dashboard URLs.
+The suites target the API Gateway at `http://localhost:8080` by default. Each suite produces a JSON summary and a standalone HTML/CSS/JavaScript dashboard. The service-specific suites default to 200 VUs; the general suite can be tuned with `MAX_VUS`. See [`performance/README.md`](performance/README.md) for prerequisites, commands, environment variables, and dashboard URLs.
 
 ## Observability & Kubernetes Readiness
 
@@ -410,6 +461,8 @@ The entire stack is orchestrated with **Docker Compose**.
 ### Prerequisites
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (includes Docker Compose)
+- [k6](https://grafana.com/docs/k6/latest/set-up/install-k6/) (only required for stress tests)
+- AWS credentials with access to the configured S3 bucket (required for course-material uploads)
 
 ### Start the System
 
@@ -418,11 +471,20 @@ The entire stack is orchestrated with **Docker Compose**.
 git clone https://github.com/maariamashraf/University-Management-System-Microservices
 cd University-Management-System-Microservices
 
-# 2. Build and start all services
-docker-compose up --build
+# 2. Create a local .env file for Academic Core's S3 integration
+# Add these entries to .env (do not commit the file):
+AWS_ACCESS_KEY_ID=your-access-key-id
+AWS_SECRET_ACCESS_KEY=your-secret-access-key
+
+# 3. Build and start all services
+docker compose up --build
 ```
 
 > First build downloads all Maven dependencies into a named volume (`maven-cache`) — subsequent restarts are much faster.
+
+The Academic Core S3 configuration defaults to the `us-east-1` region and bucket `academic-core-service`. Configure the bucket and AWS credentials for the environment before using course-material uploads. Keep `.env` local; it is ignored by Git.
+
+On startup, Academic Core retries its IAM teacher lookup before seeding courses and feedback. If IAM is temporarily unavailable, the service remains up and the seed step is skipped safely; the scheduled user-snapshot bootstrap continues retrying synchronization after IAM is ready.
 
 ### Service URLs
 
@@ -431,6 +493,7 @@ docker-compose up --build
 | **Frontend App** | http://localhost:5173 |
 | **API Gateway** | http://localhost:8080 |
 | **Eureka Dashboard** | http://localhost:8761 |
+| **Audit Log Service** | http://localhost:8085 |
 | **Kafka UI** | http://localhost:8090 |
 
 ### Infrastructure Details
@@ -440,6 +503,7 @@ docker-compose up --build
 | IAM MySQL | `3310` | root / `iamUniSys@Db#2026`, DB: `iamDb` |
 | Academic MySQL | `3309` | root / `academicUniSys@Db#2026`, DB: `academicDb` |
 | Communication MySQL | `3308` | root / `communicationUniSys@Db#2026`, DB: `communicationServiceDb` |
+| Audit Log MySQL | `3311` | root / `auditLogUniSys@Db#2026`, DB: `auditLogDb` |
 | Redis | `6379` | no auth |
 | Kafka | `9092` | no auth |
 
@@ -487,15 +551,17 @@ Public endpoints (no JWT required): `/api/auth/login`, `/api/auth/register`, `/a
 
 | Layer | Technology |
 |---|---|
-| Language | Java 17 (IAM, Academic Core, Communication) / Java 21 (API Gateway) |
-| Framework | Spring Boot 3.3.4, Spring Cloud 2023.0.3 |
+| Language | Java 17 (IAM) / Java 21 (Gateway, Eureka, Academic Core, Communication, Audit Log) |
+| Framework | Spring Boot 3.3.4 (main services), Spring Boot 3.4.2 (Audit Log), Spring Cloud 2023.0.3 (main services) / 2024.0.0 (Audit Log) |
 | API Gateway | Spring Cloud Gateway (WebFlux/Reactor) |
 | Service Discovery | Netflix Eureka |
 | Security | Spring Security, JJWT 0.11.5 |
 | Database | MySQL 8.0, Spring Data JPA, Flyway |
 | Cache / Rate Limit | Redis 7.2, Spring Data Redis, Lua scripting |
 | Messaging | Apache Kafka 7.5, Spring Kafka |
+| Object Storage | Amazon S3, AWS SDK v2, presigned upload/download URLs |
 | Real-time | STOMP over WebSocket |
 | AOP | Spring AOP (AspectJ) |
 | Containerisation | Docker, Docker Compose |
 | Frontend | React 18 + Vite |
+| Performance Testing | Grafana k6 with generated JSON and browser dashboards |

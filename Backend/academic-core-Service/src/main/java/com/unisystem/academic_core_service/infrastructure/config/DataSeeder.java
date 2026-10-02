@@ -52,6 +52,10 @@ public class DataSeeder implements CommandLineRunner {
 
         Map<DepartmentsType, DepartmentEntity> departments = seedDepartments();
         List<Long> teacherIds = loadTeacherIds();
+        if (teacherIds.isEmpty()) {
+            log.warn("Skipping course and feedback seed because IAM teachers are not available yet");
+            return;
+        }
         List<CourseEntity> courses = seedCourses(departments, teacherIds);
         repairInvalidTeacherReferences(teacherIds);
         seedFeedback(courses, teacherIds);
@@ -74,19 +78,31 @@ public class DataSeeder implements CommandLineRunner {
     }
 
     private List<Long> loadTeacherIds() {
-        try {
-            List<Long> teacherIds = iamClient.getAllTeacherBasics().stream()
-                    .map(IamClient.TeacherBasicResponse::getId)
-                    .filter(id -> id != null)
-                    .toList();
-            if (teacherIds.isEmpty()) {
-                throw new IllegalStateException("No teachers exist in IAM; cannot seed courses");
+        for (int attempt = 1; attempt <= 5; attempt++) {
+            try {
+                List<Long> teacherIds = iamClient.getAllTeacherBasics().stream()
+                        .map(IamClient.TeacherBasicResponse::getId)
+                        .filter(id -> id != null)
+                        .toList();
+                if (!teacherIds.isEmpty()) {
+                    return teacherIds;
+                }
+                log.warn("IAM returned no teachers while seeding academic data (attempt {}/5)", attempt);
+            } catch (RuntimeException ex) {
+                log.warn("IAM is not ready while seeding academic data (attempt {}/5): {}",
+                        attempt, ex.getMessage());
             }
-            return teacherIds;
-        } catch (RuntimeException ex) {
-            throw new IllegalStateException(
-                    "Could not load teachers from IAM; courses were not seeded", ex);
+
+            if (attempt < 5) {
+                try {
+                    Thread.sleep(2_000L);
+                } catch (InterruptedException interrupted) {
+                    Thread.currentThread().interrupt();
+                    return List.of();
+                }
+            }
         }
+        return List.of();
     }
 
     private List<CourseEntity> seedCourses(Map<DepartmentsType, DepartmentEntity> departments,

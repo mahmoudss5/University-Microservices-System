@@ -10,5 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudentBasicResponse {
-    String username;
+    private Long id;
+    private String username;
+    private String role;
+    private boolean active;
 }
