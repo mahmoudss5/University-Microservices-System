@@ -32,6 +32,7 @@ public class SecurityConfig {
                         // Auth endpoints are always public
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/teachers/basic/**").permitAll()
+                        .requestMatchers("/api/students/basic/**").permitAll()
                         // Allow container healthchecks without JWT
                         .requestMatchers("/actuator/health", "/actuator/info").permitAll()
                         // Everything else needs authentication

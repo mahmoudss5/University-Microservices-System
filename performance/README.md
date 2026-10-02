@@ -1,37 +1,41 @@
-# University API stress test
+# University API stress tests
 
-This folder contains a k6 ramping stress test and a dependency-free report dashboard.
+This folder contains four k6 suites and dependency-free report dashboards. All suites target the API Gateway by default.
 
-## Run
+## Prerequisites
 
-1. Start the application stack.
-2. Edit `USER_EMAIL` and `USER_PASSWORD` at the top of `stress-test.js` if needed.
-3. Run from the repository root:
+- Start the Docker Compose stack and ensure the gateway is reachable at `http://localhost:8080`.
+- Install [k6](https://grafana.com/docs/k6/latest/set-up/install-k6/).
+- Use valid IAM credentials. The academic concurrency suite also needs real student IDs and a disposable course with one available seat.
+
+## General API suite
+
+The general suite exercises authenticated profile/course requests and public department/feedback requests. Run it from the repository root:
 
 ```bash
-mkdir -p performance/results
-k6 run performance/stress-test.js
+mkdir -p performance/genreal/results
+k6 run performance/genreal/stress-test.js
 ```
 
-The test writes `performance/results/summary.json`. To view it:
+It writes `performance/genreal/results/summary.json`. To view the generated dashboard:
 
 ```bash
 python3 -m http.server 4173 --directory performance
 ```
 
-Open <http://localhost:4173/report/>. Alternatively, open `report/index.html` directly and use **Load JSON report** to choose `results/summary.json`.
+Open <http://localhost:4173/genreal/report/>. Alternatively, open `genreal/report/index.html` directly and use **Load JSON report** to choose `genreal/results/summary.json`.
 
 ## Configuration
 
 The gateway defaults to `http://localhost:8080`. Override it without editing the test:
 
 ```bash
-BASE_URL=https://staging.example.com k6 run performance/stress-test.js
+BASE_URL=https://staging.example.com k6 run performance/genreal/stress-test.js
 ```
 
-Stage durations can be overridden with `WARM_UP`, `NORMAL_LOAD`, `STRESS_LOAD`, `SPIKE_LOAD`, and `RECOVERY`. `THINK_TIME_SECONDS` controls the pause between user journeys.
+The general suite keeps its credentials as local constants at the top of the script, so update those values before running it. Stage durations can be overridden with `WARM_UP`, `NORMAL_LOAD`, `INCREASE_LOAD`, `STRESS_LOAD`, `SPIKE_LOAD`, `RECOVERY`, and `COOL_DOWN`. `THINK_TIME_SECONDS` controls the pause between user journeys, and `MAX_VUS` controls the peak load.
 
-> Run stress tests only against environments you own or have permission to test. The default profile peaks at 100 virtual users and will intentionally exercise rate limits and infrastructure capacity.
+> Run stress tests only against environments you own or have permission to test. The default profiles peak at 200 virtual users and intentionally exercise rate limits and infrastructure capacity.
 
 ## Service-specific suites
 
@@ -84,4 +88,4 @@ Each suite has a local dashboard at `report/index.html`. Serve the `performance`
 python3 -m http.server 4173 --directory performance
 ```
 
-Then open `/academic/report/`, `/iam/report/`, or `/audit-log/report/`.
+Then open `/genreal/report/`, `/academic/report/`, `/iam/report/`, or `/audit-log/report/`.

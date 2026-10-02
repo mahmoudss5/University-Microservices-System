@@ -82,6 +82,8 @@ public class TeacherMapper {
               .id(teacher.getId())
               .teacherName(teacher.getUsername())
               .officeLocation(teacher.getOfficeLocation())
+              .role(teacher.getRole() == null ? null : teacher.getRole().name())
+              .active(teacher.isActive())
               .build();
   }
 

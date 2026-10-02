@@ -3,6 +3,7 @@ package com.uni.iam.service.impl.StudentSerivces;
 import com.uni.iam.aop.ExecutionTime;
 import com.uni.iam.aop.GeneralLog;
 import com.uni.iam.dto.response.StudentResponse;
+import com.uni.iam.dto.response.StudentBasicResponse;
 import com.uni.iam.entity.Student;
 import com.uni.iam.exception.UserNotFoundException;
 import com.uni.iam.repository.StudentRepository;
@@ -28,6 +29,18 @@ public class StudentServiceImpl implements StudentService {
         public List<StudentResponse> getAllStudents() {
                 return studentRepository.findAll().stream()
                         .map(studentMapper::toStudentResponse)
+                        .toList();
+        }
+
+        @Override
+        @Transactional(readOnly = true)
+        public List<StudentBasicResponse> getAllStudentBasics() {
+                return studentRepository.findAll().stream()
+                        .map(student -> new StudentBasicResponse(
+                                student.getId(),
+                                student.getUsername(),
+                                student.getRole() == null ? null : student.getRole().name(),
+                                student.isActive()))
                         .toList();
         }
 
