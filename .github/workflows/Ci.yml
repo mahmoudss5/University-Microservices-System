@@ -1,5 +1,8 @@
 name: UniSystem CI
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
   issues: read
@@ -17,34 +20,61 @@ on:
       - main
 
 jobs:
-  buildAndTest:
+  backend-Test:
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: iam-service
+            path: Backend/iam-service
+            java: '17'
+          - name: academic-core
+            path: Backend/academic-core-Service
+            java: '21'
+
+          - name: api-gateway
+            path: Backend/api-gateway
+            java: '21'
+
+          - name: communication-service
+            path: Backend/communication-service
+            java: '21'
+
+          - name: eureka-server
+            path: Backend/eureka-server
+            java: '21'
+
+          - name: audit-log-service
+            path: Backend/AuditLogService
+            java: '21'
+
+
+    name: ${{ matrix.name }} Test
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
-      - name: Setup Java 21
+      - name: Set up JDK ${{ matrix.java }}
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
-          distribution: 'temurin'
-          cache: 'maven'
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: maven
+          cache-dependency-path: ${{ matrix.path }}/pom.xml
 
-      - name: Build and Test All Microservices
+      - name: Test service
         run: |
-          # Loop through all directories in Backend/ that contain a pom.xml
-          for dir in Backend/*/; do
-            if [ -f "${dir}pom.xml" ]; then
-              echo "================================================="
-              echo "Building and Testing: ${dir}"
-              echo "================================================="
-              mvn -f "${dir}pom.xml" clean test
-            fi
-          done
+          mvn -f "${{ matrix.path }}/pom.xml" \
+            clean verify \
+            --batch-mode \
+            --no-transfer-progress
 
-      - name: Publish Test Report
-        uses: EnricoMi/publish-unit-test-result-action@v2
+      - name: Publish test report
         if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
         with:
-          files: "Backend/**/target/surefire-reports/TEST-*.xml"
+          files: "${{ matrix.path }}/target/surefire-reports/TEST-*.xml"
